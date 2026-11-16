@@ -42,3 +42,14 @@ target_sources(nebula_test PRIVATE NebulaTest.cpp ${CMAKE_SOURCE_DIR}/plugins/ne
 target_include_directories(nebula_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/nebula/Source)
 target_link_libraries(nebula_test PRIVATE lt_dsp juce::juce_audio_basics juce::juce_audio_processors juce::juce_dsp)
 lt_configure_target(nebula_test)
+
+# Host-like stress tests (one per plugin). Build with -DLT_SANITIZE=ON to catch memory errors.
+foreach(plug IN ITEMS LTNebula LTKnock LTOrbit LTVoid LTPulsar)
+    if(TARGET ${plug})
+        juce_add_console_app(${plug}_stress PRODUCT_NAME "${plug} Stress")
+        target_sources(${plug}_stress PRIVATE stress/PluginStress.cpp)
+        target_link_libraries(${plug}_stress PRIVATE ${plug} juce::juce_audio_processors juce::juce_gui_basics)
+        target_compile_definitions(${plug}_stress PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+        set_target_properties(${plug}_stress PROPERTIES EXCLUDE_FROM_ALL TRUE)   # only built on request
+    endif()
+endforeach()

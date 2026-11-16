@@ -354,6 +354,10 @@ Editor::Editor (Processor& pr)
 
 Editor::~Editor()
 {
+    // Detach from the parameters before any slider/button is destroyed
+    // (some controls are declared after the attachment vectors).
+    sliderAttachments.clear();
+    buttonAttachments.clear();
     proc.onStateRestored = nullptr;
     setLookAndFeel (nullptr);
 }

@@ -12,6 +12,11 @@ endif()
 
 option(LT_BUILD_STUDIO "Build LT License Studio (Mac app)" ON)
 option(LT_BUILD_PLUGINS "Build the plugins" ON)
+option(LT_SANITIZE "Build with address/undefined sanitizers (tests only)" OFF)
+if(LT_SANITIZE)
+    add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer -g)
+    add_link_options(-fsanitize=address,undefined)
+endif()
 set(LT_JUCE_DIR "" CACHE PATH "Use a local JUCE checkout instead of downloading it")
 
 # ---------------------------------------------------------------- JUCE
