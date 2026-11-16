@@ -203,7 +203,14 @@ AUDIO TRIGGER: cada golpe del sidechain reinicia la curva (sin sidechain, o si n
 - **MATCH REFERENCE:** cargas una canción de referencia, se separa la voz y se deducen: **tonalidad y escala**, **retune speed**,
   **humanize / flex**, **vibrato** y **formantes**. Se aplican a LT TUNE y **todo queda editable**, con un control de cuánto se copia.
 - Estética: familia espacial LT (negro/morado y modo claro celeste/amarillo), cristal casi invisible, partículas.
-- Pendiente: diseño (prompts entregados), luego implementación.
+- **Diseño aprobado:** `design/tune/main-dark.webp` (vista tipo afinador clásico, NO piano roll):
+  VOICE, KEY & SCALE y preset arriba; nota detectada gigante + medidor de cents (-100…+100); EDIT NOTES con 12 notas
+  como orbes/planetas (las de la escala encendidas, la que se canta destella); columna derecha con RETUNE SPEED (planeta
+  con anillo, NATURAL↔ROBOT), HUMANIZE, FLEX TUNE, VIBRATO, FORMANT (+PRESERVE), TRANSPOSE, MIX; abajo DETUNE 440 Hz,
+  MODE LOW LATENCY | HQ, medidores IN/OUT, deshacer/rehacer, ajustes, bypass.
+  Correcciones al programar: quitar el texto "planet-style"; volver a poner SAVE, MATCH REFERENCE y THEME en la barra
+  superior; en EDIT NOTES encender exactamente las notas de la escala elegida (A minor = A B C D E F G).
+- Pendiente: ventana MATCH REFERENCE y versión clara; luego implementación.
 
 ## Igualador por referencia (proyecto futuro, sin nombre aún)
 Modos **Máster / Voz / Beat**. Cada parámetro (EQ, compresión, brillo, de-esser, saturación, punch, LUFS, estéreo…) con su knob y on/off.
