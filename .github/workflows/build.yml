@@ -24,16 +24,25 @@ jobs:
       - name: Build
         run: cmake --build build --config Release -j 4
 
-      - name: Test licensing
-        run: ./build/tests/lt_tests_artefacts/Release/lt_tests
+      - name: Test licensing and analysis
+        run: |
+          ./build/tests/lt_tests_artefacts/Release/lt_tests
+          ./build/tests/typebeats_analysis_test_artefacts/Release/typebeats_analysis_test
 
       - name: Package
         run: |
-          mkdir -p dist
+          mkdir -p dist pkg/VST3 pkg/Components
           APP="build/apps/license-studio/LTLicenseStudio_artefacts/Release/LT License Studio.app"
           codesign --force --deep --sign - "$APP"
           ditto -c -k --keepParent "$APP" "dist/LT-License-Studio-mac.zip"
-          ls -la dist
+          for d in build/plugins/*/*_artefacts/Release; do
+            [ -d "$d/VST3" ] && cp -R "$d"/VST3/*.vst3 pkg/VST3/
+            [ -d "$d/AU" ] && cp -R "$d"/AU/*.component pkg/Components/
+          done
+          for b in pkg/VST3/* pkg/Components/*; do codesign --force --deep --sign - "$b"; done
+          cp docs/INSTALL.md pkg/INSTALL.md
+          (cd pkg && zip -qry ../dist/LT-AUDIO-Plugins-mac.zip .)
+          ls -la dist pkg/VST3 pkg/Components
 
       - uses: actions/upload-artifact@v4
         with:
@@ -53,6 +62,22 @@ jobs:
 
       - name: Test licensing
         run: .\build\tests\lt_tests_artefacts\Release\lt_tests.exe
+
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path pkg/VST3, dist | Out-Null
+          Get-ChildItem -Path build/plugins -Recurse -Directory -Filter *.vst3 |
+            Where-Object { $_.FullName -match 'Release\\VST3\\[^\\]+\.vst3$' } |
+            ForEach-Object { Copy-Item $_.FullName -Destination pkg/VST3 -Recurse -Force }
+          Copy-Item docs/INSTALL.md pkg/INSTALL.md
+          Compress-Archive -Path pkg/* -DestinationPath dist/LT-AUDIO-Plugins-windows.zip -Force
+          Get-ChildItem pkg/VST3
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: dist/*
 
   release:
     needs: [mac, windows]

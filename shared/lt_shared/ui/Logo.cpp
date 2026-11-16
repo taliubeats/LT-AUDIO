@@ -185,6 +185,11 @@ float Logo::draw (juce::Graphics& g, juce::Rectangle<float> area, const Spec& sp
         }
         else
         {
+            if (p.isLight)
+            {
+                g.setColour (juce::Colour (0x30000000));
+                g.drawText (ch, cell.withWidth (cw + 4.0f).translated (0, 1.5f), juce::Justification::centredLeft, false);
+            }
             g.setColour (nameColour);
             g.drawText (ch, cell.withWidth (cw + 4.0f), juce::Justification::centredLeft, false);
 

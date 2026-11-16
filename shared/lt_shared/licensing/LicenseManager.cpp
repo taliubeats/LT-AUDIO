@@ -53,7 +53,7 @@ juce::File LicenseManager::getDataDirectory()
 }
 
 LicenseManager::LicenseManager (juce::String id, juce::String name)
-    : productId (std::move (id)), productName (std::move (name)), machineId (getMachineId())
+    : productId (std::move (id)), productName (std::move (name)), machineId (lt::licensing::getMachineId())
 {
     refresh();
 }

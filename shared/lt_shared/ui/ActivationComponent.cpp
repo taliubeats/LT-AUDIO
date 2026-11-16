@@ -188,7 +188,7 @@ void ActivationComponent::paint (juce::Graphics& g)
 
     g.setColour (palette.textDim.withMultipliedAlpha (0.8f));
     g.setFont (Fonts::regular (12.0f));
-    g.drawText ("LT Audio  ·  2 computers per license", card.withTop (card.getBottom() - 34.0f), juce::Justification::centred);
+    g.drawText (juce::String (juce::CharPointer_UTF8 ("LT Audio  \xc2\xb7  2 computers per license")), card.withTop (card.getBottom() - 34.0f), juce::Justification::centred);
 }
 
 } // namespace lt::ui

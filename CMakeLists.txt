@@ -65,6 +65,16 @@ function(lt_configure_target target)
 endfunction()
 
 # ---------------------------------------------------------------- products
+if(APPLE)
+    set(LT_PLUGIN_FORMATS VST3 AU Standalone)
+else()
+    set(LT_PLUGIN_FORMATS VST3 Standalone)
+endif()
+
+if(LT_BUILD_PLUGINS)
+    add_subdirectory(plugins/type-beats)
+endif()
+
 if(LT_BUILD_STUDIO)
     add_subdirectory(apps/license-studio)
 endif()

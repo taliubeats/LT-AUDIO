@@ -130,7 +130,7 @@ struct MainComponent::RecentModel : public juce::ListBoxModel
         g.drawText (r.info.name, text.removeFromTop (text.getHeight() * 0.55f), juce::Justification::bottomLeft, true);
         g.setColour (p.textDim);
         g.setFont (Fonts::regular (11.0f));
-        g.drawText (Logo::displayNameFor (r.info.productId) + "  ·  " + r.info.machineId.substring (0, 9) + "...  ·  "
+        g.drawText (Logo::displayNameFor (r.info.productId) + juce::String (juce::CharPointer_UTF8 ("  \xc2\xb7  ")) + r.info.machineId.substring (0, 9) + juce::String (juce::CharPointer_UTF8 ("...  \xc2\xb7  "))
                         + shortDate (r.info.issued),
                     text, juce::Justification::topLeft, true);
     }
@@ -191,7 +191,7 @@ struct MainComponent::CustomerModel : public juce::ListBoxModel
         g.setColour (p.textDim);
         g.setFont (Fonts::regular (12.5f));
         g.drawText (c.email, text.removeFromTop (18.0f), juce::Justification::centredLeft, true);
-        g.drawText (c.products.joinIntoString ("  ·  "), text, juce::Justification::centredLeft, true);
+        g.drawText (c.products.joinIntoString (juce::String (juce::CharPointer_UTF8 ("  \xc2\xb7  "))), text, juce::Justification::centredLeft, true);
 
         g.setColour (p.text);
         g.setFont (Fonts::regular (13.0f));
@@ -744,7 +744,7 @@ void MainComponent::paintOverlay (juce::Graphics& g)
         g.drawText ("CUSTOMERS", title, juce::Justification::centredLeft);
         g.setColour (p.textDim);
         g.setFont (Fonts::regular (13.0f));
-        g.drawText (juce::String (customerModel->customers.size()) + " friends  ·  click one to see their licenses",
+        g.drawText (juce::String (customerModel->customers.size()) + juce::String (juce::CharPointer_UTF8 (" friends  \xc2\xb7  click one to see their licenses")),
                     subtitle, juce::Justification::centredLeft);
     }
 
