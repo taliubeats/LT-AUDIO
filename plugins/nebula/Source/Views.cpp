@@ -179,12 +179,63 @@ bool MacroKnob::hitTest (int x, int y)
     return knobArea().getCentre().getDistanceFrom ({ (float) x, (float) y }) < diameter * 0.58f;
 }
 
+bool MacroKnob::isInterestedInDragSource (const SourceDetails& d)
+{
+    return onModDrop != nullptr && d.description.toString().startsWith ("mod:");
+}
+
+void MacroKnob::itemDropped (const SourceDetails& d)
+{
+    dropHover = false;
+    if (onModDrop) onModDrop (d.description.toString().fromFirstOccurrenceOf ("mod:", false, false).getIntValue());
+    repaint();
+}
+
+void MacroKnob::mouseDown (const juce::MouseEvent& e)
+{
+    if (e.mods.isPopupMenu() && onModMenu) { onModMenu(); return; }
+    juce::Slider::mouseDown (e);
+}
+
 void MacroKnob::paint (juce::Graphics& g)
 {
     if (palette == nullptr) return;
     auto& p = *palette;
     auto k = knobArea();
-    lt::ui::GlassLookAndFeel::drawGlassKnob (g, k, (float) valueToProportionOfLength (getValue()), p, 1.0f);
+    auto base = (float) valueToProportionOfLength (getValue());
+    lt::ui::GlassLookAndFeel::drawGlassKnob (g, k, base, p, 1.0f);
+
+    // modulation rings: one coloured arc per routed source, and a dot where the knob really is now
+    if (modDepth)
+    {
+        auto start = pi * 1.25f, end = pi * 2.75f;
+        auto c = k.getCentre();
+        auto radius = k.getWidth() * 0.5f + 3.0f;
+        int ring = 0;
+        for (int src = 0; src < 4; ++src)
+        {
+            auto d = modDepth (src);
+            if (std::abs (d) < 0.001f) continue;
+            auto rr = radius + (float) ring++ * 4.0f;
+            auto bipolar = src == 1 || src == 3;
+            auto lo = juce::jlimit (0.0f, 1.0f, bipolar ? base - std::abs (d) * 0.5f : juce::jmin (base, base + d));
+            auto hi = juce::jlimit (0.0f, 1.0f, bipolar ? base + std::abs (d) * 0.5f : juce::jmax (base, base + d));
+            juce::Path arc;
+            arc.addCentredArc (c.x, c.y, rr, rr, 0, start + lo * (end - start), start + juce::jmax (lo + 0.005f, hi) * (end - start), true);
+            g.setColour (juce::Colour (src == 0 ? 0xffffd35a : src == 1 ? 0xffff7aa8 : src == 2 ? 0xff5ee6ff : 0xff7dff9b));
+            g.strokePath (arc, juce::PathStrokeType (2.2f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+        }
+        if (ring > 0 && modOffset)
+        {
+            auto now = juce::jlimit (0.0f, 1.0f, base + modOffset());
+            auto pt = c.getPointOnCircumference (radius, start + now * (end - start));
+            Glass::drawGlow (g, pt, 7.0f, juce::Colours::white, 0.7f);
+            g.setColour (juce::Colours::white);
+            g.fillEllipse (pt.x - 2.5f, pt.y - 2.5f, 5.0f, 5.0f);
+        }
+    }
+    if (dropHover)
+        Glass::drawGlow (g, k.getCentre(), k.getWidth() * 0.7f, juce::Colours::white, 0.35f);
     auto big = diameter >= 80.0f;
     if (big)
     {

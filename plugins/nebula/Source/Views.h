@@ -42,7 +42,8 @@ private:
 };
 
 /** Big glass macro knob with the value inside and the name under it. */
-class MacroKnob : public juce::Slider
+class MacroKnob : public juce::Slider,
+                  public juce::DragAndDropTarget
 {
 public:
     MacroKnob (const juce::String& label, float diameter = 100.0f);
@@ -52,9 +53,21 @@ public:
     juce::Rectangle<float> knobArea() const;
     void paint (juce::Graphics&) override;
     bool hitTest (int x, int y) override;
+    void mouseDown (const juce::MouseEvent&) override;
+
+    // modulation: drop a MOD chip here; right-click for depth / remove
+    std::function<float (int source)> modDepth;       // 0 = not routed
+    std::function<float()> modOffset;                  // current offset (normalised)
+    std::function<void (int source)> onModDrop;
+    std::function<void()> onModMenu;
+    bool isInterestedInDragSource (const SourceDetails&) override;
+    void itemDragEnter (const SourceDetails&) override { dropHover = true; repaint(); }
+    void itemDragExit (const SourceDetails&) override  { dropHover = false; repaint(); }
+    void itemDropped (const SourceDetails&) override;
 
 private:
     float diameter;
+    bool dropHover = false;
 };
 
 /** A row of pill buttons bound to one choice parameter, showing only some of its options. */

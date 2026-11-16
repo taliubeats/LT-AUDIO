@@ -119,6 +119,7 @@ MacroKnob& Editor::knob (Page& page, const char* id, const juce::String& label, 
     sliderAttachments.push_back (std::make_unique<juce::SliderParameterAttachment> (*proc.state.getParameter (id), *k));
     k->getProperties().set ("id", id);
     page.addAndMakeVisible (k);
+    setupModulation (*k, id);
     return *k;
 }
 
@@ -132,8 +133,46 @@ juce::TextButton& Editor::toggle (Page& page, const char* id, const juce::String
     return *b;
 }
 
+void Editor::setupModulation (MacroKnob& k, const char* id)
+{
+    auto target = Modulation::targetIndex (id);
+    if (target < 0) return;
+    k.modDepth = [this, target] (int src) { return proc.mod.getDepth (src, target); };
+    k.modOffset = [this, target] { return proc.mod.getOffset (target); };
+    k.onModDrop = [this, target, &k] (int src) { proc.mod.addRoute (src, target, 0.5f); k.repaint(); };
+    k.onModMenu = [this, target, &k]
+    {
+        juce::PopupMenu m;
+        m.setLookAndFeel (&lnf);
+        bool any = false;
+        for (int src = 0; src < Modulation::numSources; ++src)
+        {
+            auto d = proc.mod.getDepth (src, target);
+            if (std::abs (d) < 0.001f) continue;
+            any = true;
+            juce::PopupMenu sub;
+            for (auto amt : { 0.1f, 0.25f, 0.5f, 0.75f, 1.0f, -0.25f, -0.5f, -1.0f })
+                sub.addItem (src * 100 + 10 + (int) std::round ((amt + 1.0f) * 20.0f),
+                             (amt > 0 ? "+" : "") + juce::String (juce::roundToInt (amt * 100.0f)) + "%", true, std::abs (d - amt) < 0.01f);
+            sub.addSeparator();
+            sub.addItem (src * 100 + 1, "Remove");
+            m.addSubMenu (Modulation::sourceNames()[src] + "  (" + juce::String (juce::roundToInt (d * 100.0f)) + "%)", sub);
+        }
+        if (! any) m.addItem (-1, "Drag MOD 1, MOD 2, ENV or RND here to modulate this knob", false);
+        m.showMenuAsync (juce::PopupMenu::Options().withMousePosition(), [this, target, &k] (int r)
+        {
+            if (r <= 0) return;
+            auto src = r / 100, code = r % 100;
+            if (code == 1) proc.mod.removeRoute (src, target);
+            else proc.mod.setDepth (src, target, (float) (code - 10) / 20.0f - 1.0f);
+            k.repaint();
+        });
+    };
+}
+
 Editor::Editor (Processor& pr)
-    : AudioProcessorEditor (pr), proc (pr), stepBars (pr.state, pr.engine), tapeCurve (pr.state)
+    : AudioProcessorEditor (pr), proc (pr), stepBars (pr.state, pr.engine), tapeCurve (pr.state),
+      fxChain (pr.state), mod1View (pr.state, pr.mod), mod2View (pr.state, pr.mod)
 {
     palette = proc.lightTheme ? Palette::light() : Palette::dark();
     setLookAndFeel (&lnf);
@@ -179,10 +218,41 @@ Editor::Editor (Processor& pr)
              { IDs::tapeChance, "CHANCE " }, { IDs::input, "INPUT" }, { IDs::output, "OUTPUT" } })
         knob (advanced, id, label, 44);
     toggle (advanced, IDs::freeze, "FREEZE");
-    toggle (advanced, IDs::particles, "PARTICLES");
-    toggle (advanced, IDs::cloud, "GRAIN CLOUD");
-    toggle (advanced, IDs::shimmer, "SHIMMER");
-    toggle (advanced, IDs::reverseFx, "REVERSE");
+
+    // FX CHAIN + MODULATION
+    fxChain.palette = &palette;
+    advanced.addAndMakeVisible (fxChain);
+    mod1View.palette = mod2View.palette = &palette;
+    advanced.addAndMakeVisible (mod1View);
+    advanced.addAndMakeVisible (mod2View);
+    for (int src = 0; src < Modulation::numSources; ++src)
+    {
+        auto* c = chips.add (new ModChip (src));
+        c->palette = &palette;
+        c->mod = &proc.mod;
+        c->setTooltip ("Drag onto any knob to modulate it (right-click the knob to set the amount)");
+        advanced.addAndMakeVisible (c);
+    }
+    mod1Random.onClick = [this]
+    {
+        juce::Random r;
+        for (int i = 0; i < 8; ++i)
+            if (auto* prm = proc.state.getParameter (IDs::mod1Step (i)))
+                prm->setValueNotifyingHost (r.nextFloat());
+    };
+    mod1Clear.onClick = [this]
+    {
+        for (int i = 0; i < 8; ++i)
+            if (auto* prm = proc.state.getParameter (IDs::mod1Step (i))) prm->setValueNotifyingHost (0.0f);
+    };
+    advanced.addAndMakeVisible (mod1Random);
+    advanced.addAndMakeVisible (mod1Clear);
+    mod1Rate = std::make_unique<ChoiceRow> (*s.getParameter (IDs::mod1Rate), std::vector<int> { 0, 1, 2, 3, 4 }, juce::StringArray { "1/16", "1/8", "1/4", "1/2", "1 BAR" });
+    mod2Rate = std::make_unique<ChoiceRow> (*s.getParameter (IDs::mod2Rate), std::vector<int> { 2, 3, 4, 5, 6 }, juce::StringArray { "1/4", "1/2", "1 BAR", "2 BAR", "4 BAR" });
+    rndRate = std::make_unique<ChoiceRow> (*s.getParameter (IDs::rndRate), std::vector<int> { 1, 2, 3 }, juce::StringArray { "1/8", "1/4", "1/2" });
+    for (auto* r : { mod1Rate.get(), mod2Rate.get(), rndRate.get() }) advanced.addAndMakeVisible (r);
+    knob (advanced, IDs::mod1Swing, "SWING", 36);
+    knob (advanced, IDs::mod2Swing, "SWING ", 36);
 
     gdMixSlider.setSliderStyle (juce::Slider::LinearHorizontal);
     gdMixSlider.setTextBoxStyle (juce::Slider::NoTextBox, false, 0, 0);
@@ -368,10 +438,6 @@ void Editor::layout()
         if (id == juce::String (IDs::shimmer) + "_s")   b->setBounds (968, 312, 96, 32);
 
         if (id == juce::String (IDs::freeze) + "_a")    b->setBounds (668, 112, 96, 28);
-        if (id == juce::String (IDs::particles) + "_a") b->setBounds (730, 382, 220, 28);
-        if (id == juce::String (IDs::cloud) + "_a")     b->setBounds (730, 416, 220, 28);
-        if (id == juce::String (IDs::shimmer) + "_a")   b->setBounds (730, 450, 220, 28);
-        if (id == juce::String (IDs::reverseFx) + "_a") b->setBounds (730, 484, 220, 28);
     }
 
     const int mx[] = { 117, 290, 463, 636, 810, 983 };
@@ -387,7 +453,8 @@ void Editor::layout()
         { IDs::grainPitch, 384, 132 }, { IDs::stereo, 462, 132 }, { IDs::shape, 540, 132 }, { IDs::reverse, 618, 132 },
         { IDs::gdTime, 818, 132 }, { IDs::gdFeedback, 892, 132 }, { IDs::gdHighPass, 966, 132 }, { IDs::gdLowPass, 1040, 132 },
         { IDs::glide, 420, 262 }, { IDs::chance, 492, 262 }, { IDs::tapeLength, 852, 262 }, { IDs::tapeStart, 922, 262 },
-        { IDs::tapeChance, 992, 262 }, { IDs::input, 1004, 420 }, { IDs::output, 1004, 520 } };
+        { IDs::tapeChance, 992, 262 }, { IDs::input, 1004, 420 }, { IDs::output, 1004, 520 },
+        { IDs::mod1Swing, 360, 418 }, { IDs::mod2Swing, 360, 522 } };
     for (auto* k : knobs)
         if (k->getParentComponent() == &advanced)
             for (auto& p : pos)
@@ -402,7 +469,19 @@ void Editor::layout()
     advEvery->setBounds (580, 314, 232, 22);
     tapeTrigger->setBounds (838, 304, 160, 22);
     tapeNow.setBounds (1004, 304, 66, 22);
-    miniGalaxy.setBounds (550 - 125, 478 - 118, 250, 236);
+    miniGalaxy.setBounds (550 - 120, 482 - 112, 240, 224);
+    fxChain.setBounds (720, 378, 226, 222);
+    chips[0]->setBounds (40, 382, 70, 22);
+    chips[1]->setBounds (40, 486, 70, 22);
+    chips[2]->setBounds (180, 354, 58, 22);
+    chips[3]->setBounds (244, 354, 58, 22);
+    mod1View.setBounds (40, 408, 280, 50);
+    mod1Rate->setBounds (40, 462, 200, 20);
+    mod1Random.setBounds (246, 462, 52, 20);
+    mod1Clear.setBounds (302, 462, 46, 20);
+    mod2View.setBounds (40, 512, 280, 52);
+    mod2Rate->setBounds (40, 568, 200, 20);
+    rndRate->setBounds (308, 356, 130, 20);
 
     if (activation) activation->setBounds (0, 0, baseWidth, baseHeight);
 }
@@ -443,7 +522,7 @@ void Editor::Page::paint (juce::Graphics& g)
     header ("PITCH STEP", 40.0f, 202.0f);
     header ("TAPE STOP", 578.0f, 202.0f);
     header ("MODULATION", 40.0f, 352.0f);
-    header ("FX", 730.0f, 352.0f);
+    header ("FX CHAIN", 720.0f, 352.0f);
     label ("NEBULA", { 450.0f, 352.0f, 200.0f, 24.0f }, 18.0f);
     label ("DRY/WET", { 790.0f, 174.0f, 70.0f, 24.0f }, 13.0f, juce::Justification::centredLeft);
 
@@ -454,10 +533,8 @@ void Editor::Page::paint (juce::Graphics& g)
     g.drawVerticalLine (566, 206.0f, 340.0f);
 
     g.setColour (p.textDim);
-    g.setFont (Fonts::regular (13.0f));
-    g.drawFittedText ("MOD 1 (steps) and MOD 2 (curve) with drag-to-assign\nand the 8-slot FX CHAIN arrive in the next update.",
-                      juce::Rectangle<int> (40, 390, 360, 60), juce::Justification::topLeft, 3);
-    g.drawFittedText ("Quick FX (also in SIMPLE):", juce::Rectangle<int> (730, 374, 220, 0), juce::Justification::topLeft, 1);
+    g.setFont (Fonts::regular (11.0f));
+    g.drawText ("drag a chip onto any knob", juce::Rectangle<float> (120.0f, 384.0f, 200.0f, 18.0f), juce::Justification::centredLeft);
 
     // meters
     auto meter = [&] (float x, float l, float r, const juce::String& name)

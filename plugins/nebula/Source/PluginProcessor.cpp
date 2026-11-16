@@ -11,8 +11,19 @@ Processor::Processor()
 {
     for (auto* prm : getParameters())
         if (auto* r = dynamic_cast<juce::RangedAudioParameter*> (prm))
+        {
             p[r->getParameterID()] = state.getRawParameterValue (r->getParameterID());
+            params[r->getParameterID()] = r;
+        }
     applyPreset (factoryPresets().front());
+}
+
+float Processor::ev (const juce::String& id)
+{
+    auto t = Modulation::targetIndex (id);
+    if (t < 0) return v (id);
+    auto* prm = params.at (id);
+    return prm->convertFrom0to1 (mod.modulated (t, prm->convertTo0to1 (v (id))));
 }
 
 bool Processor::isPresetModified()
@@ -73,12 +84,27 @@ void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     midi.clear();
     if (! usable.load()) return;
 
+    // modulation sources for this block
+    Modulation::Inputs mi;
+    for (int i = 0; i < 8; ++i) mi.steps[(size_t) i] = v (IDs::mod1Step (i)) * 0.01f;
+    mi.mod1Beats = Choices::stepRateBeats (juce::roundToInt (v (IDs::mod1Rate)));
+    mi.mod2Beats = Choices::stepRateBeats (juce::roundToInt (v (IDs::mod2Rate)));
+    mi.rndBeats = Choices::stepRateBeats (juce::roundToInt (v (IDs::rndRate)));
+    mi.mod1Swing = v (IDs::mod1Swing) * 0.01f;
+    mi.mod2Swing = v (IDs::mod2Swing) * 0.01f;
+    mi.mod2Shape = juce::roundToInt (v (IDs::mod2Shape));
+    mi.ppq = t.ppq; mi.bpm = t.bpm; mi.playing = t.playing && t.hasPosition;
+    mi.inputLevel = juce::jmax (engine.getInputLevel (0), engine.getInputLevel (1));
+    mi.numSamples = buffer.getNumSamples();
+    mi.sampleRate = getSampleRate() > 0 ? getSampleRate() : 44100.0;
+    mod.advance (mi);
+
     NebulaSettings s;
-    s.motion = v (IDs::motion) * 0.01f; s.texture = v (IDs::texture) * 0.01f; s.pitchCents = v (IDs::pitch);
-    s.space = v (IDs::space) * 0.01f; s.dirt = v (IDs::dirt) * 0.01f; s.mix = v (IDs::mix) * 0.01f;
-    s.sizeMs = v (IDs::size); s.density = v (IDs::density); s.position = v (IDs::position) * 0.01f; s.spray = v (IDs::spray) * 0.01f;
-    s.grainPitch = v (IDs::grainPitch); s.stereo = v (IDs::stereo) * 0.01f; s.shape = v (IDs::shape) * 0.01f;
-    s.reverse = v (IDs::reverse) * 0.01f; s.freeze = v (IDs::freeze) > 0.5f;
+    s.motion = ev (IDs::motion) * 0.01f; s.texture = ev (IDs::texture) * 0.01f; s.pitchCents = ev (IDs::pitch);
+    s.space = ev (IDs::space) * 0.01f; s.dirt = ev (IDs::dirt) * 0.01f; s.mix = ev (IDs::mix) * 0.01f;
+    s.sizeMs = ev (IDs::size); s.density = ev (IDs::density); s.position = ev (IDs::position) * 0.01f; s.spray = ev (IDs::spray) * 0.01f;
+    s.grainPitch = ev (IDs::grainPitch); s.stereo = ev (IDs::stereo) * 0.01f; s.shape = ev (IDs::shape) * 0.01f;
+    s.reverse = ev (IDs::reverse) * 0.01f; s.freeze = v (IDs::freeze) > 0.5f;
     s.stepMode = juce::roundToInt (v (IDs::stepMode));
     for (int i = 0; i < 8; ++i) s.steps[(size_t) i] = juce::roundToInt (v (IDs::step (i)));
     s.stepBeats = Choices::stepRateBeats (juce::roundToInt (v (IDs::stepRate)));
@@ -88,11 +114,19 @@ void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     s.tapeLengthBeats = v (IDs::tapeLength); s.tapeCurve = v (IDs::tapeCurve) * 0.01f; s.tapeStart = v (IDs::tapeStart) * 0.01f;
     s.tapeChance = v (IDs::tapeChance) * 0.01f; s.tapePosition = v (IDs::tapePosition) * 0.01f;
     s.tapeManual = trigger != 0;
-    s.gdTimeMs = v (IDs::gdTime); s.gdFeedback = v (IDs::gdFeedback) * 0.01f; s.gdHighPass = v (IDs::gdHighPass);
-    s.gdLowPass = v (IDs::gdLowPass); s.gdMix = v (IDs::gdMix) * 0.01f;
+    s.gdTimeMs = ev (IDs::gdTime); s.gdFeedback = ev (IDs::gdFeedback) * 0.01f; s.gdHighPass = ev (IDs::gdHighPass);
+    s.gdLowPass = ev (IDs::gdLowPass); s.gdMix = ev (IDs::gdMix) * 0.01f;
     s.particles = v (IDs::particles) > 0.5f; s.grainCloud = v (IDs::cloud) > 0.5f;
     s.reverseFx = v (IDs::reverseFx) > 0.5f; s.shimmer = v (IDs::shimmer) > 0.5f;
     s.input = juce::Decibels::decibelsToGain (v (IDs::input)); s.output = juce::Decibels::decibelsToGain (v (IDs::output));
+    for (int i = 0; i < 8; ++i)
+    {
+        auto type = juce::roundToInt (v (IDs::fxSlot (i)));
+        s.fxTypes[(size_t) i] = type;
+        s.fxAmounts[(size_t) i] = ev (IDs::fxAmt (i)) * 0.01f;
+        if (type == FxTypes::particles && s.fxAmounts[(size_t) i] > 0.01f) s.particles = true;
+        if (type == FxTypes::grainCloud && s.fxAmounts[(size_t) i] > 0.01f) s.grainCloud = true;
+    }
     engine.process (buffer, s, t);
 }
 
@@ -104,6 +138,7 @@ void Processor::getStateInformation (juce::MemoryBlock& dest)
     tree.setProperty ("preset", presetName, nullptr);
     tree.setProperty ("light", lightTheme, nullptr);
     tree.setProperty ("advanced", advanced, nullptr);
+    tree.setProperty ("mods", juce::JSON::toString (mod.toVar(), true), nullptr);
     if (auto xml = tree.createXml())
         copyXmlToBinary (*xml, dest);
 }
@@ -117,6 +152,7 @@ void Processor::setStateInformation (const void* data, int size)
     presetName = tree.getProperty ("preset", "Stardust Keys").toString();
     lightTheme = tree.getProperty ("light", false);
     advanced = tree.getProperty ("advanced", false);
+    mod.fromVar (juce::JSON::parse (tree.getProperty ("mods").toString()));
     if (onStateRestored) onStateRestored();
 }
 

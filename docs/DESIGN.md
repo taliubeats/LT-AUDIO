@@ -111,8 +111,12 @@ Diseño: `design/nebula/*`.
 GLIDE/CHANCE/SCALE LOCK), TAPE STOP (AUTO/MANUAL/MIDI, LENGTH/CURVE/START/CHANCE/POSITION), GRAIN DELAY, FREEZE, PARTICLES,
 GRAIN CLOUD, REVERSE, SHIMMER, macros MOTION/TEXTURE/PITCH/SPACE/DIRT/MIX, pantalla SIMPLE completa, ADVANCED con GRAIN ENGINE,
 GRAIN DELAY, PITCH STEP, TAPE STOP y medidores. Banco LT COSMOS: 50 presets con etiquetas.
-**Pendiente:** fase 2 = MODULATION (MOD 1/2, LFO, envelope, random, asignar arrastrando) y FX CHAIN de 8 ranuras con los 24+ efectos;
-fase 3 = navegador de bancos (portadas, favoritos, búsqueda, importar/exportar).
+**Fase 2 hecha:** FX CHAIN de 8 ranuras con 31 efectos (clic = elegir/mover/quitar, arrastrar izquierda-derecha = cantidad,
+arriba-abajo = reordenar, "+" añade). MODULATION: MOD 1 (8 pasos dibujables, RATE, SWING, RANDOM, CLEAR), MOD 2 (curva:
+SINE/TRIANGLE/SAW/SQUARE/SMOOTH RND, clic cambia la forma), ENV (sigue la entrada) y RND (sample & hold). Se asignan arrastrando
+el chip sobre cualquier knob (anillo de color = cantidad); clic derecho en el knob = cantidad (±10…100 %) o quitar. Hasta 16 rutas,
+se guardan con el proyecto.
+**Pendiente:** fase 3 = navegador de bancos (portadas, favoritos, búsqueda, importar/exportar).
 
 ## 5. LT ORBIT — delay
 Diseño: `design/orbit/*`. Logo con la "O" como planeta con anillo.

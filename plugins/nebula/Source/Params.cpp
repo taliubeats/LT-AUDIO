@@ -4,6 +4,9 @@ namespace nebula
 {
 
 juce::String IDs::step (int i) { return "step" + juce::String (i + 1); }
+juce::String IDs::fxSlot (int i) { return "fxSlot" + juce::String (i + 1); }
+juce::String IDs::fxAmt (int i) { return "fxAmt" + juce::String (i + 1); }
+juce::String IDs::mod1Step (int i) { return "mod1_" + juce::String (i + 1); }
 
 const juce::StringArray& Choices::stepModes() { static const juce::StringArray n { "OFF", "+5", "+7", "+12", "-12", "CUSTOM" }; return n; }
 const juce::StringArray& Choices::stepRates() { static const juce::StringArray n { "1/16", "1/8", "1/4", "1/2", "1 BAR", "2 BAR", "4 BAR" }; return n; }
@@ -85,6 +88,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     l.add (std::make_unique<AudioParameterBool> (P (IDs::cloud), "Grain Cloud", false));
     l.add (std::make_unique<AudioParameterBool> (P (IDs::reverseFx), "Reverse FX", false));
     l.add (std::make_unique<AudioParameterBool> (P (IDs::shimmer), "Shimmer", false));
+    for (int i = 0; i < 8; ++i)
+    {
+        l.add (std::make_unique<AudioParameterChoice> (P (IDs::fxSlot (i)), "FX Slot " + String (i + 1), FxTypes::names(), 0));
+        l.add (std::make_unique<AudioParameterFloat> (P (IDs::fxAmt (i)), "FX Amount " + String (i + 1), NormalisableRange<float> (0, 100, 0.1f), 50, pct));
+    }
+    static const float modDefaults[] = { 10, 70, 100, 55, 10, 30, 100, 70 };
+    for (int i = 0; i < 8; ++i)
+        l.add (std::make_unique<AudioParameterFloat> (P (IDs::mod1Step (i)), "MOD 1 Step " + String (i + 1), NormalisableRange<float> (0, 100, 0.1f), modDefaults[i], pct));
+    l.add (std::make_unique<AudioParameterChoice> (P (IDs::mod1Rate), "MOD 1 Rate", Choices::stepRates(), 1));
+    amount (IDs::mod1Swing, "MOD 1 Swing", 0);
+    l.add (std::make_unique<AudioParameterChoice> (P (IDs::mod2Shape), "MOD 2 Shape", Modulation::mod2Shapes(), 0));
+    l.add (std::make_unique<AudioParameterChoice> (P (IDs::mod2Rate), "MOD 2 Rate", Choices::stepRates(), 4));
+    amount (IDs::mod2Swing, "MOD 2 Swing", 0);
+    l.add (std::make_unique<AudioParameterChoice> (P (IDs::rndRate), "RND Rate", Choices::stepRates(), 2));
+
     auto db = AudioParameterFloatAttributes().withLabel ("dB");
     l.add (std::make_unique<AudioParameterFloat> (P (IDs::input), "Input", NormalisableRange<float> (-24, 24, 0.1f), 0, db));
     l.add (std::make_unique<AudioParameterFloat> (P (IDs::output), "Output", NormalisableRange<float> (-24, 24, 0.1f), 0, db));
@@ -169,6 +187,29 @@ std::vector<lt::presets::ParamPreset> factoryPresets()
         v[IDs::reverseFx] = a.revFx ? 1.0f : 0.0f;
         v[IDs::shimmer] = a.shimmer ? 1.0f : 0.0f;
         v[IDs::freeze] = 0.0f;
+
+        // a small FX CHAIN per sound family
+        using F = FxTypes;
+        static const std::vector<std::pair<int, float>> chains[] = {
+            { { F::chorus, 35 }, { F::tape, 30 } },                       // pad
+            { { F::chorus, 25 }, { F::eq, 30 } },                         // keys
+            { { F::delay, 30 }, { F::saturation, 30 } },                  // lead
+            { { F::spectralFreeze, 35 }, { F::phaser, 30 }, { F::filterLP, 25 } }, // fx
+            { { F::pingPong, 30 }, { F::chorus, 20 } },                   // pluck
+            { { F::saturation, 45 }, { F::filterLP, 30 } },               // bass
+            { { F::pingPong, 35 }, { F::tremolo, 25 } },                  // arp
+            { { F::stutter, 45 }, { F::bitcrusher, 35 }, { F::freqShifter, 25 } }, // glitch
+            { { F::vinyl, 55 }, { F::tapeWobble, 40 }, { F::bitcrusher, 20 } },    // lo-fi
+            { { F::formant, 35 }, { F::harmonizer, 25 } },                // vocal
+            { { F::filterLP, 40 }, { F::comb, 25 }, { F::distortion, 15 } },       // dark
+            { { F::stutter, 35 }, { F::reverseDelay, 35 }, { F::autoPan, 40 } },   // rhythmic fx
+        };
+        auto& chain = chains[r.arch];
+        for (int i = 0; i < 8; ++i)
+        {
+            v[IDs::fxSlot (i)] = i < (int) chain.size() ? (float) chain[(size_t) i].first : 0.0f;
+            v[IDs::fxAmt (i)] = i < (int) chain.size() ? chain[(size_t) i].second : 50.0f;
+        }
         out.push_back (p);
     }
     return out;

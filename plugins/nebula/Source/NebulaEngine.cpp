@@ -25,6 +25,7 @@ void NebulaEngine::prepare (double sampleRate, int maxBlockSize)
     gdLp.prepare (spec); gdLp.setType (juce::dsp::StateVariableTPTFilterType::lowpass);
     dirtLp.prepare (spec); dirtLp.setType (juce::dsp::StateVariableTPTFilterType::lowpass);
     reverb.setSampleRate (sr);
+    for (auto& f : fx) f.prepare (sr, block);
     mixS.reset (sr, 0.05);
     reset();
 }
@@ -286,6 +287,14 @@ void NebulaEngine::process (juce::AudioBuffer<float>& buffer, const NebulaSettin
         reverb.processStereo (verb.getWritePointer (0), verb.getWritePointer (1), n);
         wet.addFrom (0, 0, verb, 0, 0, n, s.space * 0.8f);
         wet.addFrom (1, 0, verb, 1, 0, n, s.space * 0.8f);
+    }
+
+    // FX CHAIN on the grains (before the dry / wet mix)
+    for (int k = 0; k < 8; ++k)
+    {
+        fx[(size_t) k].setType (s.fxTypes[(size_t) k]);
+        fx[(size_t) k].process (wet.getWritePointer (0), wet.getWritePointer (1), n, s.fxAmounts[(size_t) k], bpm,
+                                t.ppq, t.playing && t.hasPosition);
     }
 
     // 8) mix, 9) tape stop on the final sound

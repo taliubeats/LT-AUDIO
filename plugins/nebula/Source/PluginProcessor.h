@@ -17,6 +17,7 @@ public:
     juce::AudioProcessorValueTreeState state;
     lt::presets::ParamPresetLibrary presets { "NEBULA", "LT NEBULA", factoryPresets() };
     NebulaEngine engine;
+    Modulation mod;
     lt::licensing::LicenseManager license { lt::licensing::Products::nebula, "LT NEBULA" };
 
     juce::String presetName { "Stardust Keys" };
@@ -52,6 +53,8 @@ public:
 private:
     std::map<juce::String, std::atomic<float>*> p;
     float v (const juce::String& id) const { return p.at (id)->load(); }
+    float ev (const juce::String& id);   // value with modulation
+    std::map<juce::String, juce::RangedAudioParameter*> params;
     std::atomic<bool> usable { true };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Processor)

@@ -1,5 +1,6 @@
 // Tests for the LT NEBULA engine: grains sound, mix, freeze, pitch step, tape stop, stability.
 #include "NebulaEngine.h"
+#include "Modulation.h"
 
 using namespace nebula;
 
@@ -118,6 +119,40 @@ int main()
         bool ok = true;
         for (int i = 0; i < b.getNumSamples(); ++i) for (int c = 0; c < 2; ++c) { auto v = b.getSample (c, i); if (! std::isfinite (v) || std::abs (v) > 8) ok = false; }
         check (ok, "everything on at maximum stays stable");
+    }
+
+    for (int type = 1; type < FxTypes::count; ++type)
+    {
+        if (FxTypes::isEngineFx (type)) continue;
+        auto s = base; s.fxTypes[0] = type; s.fxAmounts[0] = 1.0f; s.texture = 0.8f;
+        auto ref = tone (sr, 2, 330); run (ref, base, sr);
+        auto b = tone (sr, 2, 330); run (b, s, sr);
+        bool ok = true; float diff = 0;
+        for (int i = 0; i < b.getNumSamples(); ++i)
+            for (int c = 0; c < 2; ++c)
+            {
+                auto x = b.getSample (c, i);
+                if (! std::isfinite (x) || std::abs (x) > 8) ok = false;
+                diff = juce::jmax (diff, std::abs (x - ref.getSample (c, i)));
+            }
+        check (ok && diff > 1.0e-3f, "FX " + FxTypes::names()[type] + " works and is stable");
+    }
+
+    {
+        Modulation m;
+        auto target = Modulation::targetIndex ("space");
+        m.addRoute (Modulation::mod1, target, 0.5f);
+        Modulation::Inputs in; in.steps = { 0, 1, 0, 1, 0, 1, 0, 1 }; in.mod1Beats = 1.0; in.playing = true; in.numSamples = 512; in.sampleRate = sr;
+        in.ppq = 0.1; m.advance (in); auto a = m.modulated (target, 0.2f);
+        in.ppq = 1.1; m.advance (in); auto b = m.modulated (target, 0.2f);
+        check (std::abs (a - 0.2f) < 1e-4f && std::abs (b - 0.7f) < 1e-4f, "MOD 1 moves a routed knob step by step");
+        m.removeRoute (Modulation::mod1, target);
+        m.advance (in);
+        check (std::abs (m.modulated (target, 0.2f) - 0.2f) < 1e-4f, "removing the route stops the modulation");
+        m.addRoute (Modulation::mod2, target, 1.0f);
+        auto saved = m.toVar();
+        Modulation m2; m2.fromVar (saved);
+        check (std::abs (m2.getDepth (Modulation::mod2, target) - 1.0f) < 1e-4f, "routes are saved with the project");
     }
 
     std::cout << (failures == 0 ? "All NEBULA tests passed." : juce::String (failures) + " test(s) failed.") << std::endl;

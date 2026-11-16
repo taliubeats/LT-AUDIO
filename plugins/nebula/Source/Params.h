@@ -3,6 +3,8 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <lt_dsp/lt_dsp.h>
 #include "NebulaEngine.h"
+#include "NebulaFx.h"
+#include "Modulation.h"
 
 namespace nebula
 {
@@ -58,6 +60,17 @@ namespace IDs
 
     /** step1 .. step8 */
     juce::String step (int i);
+    /** FX CHAIN: fxSlot1..8 (effect), fxAmt1..8 (amount) */
+    juce::String fxSlot (int i);
+    juce::String fxAmt (int i);
+    /** MOD 1 steps: mod1_1 .. mod1_8 */
+    juce::String mod1Step (int i);
+    inline constexpr const char* mod1Rate = "mod1Rate";
+    inline constexpr const char* mod1Swing = "mod1Swing";
+    inline constexpr const char* mod2Shape = "mod2Shape";
+    inline constexpr const char* mod2Rate = "mod2Rate";
+    inline constexpr const char* mod2Swing = "mod2Swing";
+    inline constexpr const char* rndRate = "rndRate";
 }
 
 struct Choices

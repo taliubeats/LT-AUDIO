@@ -2,6 +2,7 @@
 
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_dsp/juce_dsp.h>
+#include "NebulaFx.h"
 
 namespace nebula
 {
@@ -36,6 +37,10 @@ struct NebulaSettings
     // FX
     bool particles = false, grainCloud = false, reverseFx = false, shimmer = false;
     float input = 1.0f, output = 1.0f;
+
+    // FX CHAIN (8 slots, processed in order on the grains)
+    std::array<int, 8> fxTypes {};
+    std::array<float, 8> fxAmounts {};
 };
 
 struct Transport { bool playing = false, hasPosition = false; double ppq = 0, bpm = 120; };
@@ -113,6 +118,7 @@ private:
     juce::dsp::StateVariableTPTFilter<float> dirtLp;
     int crushCount = 0; float crushHold[2] {};
     juce::SmoothedValue<float> mixS;
+    std::array<FxUnit, 8> fx;
 
     std::atomic<int> grainsStarted { 0 }, activeGrains { 0 }, stepFlash { 0 }, stepIndexNow { 0 };
     std::atomic<float> tapeSpeedNow { 1.0f }, currentSemis { 0.0f }, wetLevel { 0.0f };

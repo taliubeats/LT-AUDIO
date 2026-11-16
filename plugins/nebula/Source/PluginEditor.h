@@ -2,6 +2,7 @@
 
 #include "PluginProcessor.h"
 #include "Views.h"
+#include "ModViews.h"
 
 namespace nebula
 {
@@ -40,6 +41,7 @@ private:
 };
 
 class Editor : public juce::AudioProcessorEditor,
+               public juce::DragAndDropContainer,
                private juce::Timer
 {
 public:
@@ -90,6 +92,13 @@ private:
     StepBars stepBars;
     TapeCurveView tapeCurve;
     juce::Slider gdMixSlider;
+    FxChainView fxChain;
+    ModStepsView mod1View;
+    ModCurveView mod2View;
+    juce::OwnedArray<ModChip> chips;
+    juce::TextButton mod1Random { "RANDOM" }, mod1Clear { "CLEAR" };
+    std::unique_ptr<ChoiceRow> mod1Rate, mod2Rate, rndRate;
+    void setupModulation (MacroKnob&, const char* id);
     std::unique_ptr<lt::ui::ActivationComponent> activation;
     std::unique_ptr<juce::AlertWindow> saveDialog;
 
