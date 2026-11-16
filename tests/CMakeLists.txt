@@ -16,3 +16,11 @@ target_sources(pulsar_test PRIVATE PulsarTest.cpp
 target_include_directories(pulsar_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/pulsar/Source)
 target_link_libraries(pulsar_test PRIVATE lt_dsp juce::juce_audio_basics juce::juce_dsp)
 lt_configure_target(pulsar_test)
+
+juce_add_console_app(void_test PRODUCT_NAME "Void Test")
+target_sources(void_test PRIVATE VoidTest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/void/Source/VoidEngine.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/void/Source/ReverbTypes.cpp)
+target_include_directories(void_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/void/Source)
+target_link_libraries(void_test PRIVATE juce::juce_audio_basics juce::juce_dsp juce::juce_graphics)
+lt_configure_target(void_test)

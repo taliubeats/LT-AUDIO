@@ -124,6 +124,13 @@ Diseño: `design/void/main-cloud.webp`, `all-types.webp`. Referencias de calidad
 - Animación: nebulosa girando en espiral hacia el agujero negro; destellos con cada golpe que se apagan como la cola;
   DECAY/SIZE/MOD/DAMPING modifican la animación; FREEZE la suspende girando.
 
+**Estado: hecho** (`plugins/void`). Motor: FDN de 8 líneas con retardos modulados (interpolación cúbica), difusión de entrada,
+ATTACK = "bloom" (entrada repartida en el tiempo), early reflections (HALL/ROOM/CHAMBER/GATED), damping alto/bajo dentro del tanque.
+Etapas por tipo: SHIMMER (+12 en la realimentación), SPRING (cadena allpass = chirrido), REVERSE (cola reproducida al revés por bloques),
+GATED (puerta: duración = DECAY × 0.08, máx. 1.2 s), VINTAGE (12 bit, ÷2), LO-FI (8 bit, ÷4, banda 250 Hz–3.8 kHz, siseo).
+PRE-DELAY SYNC: 1/64 … 1/4 (con tresillos y 1/8 con puntillo). 36 presets de fábrica (3 por tipo) + SAVE.
+El agujero negro es el knob de DECAY (arrastrar arriba/abajo). Cambiar de tipo no toca los knobs; elegir un preset sí.
+
 ## Licencias
 Diseño: `design/licensing/activation.webp`, `license-studio.webp`.
 

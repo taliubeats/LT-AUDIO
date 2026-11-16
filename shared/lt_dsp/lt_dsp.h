@@ -5,7 +5,7 @@
   vendor:             LT Audio
   version:            0.1.0
   name:               LT DSP
-  description:        Audio pieces shared by the LT plugins: Frequency Focus (band split + spectrum + window).
+  description:        Audio pieces shared by the LT plugins: Frequency Focus (band split + spectrum + window), parameter presets.
   license:            Proprietary
   minimumCppStandard: 17
 
@@ -24,3 +24,4 @@
 #include "dsp/FocusSplitter.h"
 #include "dsp/SpectrumAnalyser.h"
 #include "ui/FrequencyFocusView.h"
+#include "presets/ParamPresets.h"
