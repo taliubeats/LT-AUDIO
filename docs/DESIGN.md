@@ -203,7 +203,11 @@ AUDIO TRIGGER: cada golpe del sidechain reinicia la curva (sin sidechain, o si n
 - **MATCH REFERENCE:** cargas una canción de referencia, se separa la voz y se deducen: **tonalidad y escala**, **retune speed**,
   **humanize / flex**, **vibrato** y **formantes**. Se aplican a LT TUNE y **todo queda editable**, con un control de cuánto se copia.
 - Estética: familia espacial LT (negro/morado y modo claro celeste/amarillo), cristal casi invisible, partículas.
-- **Diseño aprobado:** `design/tune/main-dark.webp` (vista tipo afinador clásico, NO piano roll):
+- **Diseño FINAL aprobado (versión 2, la imagen se adjuntará al programar):** logo "LT~TUNE" (onda senoidal entre LT y TUNE),
+  VOICE y KEY & SCALE arriba en el centro, nota gigante fina con "#" en superíndice y resplandor morado detrás, medidor de cents,
+  EDIT NOTES con orbes, panel derecho con RETUNE SPEED como planeta oscuro con anillo, 6 knobs, barra inferior DETUNE / MODE / IN-OUT
+  horizontales. Al programar quitar los corchetes de "[Tenor]" y "[A Minor]".
+- Versión 1 de referencia: `design/tune/main-dark.webp` (vista tipo afinador clásico, NO piano roll):
   VOICE, KEY & SCALE y preset arriba; nota detectada gigante + medidor de cents (-100…+100); EDIT NOTES con 12 notas
   como orbes/planetas (las de la escala encendidas, la que se canta destella); columna derecha con RETUNE SPEED (planeta
   con anillo, NATURAL↔ROBOT), HUMANIZE, FLEX TUNE, VIBRATO, FORMANT (+PRESERVE), TRANSPOSE, MIX; abajo DETUNE 440 Hz,
