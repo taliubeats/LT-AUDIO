@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   mac:
-    runs-on: macos-latest
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
 
@@ -81,6 +81,7 @@ jobs:
 
   release:
     needs: [mac, windows]
+    if: ${{ always() && (needs.mac.result == 'success' || needs.windows.result == 'success') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
