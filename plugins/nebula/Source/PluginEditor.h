@@ -3,6 +3,7 @@
 #include "PluginProcessor.h"
 #include "Views.h"
 #include "ModViews.h"
+#include "PresetBrowser.h"
 
 namespace nebula
 {
@@ -68,6 +69,7 @@ private:
     void applyTheme();
     void setAdvanced (bool);
     void showPresetMenu();
+    void openBrowser();
     void stepPreset (int);
     void savePreset();
     void showActivation (bool);
@@ -92,6 +94,7 @@ private:
     StepBars stepBars;
     TapeCurveView tapeCurve;
     juce::Slider gdMixSlider;
+    PresetBrowser browser;
     FxChainView fxChain;
     ModStepsView mod1View;
     ModCurveView mod2View;

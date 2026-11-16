@@ -116,7 +116,11 @@ arriba-abajo = reordenar, "+" añade). MODULATION: MOD 1 (8 pasos dibujables, RA
 SINE/TRIANGLE/SAW/SQUARE/SMOOTH RND, clic cambia la forma), ENV (sigue la entrada) y RND (sample & hold). Se asignan arrastrando
 el chip sobre cualquier knob (anillo de color = cantidad); clic derecho en el knob = cantidad (±10…100 %) o quitar. Hasta 16 rutas,
 se guardan con el proyecto.
-**Pendiente:** fase 3 = navegador de bancos (portadas, favoritos, búsqueda, importar/exportar).
+**Fase 3 hecha:** navegador de presets (clic en el nombre del preset): búsqueda, filtros ALL/AMBIENT/RHYTHMIC/GLITCH/DARK/LO-FI/VOCAL/
+★ FAVORITES, bancos con portada (LT COSMOS de fábrica, MY BANK y los que crees con + NEW BANK), CHANGE IMAGE (png/jpg, se recorta
+cuadrada), IMPORT (.ltbank o .ltpreset), EXPORT (.ltbank para compartir). Clic derecho en un banco o preset de usuario = borrar.
+SAVE guarda en el banco actual (LT COSMOS es de solo lectura → MY BANK). Carpeta: `LT Audio/Presets/LT NEBULA/`.
+**LT NEBULA completo.**
 
 ## 5. LT ORBIT — delay
 Diseño: `design/orbit/*`. Logo con la "O" como planeta con anillo.

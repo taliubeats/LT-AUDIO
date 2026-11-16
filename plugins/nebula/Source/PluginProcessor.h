@@ -4,6 +4,7 @@
 #include <lt_shared/lt_shared.h>
 #include <lt_dsp/lt_dsp.h>
 #include "Params.h"
+#include "Banks.h"
 
 namespace nebula
 {
@@ -20,10 +21,12 @@ public:
     Modulation mod;
     lt::licensing::LicenseManager license { lt::licensing::Products::nebula, "LT NEBULA" };
 
-    juce::String presetName { "Stardust Keys" };
+    BankLibrary banks { factoryPresets() };
+    juce::String presetName { "Stardust Keys" }, bankName { "LT COSMOS" };
     bool lightTheme = false, advanced = false;
     void applyPreset (const lt::presets::ParamPreset& preset) { preset.apply (state); presetName = preset.name; }
     bool isPresetModified();
+    const lt::presets::ParamPreset* findCurrent() const;
     void refreshLicense()                    { license.refresh(); usable = license.isUsable(); }
     std::function<void()> onStateRestored;
 

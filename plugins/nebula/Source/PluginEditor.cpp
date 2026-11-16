@@ -172,7 +172,7 @@ void Editor::setupModulation (MacroKnob& k, const char* id)
 
 Editor::Editor (Processor& pr)
     : AudioProcessorEditor (pr), proc (pr), stepBars (pr.state, pr.engine), tapeCurve (pr.state),
-      fxChain (pr.state), mod1View (pr.state, pr.mod), mod2View (pr.state, pr.mod)
+      browser (pr.banks), fxChain (pr.state), mod1View (pr.state, pr.mod), mod2View (pr.state, pr.mod)
 {
     palette = proc.lightTheme ? Palette::light() : Palette::dark();
     setLookAndFeel (&lnf);
@@ -184,7 +184,7 @@ Editor::Editor (Processor& pr)
     // ---- header (shared)
     prevButton.onClick = [this] { stepPreset (-1); };
     nextButton.onClick = [this] { stepPreset (1); };
-    presetButton.onClick = [this] { showPresetMenu(); };
+    presetButton.onClick = [this] { openBrowser(); };
     saveButton.onClick = [this] { savePreset(); };
     themeButton.onClick = [this] { proc.lightTheme = ! proc.lightTheme; applyTheme(); };
     simpleButton.onClick = [this] { setAdvanced (false); };
@@ -275,6 +275,25 @@ Editor::Editor (Processor& pr)
     miniGalaxy.framed = false;
     advanced.addAndMakeVisible (miniGalaxy);
 
+    // preset browser (banks, covers, search, favourites)
+    browser.palette = &palette;
+    browser.getCurrentPreset = [this] { return proc.presetName; };
+    browser.onLoad = [this] (const lt::presets::ParamPreset& preset, const juce::String& bank)
+    {
+        proc.applyPreset (preset);
+        proc.bankName = bank;
+        content.repaint();
+    };
+    browser.onClose = [this]
+    {
+        browser.setVisible (false);
+        for (auto* c : content.getChildren())
+            if (c != &browser && c != &background && c != activation.get() && c != &simple && c != &advanced) c->setVisible (true);
+        setAdvanced (proc.advanced);
+        licenseButton.setVisible (licenseButton.getButtonText().isNotEmpty());
+    };
+    content.addChildComponent (browser);
+
     proc.onStateRestored = [safe = juce::Component::SafePointer<Editor> (this)]
     {
         juce::MessageManager::callAsync ([safe] { if (safe != nullptr) { safe->applyTheme(); safe->setAdvanced (safe->proc.advanced); } });
@@ -302,6 +321,7 @@ Editor::Editor (Processor& pr)
         activation.reset();
         if (juce::SystemStats::getEnvironmentVariable ("LT_LIGHT", {}).isNotEmpty()) themeButton.triggerClick();
         if (juce::SystemStats::getEnvironmentVariable ("LT_ADVANCED", {}).isNotEmpty()) setAdvanced (true);
+        if (juce::SystemStats::getEnvironmentVariable ("LT_BROWSER", {}).isNotEmpty()) openBrowser();
         juce::Timer::callAfterDelay (500, [this]
         {
             proc.engine.prepare (48000.0, 512);
@@ -336,6 +356,14 @@ Editor::~Editor()
 {
     proc.onStateRestored = nullptr;
     setLookAndFeel (nullptr);
+}
+
+void Editor::openBrowser()
+{
+    // the browser floats over the nebula only
+    for (auto* c : content.getChildren())
+        if (c != &browser && c != &background && c != activation.get()) c->setVisible (false);
+    browser.show (proc.bankName);
 }
 
 void Editor::applyTheme()
@@ -483,6 +511,7 @@ void Editor::layout()
     mod2Rate->setBounds (40, 568, 200, 20);
     rndRate->setBounds (308, 356, 130, 20);
 
+    browser.setBounds (0, 0, baseWidth, baseHeight);
     if (activation) activation->setBounds (0, 0, baseWidth, baseHeight);
 }
 
@@ -493,11 +522,15 @@ void Editor::Page::paint (juce::Graphics& g)
     Glass::drawPanel (g, { 12.0f, 10.0f, (float) baseWidth - 24.0f, (float) baseHeight - 20.0f }, 14.0f, p, 0.25f);
     Logo::draw (g, { 400.0f, 24.0f, 300.0f, 44.0f }, Logo::specFor ("NEBULA"), p, juce::Justification::centred);
 
-    // bank cover (LT COSMOS)
+    // cover of the current bank
     auto cover = juce::Rectangle<float> (36.0f, 30.0f, 34.0f, 32.0f);
-    juce::ColourGradient cg (p.nebulaC, cover.getCentreX(), cover.getCentreY(), p.background, cover.getRight(), cover.getBottom(), true);
-    g.setGradientFill (cg);
-    g.fillRoundedRectangle (cover, 4.0f);
+    auto bi = juce::jmax (0, e.proc.banks.indexOfBank (e.proc.bankName));
+    {
+        juce::Graphics::ScopedSaveState ss (g);
+        juce::Path clip; clip.addRoundedRectangle (cover, 4.0f);
+        g.reduceClipRegion (clip);
+        g.drawImage (e.proc.banks.banks()[(size_t) bi].cover, cover, juce::RectanglePlacement::fillDestination);
+    }
     g.setColour (p.glassEdge);
     g.drawRoundedRectangle (cover, 4.0f, 1.0f);
 
@@ -601,20 +634,23 @@ void Editor::showPresetMenu()
 
 void Editor::stepPreset (int delta)
 {
-    proc.presets.rescan();
-    auto& all = proc.presets.all();
+    auto bi = juce::jmax (0, proc.banks.indexOfBank (proc.bankName));
+    auto& all = proc.banks.banks()[(size_t) bi].presets;
     if (all.empty()) return;
     auto n = (int) all.size();
-    auto i = proc.presets.indexOf (proc.presetName);
+    int i = -1;
+    for (int k = 0; k < n; ++k) if (all[(size_t) k].name == proc.presetName) i = k;
     i = ((i < 0 ? 0 : i + delta) % n + n) % n;
     proc.applyPreset (all[(size_t) i]);
+    proc.bankName = proc.banks.banks()[(size_t) bi].name;
 }
 
 void Editor::savePreset()
 {
-    auto ci = proc.presets.indexOf (proc.presetName);
-    auto suggested = ci >= 0 && ! proc.presets.all()[(size_t) ci].factory ? proc.presetName : juce::String();
-    saveDialog = std::make_unique<juce::AlertWindow> ("Save preset", "Name for your preset:", juce::MessageBoxIconType::NoIcon);
+    auto inUserBank = proc.banks.indexOfBank (proc.bankName) > 0;
+    auto suggested = inUserBank ? proc.presetName : juce::String();
+    saveDialog = std::make_unique<juce::AlertWindow> ("Save preset", "Name for your preset (saved in " + (inUserBank ? proc.bankName : juce::String ("MY BANK")) + "):",
+                                                      juce::MessageBoxIconType::NoIcon);
     saveDialog->setLookAndFeel (&lnf);
     saveDialog->addTextEditor ("name", suggested);
     saveDialog->addButton ("SAVE", 1, juce::KeyPress (juce::KeyPress::returnKey));
@@ -624,8 +660,13 @@ void Editor::savePreset()
         auto name = saveDialog->getTextEditorContents ("name").trim();
         saveDialog.reset();
         if (result != 1 || name.isEmpty()) return;
-        if (proc.presets.save (lt::presets::ParamPreset::capture (proc.state, name, "MY BANK")))
-            proc.presetName = name;
+        // saved into the bank you are in (LT COSMOS is read-only -> MY BANK)
+        auto bi = proc.banks.indexOfBank (proc.bankName);
+        if (bi <= 0) bi = 1;
+        auto bank = proc.banks.banks()[(size_t) bi].name;
+        auto* cur = proc.findCurrent();
+        auto preset = lt::presets::ParamPreset::capture (proc.state, name, cur != nullptr ? cur->group : juce::String ("MY"));
+        if (proc.banks.savePreset (bi, preset)) { proc.presetName = name; proc.bankName = bank; }
     }), false);
 }
 

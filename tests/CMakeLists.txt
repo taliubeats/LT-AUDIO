@@ -38,7 +38,7 @@ target_link_libraries(knock_test PRIVATE lt_dsp juce::juce_audio_basics juce::ju
 lt_configure_target(knock_test)
 
 juce_add_console_app(nebula_test PRODUCT_NAME "Nebula Test")
-target_sources(nebula_test PRIVATE NebulaTest.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/NebulaEngine.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/NebulaFx.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/Modulation.cpp)
+target_sources(nebula_test PRIVATE NebulaTest.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/NebulaEngine.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/NebulaFx.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/Modulation.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/Banks.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/Params.cpp)
 target_include_directories(nebula_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/nebula/Source)
-target_link_libraries(nebula_test PRIVATE juce::juce_audio_basics juce::juce_audio_processors juce::juce_dsp)
+target_link_libraries(nebula_test PRIVATE lt_dsp juce::juce_audio_basics juce::juce_audio_processors juce::juce_dsp)
 lt_configure_target(nebula_test)

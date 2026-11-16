@@ -23,6 +23,8 @@ target_sources(LTNebula PRIVATE
     Source/NebulaFx.cpp
     Source/Modulation.cpp
     Source/ModViews.cpp
+    Source/Banks.cpp
+    Source/PresetBrowser.cpp
     Source/Params.cpp)
 
 target_compile_definitions(LTNebula PUBLIC JUCE_VST3_CAN_REPLACE_VST2=0)

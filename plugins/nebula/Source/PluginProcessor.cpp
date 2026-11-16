@@ -26,10 +26,19 @@ float Processor::ev (const juce::String& id)
     return prm->convertFrom0to1 (mod.modulated (t, prm->convertTo0to1 (v (id))));
 }
 
+const lt::presets::ParamPreset* Processor::findCurrent() const
+{
+    auto bi = banks.indexOfBank (bankName);
+    if (bi < 0) return nullptr;
+    for (auto& pr : banks.banks()[(size_t) bi].presets)
+        if (pr.name == presetName) return &pr;
+    return nullptr;
+}
+
 bool Processor::isPresetModified()
 {
-    auto i = presets.indexOf (presetName);
-    return i < 0 || ! presets.all()[(size_t) i].matches (state);
+    auto* cur = findCurrent();
+    return cur == nullptr || ! cur->matches (state);
 }
 
 void Processor::setCurrentProgram (int i)
@@ -38,6 +47,7 @@ void Processor::setCurrentProgram (int i)
     if (juce::isPositiveAndBelow (i, (int) f.size()))
     {
         applyPreset (f[(size_t) i]);
+        bankName = "LT COSMOS";
         if (onStateRestored) onStateRestored();
     }
 }
@@ -136,6 +146,7 @@ void Processor::getStateInformation (juce::MemoryBlock& dest)
 {
     auto tree = state.copyState();
     tree.setProperty ("preset", presetName, nullptr);
+    tree.setProperty ("bank", bankName, nullptr);
     tree.setProperty ("light", lightTheme, nullptr);
     tree.setProperty ("advanced", advanced, nullptr);
     tree.setProperty ("mods", juce::JSON::toString (mod.toVar(), true), nullptr);
@@ -150,6 +161,7 @@ void Processor::setStateInformation (const void* data, int size)
     auto tree = juce::ValueTree::fromXml (*xml);
     state.replaceState (tree);
     presetName = tree.getProperty ("preset", "Stardust Keys").toString();
+    bankName = tree.getProperty ("bank", "LT COSMOS").toString();
     lightTheme = tree.getProperty ("light", false);
     advanced = tree.getProperty ("advanced", false);
     mod.fromVar (juce::JSON::parse (tree.getProperty ("mods").toString()));

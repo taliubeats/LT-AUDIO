@@ -1,6 +1,8 @@
 // Tests for the LT NEBULA engine: grains sound, mix, freeze, pitch step, tape stop, stability.
 #include "NebulaEngine.h"
 #include "Modulation.h"
+#include "Banks.h"
+#include "Params.h"
 
 using namespace nebula;
 
@@ -153,6 +155,31 @@ int main()
         auto saved = m.toVar();
         Modulation m2; m2.fromVar (saved);
         check (std::abs (m2.getDepth (Modulation::mod2, target) - 1.0f) < 1e-4f, "routes are saved with the project");
+    }
+
+    {
+        juce::ScopedJuceInitialiser_GUI gui;
+        BankLibrary lib (factoryPresets());
+        check (lib.banks().size() >= 2 && lib.banks()[0].presets.size() == 50, "LT COSMOS has 50 presets, MY BANK exists");
+        auto name = "LT Test Bank " + juce::String (juce::Random::getSystemRandom().nextInt (100000));
+        auto bi = lib.createBank (name);
+        check (bi >= 2, "+ NEW BANK creates a bank");
+        auto preset = lib.banks()[0].presets[3];
+        preset.name = "My Swell";
+        check (lib.savePreset (bi, preset) && lib.banks()[(size_t) lib.indexOfBank (name)].presets.size() == 1, "SAVE puts the preset in that bank");
+        lib.toggleFavourite (name, "My Swell");
+        check (lib.isFavourite (name, "My Swell"), "presets can be starred");
+        auto file = juce::File::getSpecialLocation (juce::File::tempDirectory).getChildFile (name + ".ltbank");
+        bi = lib.indexOfBank (name);
+        check (lib.exportBank (bi, file) && file.getSize() > 100, "EXPORT writes a .ltbank file");
+        lib.deleteBank (bi);
+        check (lib.indexOfBank (name) < 0, "a bank can be deleted");
+        auto back = lib.importFile (file);
+        check (back >= 2 && lib.banks()[(size_t) back].presets.size() == 1 && lib.banks()[(size_t) back].presets[0].name == "My Swell",
+               "IMPORT brings the bank back with its presets");
+        lib.toggleFavourite (name, "My Swell");
+        lib.deleteBank (lib.indexOfBank (name));
+        file.deleteFile();
     }
 
     std::cout << (failures == 0 ? "All NEBULA tests passed." : juce::String (failures) + " test(s) failed.") << std::endl;
