@@ -157,3 +157,13 @@ Diseño: `design/licensing/activation.webp`, `license-studio.webp`.
     Pedir al usuario ejemplos (nombre de canción o archivo + BPM/tonalidad/acordes reales) y ajustar `plugins/type-beats/Source/Analysis.cpp`.
 - **LT License Studio** entregado. Clave pública instalada en `shared/license_public_key.txt`.
 - **Siguiente:** LT PULSAR.
+
+### LT PULSAR — correcciones pedidas tras la primera prueba (para más adelante)
+
+1. **Quitar los números de rate (1/16, 1/8, 1/4, 1/2, 1/1) de dentro del visor de la curva.** Tapan los puntos de arriba:
+   al subir un punto al máximo cae encima de esos números y ya no se puede arrastrar. Dejar solo el selector de abajo a la derecha.
+2. **Entrada de SIDECHAIN externa.** Añadir un bus de sidechain al plugin para poder elegir otra pista (p. ej. el kick)
+   como fuente (en Ableton se elige en el selector "Sidechain" del propio dispositivo).
+   - El visor debe mostrar la **onda de la señal de sidechain** (el kick) en lugar de la señal procesada (el bajo),
+     para ver dónde baja el volumen y dónde vuelve.
+   - Opcional: modo "AUDIO TRIGGER" — que el ducking se dispare con los golpes de la señal de sidechain.
