@@ -175,6 +175,7 @@ namespace
 void FrequencyFocusView::FocusLookAndFeel::drawButtonBackground (juce::Graphics& g, juce::Button& b, const juce::Colour&,
                                                                  bool hover, bool down)
 {
+    if (glass) { GlassLookAndFeel::drawButtonBackground (g, b, juce::Colour(), hover, down); return; }
     auto l = lookFor (getPalette());
     auto r = b.getLocalBounds().toFloat().reduced (2.0f);
     auto on = b.getToggleState();
@@ -226,8 +227,16 @@ void FrequencyFocusView::FocusLookAndFeel::drawButtonBackground (juce::Graphics&
     }
 }
 
-void FrequencyFocusView::FocusLookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& b, bool hover, bool)
+void FrequencyFocusView::FocusLookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& b, bool hover, bool down)
 {
+    if (glass)
+    {
+        g.setFont (Fonts::regular (juce::jmin (19.0f, (float) b.getHeight() * 0.45f)));
+        g.setColour (b.getToggleState() && ! getPalette().isLight ? juce::Colours::white : getPalette().text.withMultipliedAlpha (b.getToggleState() ? 1.0f : 0.75f));
+        g.drawFittedText (b.getButtonText(), b.getLocalBounds(), juce::Justification::centred, 1);
+        juce::ignoreUnused (hover, down);
+        return;
+    }
     auto l = lookFor (getPalette());
     auto on = b.getToggleState();
     g.setFont (Fonts::regular (juce::jmin (20.0f, (float) b.getHeight() * 0.42f)));
@@ -236,8 +245,23 @@ void FrequencyFocusView::FocusLookAndFeel::drawButtonText (juce::Graphics& g, ju
     g.drawFittedText (b.getButtonText(), b.getLocalBounds(), juce::Justification::centred, 1);
 }
 
-void FrequencyFocusView::FocusLookAndFeel::drawToggleButton (juce::Graphics& g, juce::ToggleButton& b, bool hover, bool)
+void FrequencyFocusView::FocusLookAndFeel::drawToggleButton (juce::Graphics& g, juce::ToggleButton& b, bool hover, bool down)
 {
+    if (glass)
+    {
+        // glass switch, with a larger label than the default one
+        auto r = b.getLocalBounds().toFloat();
+        auto sw = juce::Rectangle<float> (r.getRight() - 52.0f, r.getCentreY() - 12.0f, 50.0f, 24.0f);
+        auto on = b.getToggleState();
+        Glass::drawPill (g, sw, getPalette(), on, hover, down);
+        auto knob = on ? sw.removeFromRight (24.0f).reduced (3.5f) : sw.removeFromLeft (24.0f).reduced (3.5f);
+        g.setColour (on ? getPalette().accentText : getPalette().nebulaC.withAlpha (0.85f));
+        g.fillEllipse (knob);
+        g.setColour (getPalette().text);
+        g.setFont (Fonts::regular (18.0f));
+        g.drawText (b.getButtonText(), r.withRight (r.getRight() - 62.0f), juce::Justification::centredRight);
+        return;
+    }
     auto l = lookFor (getPalette());
     auto r = b.getLocalBounds().toFloat();
     auto sw = juce::Rectangle<float> (r.getRight() - 58.0f, r.getCentreY() - 15.0f, 56.0f, 30.0f);
@@ -281,9 +305,36 @@ void FrequencyFocusView::FocusLookAndFeel::drawToggleButton (juce::Graphics& g, 
 
 // ------------------------------------------------------------------ layout
 
+void FrequencyFocusView::setGlassStyle (bool g)
+{
+    glassStyle = g;
+    lnf.glass = g;
+    backButton.setButtonText (g ? juce::String (juce::CharPointer_UTF8 ("\xc3\x97")) : juce::String ("BACK"));
+    setOpaque (! g);
+    resized();
+    repaint();
+}
+
 void FrequencyFocusView::resized()
 {
     auto b = getLocalBounds().toFloat();
+    if (glassStyle)
+    {
+        panel = { 42.0f, 30.0f, b.getWidth() - 84.0f, b.getHeight() - 60.0f };
+        graph = { panel.getX() + 36.0f, panel.getY() + 100.0f, panel.getWidth() - 72.0f, 318.0f };
+        bottomBar = { panel.getX(), panel.getBottom() - 74.0f, panel.getWidth(), 60.0f };
+        backButton.setBounds ((int) panel.getRight() - 68, (int) panel.getY() + 18, 40, 40);
+        auto row = bottomBar.toNearestInt().reduced (30, 10);
+        for (auto& bb : bandButtons)
+        {
+            bb.setBounds (row.removeFromLeft (108));
+            row.removeFromLeft (16);
+        }
+        soloButton.setBounds (row.removeFromRight (112));
+        row.removeFromRight (14);
+        invertButton.setBounds (row.removeFromRight (128));
+        return;
+    }
     backButton.setBounds ((int) b.getRight() - 30 - 110, 26, 110, 38);
 
     panel = { 10.0f, 92.0f, b.getWidth() - 20.0f, b.getHeight() - 92.0f - 90.0f };
@@ -406,8 +457,132 @@ void FrequencyFocusView::drawHandle (juce::Graphics& g, float x, const juce::Str
     g.drawText (hzText (hz), label.translated (0, 23.0f), juce::Justification::centred);
 }
 
+void FrequencyFocusView::paintGlass (juce::Graphics& g)
+{
+    auto& p = palette;
+    auto glow = p.isLight ? juce::Colours::white : p.accent;
+
+    // dim the plugin behind, then one big glass panel with a glowing edge
+    g.fillAll ((p.isLight ? juce::Colour (0xff1c6f99) : juce::Colours::black).withAlpha (0.35f));
+    Glass::drawRectGlow (g, panel, 16.0f, glow, 12.0f, 0.6f);
+    Glass::drawPanel (g, panel, 16.0f, p, 1.3f);
+    g.setColour (glow.withAlpha (0.7f));
+    g.drawRoundedRectangle (panel.reduced (0.5f), 16.0f, 1.4f);
+
+    auto titleArea = juce::Rectangle<float> (panel.getX() + 40.0f, panel.getY() + 22.0f, 700.0f, 44.0f);
+    auto used = Logo::draw (g, titleArea, Logo::specFor (productId), p, juce::Justification::centredLeft);
+    g.setColour (p.isLight ? juce::Colours::white : p.value);
+    Fonts::drawSpaced (g, "FREQUENCY FOCUS", titleArea.withTrimmedLeft (used + 28.0f), Fonts::light (33.0f), 0.03f,
+                       juce::Justification::centredLeft);
+
+    auto f = current();
+    auto lo = f.isActive() ? f.lowHz : dsp::FocusSettings::minHz;
+    auto hi = f.isActive() ? f.highHz : dsp::FocusSettings::maxHz;
+    auto xl = xForHz (lo), xh = xForHz (hi);
+    juce::Array<juce::Rectangle<float>> focus;
+    if (! f.isActive() || ! f.invert)
+        focus.add ({ xl, graph.getY(), xh - xl, graph.getHeight() });
+    else
+    {
+        focus.add ({ graph.getX(), graph.getY(), xl - graph.getX(), graph.getHeight() });
+        focus.add ({ xh, graph.getY(), graph.getRight() - xh, graph.getHeight() });
+    }
+
+    auto energy = analyser.getLevel (std::sqrt (lo * hi));
+    auto spectrum = spectrumPath (graph);
+
+    // nebula clouds behind the band (they bleed softly past the edges)
+    {
+        juce::Graphics::ScopedSaveState ss (g);
+        g.reduceClipRegion (graph.expanded (0, 10.0f).toNearestInt());
+        for (auto& r : focus) drawGlowBlobs (g, r, energy);
+    }
+
+    // the spectrum: soft grey fill with a thin light outline
+    g.setColour ((p.isLight ? juce::Colours::white : juce::Colour (0xff9a96a8)).withAlpha (p.isLight ? 0.35f : 0.28f));
+    g.fillPath (spectrum);
+    juce::Path outline;
+    {
+        // the outline is the top edge of the fill path
+        juce::PathFlatteningIterator it (spectrum);
+        bool first = true;
+        while (it.next())
+        {
+            if (it.y2 >= graph.getBottom() - 0.5f && (it.x2 <= graph.getX() + 0.5f || it.x2 >= graph.getRight() - 0.5f)) continue;
+            if (first) { outline.startNewSubPath (it.x1, it.y1); first = false; }
+            outline.lineTo (it.x2, it.y2);
+        }
+    }
+    g.setColour ((p.isLight ? juce::Colours::white : juce::Colour (0xffc9c5d6)).withAlpha (0.55f));
+    g.strokePath (outline, juce::PathStrokeType (1.2f));
+
+    for (auto& r : focus)
+    {
+        juce::Graphics::ScopedSaveState ss (g);
+        g.reduceClipRegion (r.toNearestInt());
+        g.setColour ((p.isLight ? juce::Colours::white : p.nebulaC).withAlpha (0.18f));
+        g.fillPath (spectrum);
+        Glass::drawGlow (g, { r.getCentreX(), graph.getBottom() - graph.getHeight() * 0.3f }, juce::jmax (60.0f, r.getWidth()) * 0.6f,
+                         juce::Colours::white, 0.08f + 0.12f * energy);
+        g.setColour (juce::Colours::white.withAlpha (0.95f));
+        g.strokePath (outline, juce::PathStrokeType (2.0f));
+        for (auto& s : sparks)
+        {
+            auto x = graph.getX() + s.x * graph.getWidth();
+            auto y = graph.getY() + s.y * graph.getHeight();
+            g.setColour ((s.white ? juce::Colours::white : p.nebulaC).withAlpha (juce::jlimit (0.0f, 1.0f, s.life) * 0.9f));
+            g.fillEllipse (x - s.size * 0.5f, y - s.size * 0.5f, s.size, s.size);
+        }
+    }
+
+    // frequency labels
+    g.setFont (Fonts::regular (17.0f));
+    g.setColour (p.text);
+    for (auto [hz, text] : std::initializer_list<std::pair<float, const char*>> {
+             { 20.0f, "20" }, { 50.0f, "50" }, { 100.0f, "100" }, { 200.0f, "200" }, { 500.0f, "500" }, { 1000.0f, "1k" },
+             { 2000.0f, "2k" }, { 5000.0f, "5k" }, { 10000.0f, "10k" }, { 20000.0f, "20k Hz" } })
+    {
+        auto x = xForHz (hz);
+        auto area = juce::Rectangle<float> (x - 30.0f, graph.getBottom() + 14.0f, 60.0f, 22.0f);
+        if (hz >= 20000.0f) area = juce::Rectangle<float> (x - 50.0f, area.getY(), 90.0f, 22.0f);
+        g.drawText (text, area, juce::Justification::centred);
+    }
+
+    // thin handles with a dot on top; labels beside them
+    auto handle = [&] (float x, const juce::String& title, float hz, bool hot, bool labelLeft)
+    {
+        auto top = graph.getY() - 6.0f;
+        if (hot) Glass::drawRectGlow (g, { x - 2.0f, top, 4.0f, graph.getBottom() - top }, 2.0f, glow, 8.0f, 0.9f);
+        g.setColour (juce::Colours::white.withAlpha (hot ? 0.95f : 0.65f));
+        g.fillRoundedRectangle (x - 2.0f, top + 8.0f, 4.0f, graph.getBottom() - top - 8.0f, 2.0f);
+        g.fillEllipse (x - 3.5f, top - 3.5f, 7.0f, 7.0f);
+        auto area = labelLeft ? juce::Rectangle<float> (x - 150.0f, graph.getY() + 4.0f, 138.0f, 24.0f)
+                              : juce::Rectangle<float> (x + 12.0f, graph.getY() + 4.0f, 138.0f, 24.0f);
+        auto just = labelLeft ? juce::Justification::centredRight : juce::Justification::centredLeft;
+        g.setColour (p.text);
+        g.setFont (Fonts::regular (17.0f));
+        g.drawText (title, area, just);
+        g.setColour (p.value);
+        g.drawText (hzText (hz), area.translated (0, 25.0f), just);
+    };
+
+    if (f.isActive() || hover != Drag::none || dragging != Drag::none)
+    {
+        handle (xl, "LOW CUT", lo, hover == Drag::low || dragging == Drag::low || dragging == Drag::both, true);
+        handle (xh, "HIGH CUT", hi, hover == Drag::high || dragging == Drag::high || dragging == Drag::both, false);
+    }
+    else
+    {
+        g.setColour (p.textDim);
+        g.setFont (Fonts::regular (15.0f));
+        g.drawText ("FULL: the effect works on the whole sound. Drag from the edges or pick LOW / MID / HIGH.",
+                    graph.withHeight (30.0f).translated (0, -34.0f), juce::Justification::centred);
+    }
+}
+
 void FrequencyFocusView::paint (juce::Graphics& g)
 {
+    if (glassStyle) { paintGlass (g); return; }
     auto l = lookFor (palette);
     auto bounds = getLocalBounds().toFloat();
 

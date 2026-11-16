@@ -21,7 +21,7 @@ public:
 
     juce::String presetName { "Default" };
     bool lightTheme = false;
-    void applyPreset (const lt::presets::ParamPreset& p) { p.apply (state); presetName = p.name; }
+    void applyPreset (const lt::presets::ParamPreset& preset) { preset.apply (state); presetName = preset.name; }
     bool isPresetModified();
     void refreshLicense()                    { license.refresh(); usable = license.isUsable(); }
     std::function<void()> onStateRestored;

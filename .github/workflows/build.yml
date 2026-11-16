@@ -31,6 +31,7 @@ jobs:
           ./build/tests/pulsar_test_artefacts/Release/pulsar_test
           ./build/tests/void_test_artefacts/Release/void_test
           ./build/tests/orbit_test_artefacts/Release/orbit_test
+          ./build/tests/knock_test_artefacts/Release/knock_test
 
       - name: Package
         run: |
@@ -70,6 +71,7 @@ jobs:
           .\build\tests\pulsar_test_artefacts\Release\pulsar_test.exe
           .\build\tests\void_test_artefacts\Release\void_test.exe
           .\build\tests\orbit_test_artefacts\Release\orbit_test.exe
+          .\build\tests\knock_test_artefacts\Release\knock_test.exe
 
       - name: Package
         shell: pwsh

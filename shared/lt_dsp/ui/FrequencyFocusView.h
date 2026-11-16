@@ -18,6 +18,10 @@ public:
 
     std::function<void()> onClose;
 
+    /** Glass style (LT KNOCK): a translucent panel over the plugin's nebula, outlined spectrum, pill buttons.
+        Default is the "hardware" style of LT PULSAR. */
+    void setGlassStyle (bool);
+
     void setPalette (const Palette&);
 
     void paint (juce::Graphics&) override;
@@ -43,6 +47,8 @@ private:
     juce::Path spectrumPath (juce::Rectangle<float> graph) const;
     void drawGlowBlobs (juce::Graphics&, juce::Rectangle<float> region, float energy);
     void drawHandle (juce::Graphics&, float x, const juce::String& title, float hz, bool hot);
+    void paintGlass (juce::Graphics&);
+    bool glassStyle = false;
 
     juce::AudioProcessorValueTreeState& state;
     dsp::SpectrumAnalyser& analyser;
@@ -52,6 +58,7 @@ private:
     /** Rectangular "hardware" buttons and switches like the reference design. */
     struct FocusLookAndFeel : public GlassLookAndFeel
     {
+        bool glass = false;
         void drawButtonBackground (juce::Graphics&, juce::Button&, const juce::Colour&, bool hover, bool down) override;
         void drawButtonText (juce::Graphics&, juce::TextButton&, bool hover, bool down) override;
         void drawToggleButton (juce::Graphics&, juce::ToggleButton&, bool hover, bool down) override;

@@ -30,3 +30,9 @@ target_sources(orbit_test PRIVATE OrbitTest.cpp ${CMAKE_SOURCE_DIR}/plugins/orbi
 target_include_directories(orbit_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/orbit/Source)
 target_link_libraries(orbit_test PRIVATE juce::juce_audio_basics juce::juce_dsp)
 lt_configure_target(orbit_test)
+
+juce_add_console_app(knock_test PRODUCT_NAME "Knock Test")
+target_sources(knock_test PRIVATE KnockTest.cpp ${CMAKE_SOURCE_DIR}/plugins/knock/Source/KnockEngine.cpp)
+target_include_directories(knock_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/knock/Source)
+target_link_libraries(knock_test PRIVATE lt_dsp juce::juce_audio_basics juce::juce_dsp)
+lt_configure_target(knock_test)

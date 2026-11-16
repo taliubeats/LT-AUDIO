@@ -81,6 +81,12 @@ Diseño: `design/knock/*`. Logo con la "O" como órbita.
 - **INPUT** y **OUTPUT** + medidores IN/OUT. Modo **DRUMS | MELODY**. Presets + SAVE. Botón **EQ**.
 - Un solo panel de cristal casi invisible, sin cajas.
 
+**Estado: hecho** (`plugins/knock`). Cadena: INPUT → Frequency Focus → TONE → FX → SPACE → KNOCK (dry/wet) → OUTPUT, sin latencia.
+PUNCH = transient shaper; GLUE = compresor de bus; STUTTER repite la última porción sincronizada (1/16 en DRUMS, 1/8 en MELODY);
+FILTER bipolar (izquierda LP, derecha HP, doble clic = OFF); REVERSE = reverb invertida; DELAY con tiempo 1/16…1/2.
+MELODY suaviza PUNCH, alarga GLUE y agranda la reverb. CHAOS respeta los candados de TONE/FX/SPACE y se puede deshacer (↶).
+La ventana EQ usa el estilo cristal de `design/knock/eq-*.webp` (FrequencyFocusView::setGlassStyle). 13 presets de fábrica.
+
 ## 4. LT NEBULA — granular (alternativa simple a Portal)
 Diseño: `design/nebula/*`.
 
