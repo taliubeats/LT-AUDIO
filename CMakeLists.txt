@@ -80,6 +80,7 @@ if(LT_BUILD_PLUGINS)
     add_subdirectory(plugins/void)
     add_subdirectory(plugins/orbit)
     add_subdirectory(plugins/knock)
+    add_subdirectory(plugins/nebula)
 endif()
 
 if(LT_BUILD_STUDIO)

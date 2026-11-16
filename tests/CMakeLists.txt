@@ -36,3 +36,9 @@ target_sources(knock_test PRIVATE KnockTest.cpp ${CMAKE_SOURCE_DIR}/plugins/knoc
 target_include_directories(knock_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/knock/Source)
 target_link_libraries(knock_test PRIVATE lt_dsp juce::juce_audio_basics juce::juce_dsp)
 lt_configure_target(knock_test)
+
+juce_add_console_app(nebula_test PRODUCT_NAME "Nebula Test")
+target_sources(nebula_test PRIVATE NebulaTest.cpp ${CMAKE_SOURCE_DIR}/plugins/nebula/Source/NebulaEngine.cpp)
+target_include_directories(nebula_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/nebula/Source)
+target_link_libraries(nebula_test PRIVATE juce::juce_audio_basics juce::juce_dsp)
+lt_configure_target(nebula_test)

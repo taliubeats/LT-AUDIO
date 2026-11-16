@@ -107,6 +107,13 @@ Diseño: `design/nebula/*`.
 - Animación: la galaxia gira siempre; reacciona a audio, MOTION (velocidad), TEXTURE (densidad), SPACE (expansión),
   DIRT (chispeo), PITCH STEP (destello), TAPE STOP (se frena), FREEZE (congelada).
 
+**Estado: fase 1 hecha** (`plugins/nebula`): motor granular (búfer de 8 s, hasta 96 granos), PITCH STEP (simple y 8 pasos con
+GLIDE/CHANCE/SCALE LOCK), TAPE STOP (AUTO/MANUAL/MIDI, LENGTH/CURVE/START/CHANCE/POSITION), GRAIN DELAY, FREEZE, PARTICLES,
+GRAIN CLOUD, REVERSE, SHIMMER, macros MOTION/TEXTURE/PITCH/SPACE/DIRT/MIX, pantalla SIMPLE completa, ADVANCED con GRAIN ENGINE,
+GRAIN DELAY, PITCH STEP, TAPE STOP y medidores. Banco LT COSMOS: 50 presets con etiquetas.
+**Pendiente:** fase 2 = MODULATION (MOD 1/2, LFO, envelope, random, asignar arrastrando) y FX CHAIN de 8 ranuras con los 24+ efectos;
+fase 3 = navegador de bancos (portadas, favoritos, búsqueda, importar/exportar).
+
 ## 5. LT ORBIT — delay
 Diseño: `design/orbit/*`. Logo con la "O" como planeta con anillo.
 
