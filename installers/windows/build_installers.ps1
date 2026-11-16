@@ -12,7 +12,7 @@ foreach ($p in $plugins) {
   & $iscc "/DAppName=$name" "/DSourceDir=$($p.FullName)" "/DOutName=$out" "/DAppVersion=$Version" "$here\plugin.iss"
   if ($LASTEXITCODE -ne 0) { throw "ISCC failed for $name" }
 }
-if ($plugins.Count -gt 1) {
+if ($plugins.Count -ge 1) {
   & $iscc "/DAppName=LT AUDIO - All plugins" "/DSourceDir=$root\pkg\VST3" "/DOutName=LT-AUDIO-All-Plugins-Installer-windows" "/DAppVersion=$Version" "/DAll=1" "$here\plugin.iss"
   if ($LASTEXITCODE -ne 0) { throw "ISCC failed for all plugins" }
 }

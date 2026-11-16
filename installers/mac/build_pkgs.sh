@@ -53,7 +53,7 @@ for vst in "$SRC"/VST3/*.vst3; do
   finish "$NAME" "$OUT/$(echo "$NAME" | tr ' ' '-')-Installer-mac.pkg" "$COMP"
 done
 
-if [ ${#ALL[@]} -gt 1 ]; then
+if [ ${#ALL[@]} -ge 1 ]; then
   finish "LT AUDIO - All plugins" "$OUT/LT-AUDIO-All-Plugins-Installer-mac.pkg" "${ALL[@]}"
 fi
 
