@@ -269,7 +269,7 @@ void Editor::layout()
     bigKnob (size, 166, 472);
     syncButton.setBounds (226, 370, 50, 22);
 
-    hole.setBounds (550 - 300, 262 - 262, 600, 524);   // big, so the glow is never clipped (only the ring is clickable)
+    hole.setBounds (550 - 360, 0, 720, 590);   // centre y = 295; big, so the glow is never clipped (only the ring is clickable)
 
     auto small = [] (VoidKnob& k, int cx, int cy) { k.setBounds (cx - 34, cy - 24, 68, 66); };
     small (highFreq, 859, 168); small (lowFreq, 943, 168);
@@ -328,9 +328,9 @@ void Editor::Decor::paint (juce::Graphics& g)
     g.setColour (p.value);
     g.setFont (Fonts::light (42.0f));
     g.drawText (frozen ? juce::String ("FROZEN") : juce::String (decay, decay < 10.0f ? 1 : 0) + " s",
-                juce::Rectangle<float> (400.0f, 470.0f, 300.0f, 50.0f), juce::Justification::centred);
+                juce::Rectangle<float> (400.0f, 486.0f, 300.0f, 50.0f), juce::Justification::centred);
     g.setColour (p.text);
-    Fonts::drawSpaced (g, "DECAY", { 450.0f, 520.0f, 200.0f, 22.0f }, Fonts::regular (17.0f), 0.08f, juce::Justification::centred);
+    Fonts::drawSpaced (g, "DECAY", { 450.0f, 534.0f, 200.0f, 22.0f }, Fonts::regular (17.0f), 0.08f, juce::Justification::centred);
 
     g.setColour (p.text);
     g.setFont (Fonts::regular (12.5f));

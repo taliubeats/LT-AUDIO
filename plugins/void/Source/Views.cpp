@@ -94,7 +94,7 @@ BlackHoleView::BlackHoleView()
 
 juce::Rectangle<float> BlackHoleView::getRingArea() const
 {
-    auto s = juce::jmin (364.0f, juce::jmin ((float) getWidth(), (float) getHeight()));
+    auto s = 352.0f;
     return juce::Rectangle<float> (s, s).withCentre (getLocalBounds().toFloat().getCentre());
 }
 
@@ -155,7 +155,7 @@ void BlackHoleView::paint (juce::Graphics& g)
     auto highlight = p.isLight ? juce::Colour (0xfffff6c8) : p.nebulaC;
     auto bright = 0.75f + 0.35f * st.brightness + 0.45f * flash + 0.2f * freezeGlow;
 
-    Glass::drawGlow (g, c, diskR * 1.2f, glowCol, 0.30f + 0.2f * flash);
+    Glass::drawGlow (g, c, diskR * 1.05f, glowCol, 0.30f + 0.2f * flash);
 
     auto drawLayer = [&] (const juce::Image& img, float rot, float scale, juce::Colour col, float alpha)
     {

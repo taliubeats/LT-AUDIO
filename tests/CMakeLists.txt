@@ -24,3 +24,9 @@ target_sources(void_test PRIVATE VoidTest.cpp
 target_include_directories(void_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/void/Source)
 target_link_libraries(void_test PRIVATE juce::juce_audio_basics juce::juce_dsp juce::juce_graphics)
 lt_configure_target(void_test)
+
+juce_add_console_app(orbit_test PRODUCT_NAME "Orbit Test")
+target_sources(orbit_test PRIVATE OrbitTest.cpp ${CMAKE_SOURCE_DIR}/plugins/orbit/Source/OrbitEngine.cpp)
+target_include_directories(orbit_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/orbit/Source)
+target_link_libraries(orbit_test PRIVATE juce::juce_audio_basics juce::juce_dsp)
+lt_configure_target(orbit_test)

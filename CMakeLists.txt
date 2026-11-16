@@ -78,6 +78,7 @@ if(LT_BUILD_PLUGINS)
     add_subdirectory(plugins/type-beats)
     add_subdirectory(plugins/pulsar)
     add_subdirectory(plugins/void)
+    add_subdirectory(plugins/orbit)
 endif()
 
 if(LT_BUILD_STUDIO)

@@ -110,6 +110,11 @@ Diseño: `design/orbit/*`. Logo con la "O" como planeta con anillo.
 - Visual: planeta = sonido original; cada eco = satélite orbitando en anillos cada vez más lejanos/tenues.
   FEEDBACK = más anillos, TIME = velocidad, PING-PONG = rebote lateral, REVERSE = hacia dentro, FREEZE = órbitas infinitas.
 
+**Estado: hecho** (`plugins/orbit`). Una línea estéreo (hasta 6 s) con interpolación cúbica; color en la realimentación según el modo:
+TAPE (wow/flutter, saturación, ~7 kHz, deslizamiento de tono al cambiar TIME), ANALOG (BBD oscuro ~3.8 kHz, ruido), PING-PONG (L↔R),
+REVERSE (ecos al revés por bloques), SHIMMER (+12), LO-FI (8 bit, banda 300 Hz–3.2 kHz), DUB (banda estrecha, saturación, feedback hasta 105 %).
+TIME: SYNC 1/64…1/1 o MS 1–2000; NORMAL/DOTTED/TRIPLET. 17 presets de fábrica.
+
 ## 6. LT VOID — reverb de alta gama
 Diseño: `design/void/main-cloud.webp`, `all-types.webp`. Referencias de calidad: reverbs vintage/algorítmicas de gama alta.
 

@@ -30,6 +30,7 @@ jobs:
           ./build/tests/typebeats_analysis_test_artefacts/Release/typebeats_analysis_test
           ./build/tests/pulsar_test_artefacts/Release/pulsar_test
           ./build/tests/void_test_artefacts/Release/void_test
+          ./build/tests/orbit_test_artefacts/Release/orbit_test
 
       - name: Package
         run: |
@@ -68,6 +69,7 @@ jobs:
           .\build\tests\lt_tests_artefacts\Release\lt_tests.exe
           .\build\tests\pulsar_test_artefacts\Release\pulsar_test.exe
           .\build\tests\void_test_artefacts\Release\void_test.exe
+          .\build\tests\orbit_test_artefacts\Release\orbit_test.exe
 
       - name: Package
         shell: pwsh
