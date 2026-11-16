@@ -10,6 +10,7 @@ Familia de plugins de audio **LT** (VST3 / AU) para Mac y Windows.
 | LT NEBULA | Granular |
 | LT ORBIT | Delay |
 | LT VOID | Reverb |
+| LT TUNE | Afinador vocal en tiempo real (+ MATCH REFERENCE) |
 | LT LICENSE STUDIO | App de Mac para generar licencias |
 
 Todo el diseño y las decisiones: [`docs/DESIGN.md`](docs/DESIGN.md). Imágenes de referencia: [`design/`](design/).

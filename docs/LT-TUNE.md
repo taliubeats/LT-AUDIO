@@ -1,5 +1,7 @@
 # LT TUNE — especificación para empezar a programarlo
 
+> **Estado: v1 implementada.** Ver `docs/DESIGN.md` → LT TUNE (decisiones, latencias, cómo funciona MATCH REFERENCE).
+
 Afinador vocal propio de la familia LT ("Auto-Tune" es marca de Antares: no usar ese nombre).
 Leer también `docs/DESIGN.md` (reglas generales, licencias, temas) y seguir la estructura de los otros plugins (`plugins/*`).
 

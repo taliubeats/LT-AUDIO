@@ -33,6 +33,7 @@ jobs:
           ./build/tests/orbit_test_artefacts/Release/orbit_test
           ./build/tests/knock_test_artefacts/Release/knock_test
           ./build/tests/nebula_test_artefacts/Release/nebula_test
+          ./build/tests/tune_test_artefacts/Release/tune_test
 
       - name: Package
         run: |
@@ -74,6 +75,7 @@ jobs:
           .\build\tests\orbit_test_artefacts\Release\orbit_test.exe
           .\build\tests\knock_test_artefacts\Release\knock_test.exe
           .\build\tests\nebula_test_artefacts\Release\nebula_test.exe
+          .\build\tests\tune_test_artefacts\Release\tune_test.exe
 
       - name: Package
         shell: pwsh

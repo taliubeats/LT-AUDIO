@@ -355,6 +355,64 @@ PRODUCTS.append(dict(
           "Para un \"pitch\" tipo type beat: PITCH STEP <b>+12</b>, EVERY <b>1/2</b>, con SHIMMER activado."],
 ))
 
+# ------------------------------------------------------------------ TUNE
+PRODUCTS.append(dict(
+    file="LT-TUNE-Manual.pdf", title="LT TUNE", subtitle="Afinador vocal en tiempo real",
+    image="design/tune/main-dark-final.webp", image2="design/tune/match-dark.webp",
+    image2_caption="Ventana MATCH REFERENCE (imagen de referencia del diseño)",
+    intro="LT TUNE corrige la afinación de la voz en tiempo real: lleva cada nota a la nota más cercana de la escala elegida. "
+          "Va de una corrección invisible (NATURAL) al efecto robótico (ROBOT). Mantiene el timbre de la voz al cambiar el tono "
+          "(<b>preservación de formantes</b>, sin efecto \"ardilla\") y tiene un modo de <b>baja latencia</b> para grabar con el efecto puesto. "
+          "Con <b>MATCH REFERENCE</b> cargas una canción y LT TUNE deduce cómo está afinada su voz para copiarlo.",
+    sections=[("Cómo empezar", [
+        "<b>1.</b> Pon LT TUNE en la pista de voz (mono o estéreo).",
+        "<b>2.</b> Elige tu <b>VOICE</b> (el rango de tu voz) y la <b>KEY &amp; SCALE</b> de la canción (puedes sacarla con LT TYPE BEATS).",
+        "<b>3.</b> Canta: la nota grande muestra la nota a la que te afina y el medidor cuánto te desvías (en cents). "
+        "Brilla cuando estás afinado y tiembla cuando te sales.",
+        "<b>4.</b> Ajusta <b>RETUNE SPEED</b>: hacia ROBOT (0–10 ms) efecto duro; hacia NATURAL (60–200 ms) corrección suave.",
+    ]), ("MATCH REFERENCE", [
+        "Pulsa <b>MATCH REF</b> y suelta una canción (WAV, AIFF, FLAC, MP3) o haz clic para buscarla. Con un <b>stem de voz (acapella)</b> "
+        "el resultado es mucho más exacto; con la canción completa se usa la voz del centro de la mezcla.",
+        "LT TUNE detecta KEY &amp; SCALE, RETUNE SPEED (HARD/SOFT), HUMANIZE, FLEX TUNE, VIBRATO (Kept/Flattened) y FORMANT. "
+        "Cada uno tiene su interruptor: apaga los que no quieras copiar.",
+        "<b>MATCH AMOUNT</b> decide cuánto se copia (100 % = igual que la referencia, 50 % = a medio camino entre tu ajuste y el detectado). "
+        "<b>APPLY TO LT TUNE</b> aplica y todo queda editable (y se puede deshacer con el botón DESHACER).",
+        "Es una estimación a partir de la curva de afinación de la voz: úsala como punto de partida y ajusta a oído.",
+    ])],
+    params=[
+        ("VOICE", "Soprano, Alto, Tenor, Baritone, Bass", "Rango en el que se busca la nota. Elige el de tu voz: un rango más agudo detecta mejor y tiene menos latencia."),
+        ("KEY &amp; SCALE", "C…B · Chromatic, Major, Minor, Harmonic Minor, Pentatonic Major/Minor, Blues, Custom",
+         "Las notas permitidas. Chromatic = las 12 notas. Al cambiarla, EDIT NOTES vuelve a la escala."),
+        ("EDIT NOTES", "12 orbes", "Encendidas = notas a las que se puede afinar. Clic = activar/desactivar (el nombre de la escala muestra *). "
+         "La nota que cantas destella. La flecha circular = volver a la escala."),
+        ("RETUNE SPEED", "0 – 400 ms (12 ms)", "Velocidad de la corrección. Arrastra hacia arriba/derecha para ROBOT. Destella en cada nota corregida. Doble clic = valor por defecto."),
+        ("HUMANIZE", "0 – 100 (20)", "Las notas largas se corrigen más despacio para que suenen naturales; las cortas siguen rápidas."),
+        ("FLEX TUNE", "0 – 100 (15)", "Solo corrige cuando estás cerca de la nota; los adornos y deslizamientos grandes quedan naturales. 0 = corrige siempre."),
+        ("VIBRATO", "-100 a +100 (0)", "Negativo aplana tu vibrato natural; positivo añade un vibrato de 5,5 Hz."),
+        ("FORMANT", "-12 a +12 st (0) + PRESERVE", "Cambia el timbre (más grave/oscuro o más agudo/infantil) sin cambiar la nota. "
+         "<b>PRESERVE</b> encendido mantiene el timbre al corregir o transponer; apagado, el timbre sube y baja con el tono."),
+        ("TRANSPOSE", "-12 a +12 st (0)", "Sube o baja toda la voz en semitonos (después de afinar)."),
+        ("MIX", "0 – 100 % (100 %)", "Mezcla entre la voz original y la afinada."),
+        ("DETUNE", "430 – 450 Hz (440)", "Frecuencia de referencia del La (A4). Úsala si el beat está afinado a 432 Hz u otra referencia."),
+        ("MODE", "LOW LATENCY | HQ", "LOW LATENCY para grabar con el efecto puesto. HQ analiza con una ventana mayor: más estable en notas graves, algo más de latencia."),
+        ("IN / OUT", "Medidores", "Nivel de entrada y salida."),
+        ("Botones redondos", "Abajo a la derecha", "Deshacer/rehacer, ajustes (latencia, licencia, carpeta de presets, reset) y bypass."),
+        ("Presets / SAVE / THEME", "Arriba", "16 presets de fábrica (Pop Vocal, Hard Tune, Trap Robot, R&amp;B Smooth, Deep Voice, Chipmunk…), "
+         "flechas ‹ › para recorrerlos, SAVE para los tuyos, THEME para modo claro/oscuro. Los presets no cambian VOICE ni MODE."),
+    ],
+    extra_tables=[("Latencia (a 48 kHz)", [
+        ("Soprano", "LOW LATENCY ≈ 14 ms", "HQ ≈ 20 ms"),
+        ("Alto", "LOW LATENCY ≈ 18 ms", "HQ ≈ 26 ms"),
+        ("Tenor", "LOW LATENCY ≈ 23 ms", "HQ ≈ 33 ms"),
+        ("Baritone", "LOW LATENCY ≈ 28 ms", "HQ ≈ 40 ms"),
+        ("Bass", "LOW LATENCY ≈ 36 ms", "HQ ≈ 53 ms"),
+    ])],
+    tips=["Efecto trap/robot: <b>Trap Robot</b> (RETUNE 0, HUMANIZE 0, VIBRATO -100) y la escala exacta del beat. Si suena \"a notas equivocadas\", revisa la KEY.",
+          "Corrección invisible para baladas: RETUNE 80–150 ms, HUMANIZE 60, FLEX TUNE 40–60.",
+          "Ableton compensa la latencia al reproducir. Para grabar con el efecto, usa LOW LATENCY y una VOICE lo más aguda que te funcione.",
+          "Al cantar una nota que no está en la escala, LT TUNE la lleva a la nota permitida más cercana. Apaga notas en EDIT NOTES para forzar una melodía."],
+))
+
 # ------------------------------------------------------------------ LICENSE STUDIO
 PRODUCTS.append(dict(
     file="LT-License-Studio-Manual.pdf", title="LT LICENSE STUDIO", subtitle="Generador de licencias (solo para tu Mac)",
@@ -416,7 +474,7 @@ def build(prod):
         st.append(table(rows, widths))
     if prod.get("image2") and (im2 := img(prod["image2"], doc.width)) is not None:
         st.append(Spacer(1, 6 * mm)); st.append(im2)
-        st.append(Paragraph("Modo ADVANCED (imagen de referencia del diseño)", S["cap"]))
+        st.append(Paragraph(prod.get("image2_caption", "Modo ADVANCED (imagen de referencia del diseño)"), S["cap"]))
 
     st.append(Paragraph("Consejos", S["h2"]))
     for t in prod["tips"]:

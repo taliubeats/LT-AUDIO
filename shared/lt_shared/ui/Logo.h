@@ -6,7 +6,7 @@ namespace lt::ui
 /** "LT" + product name logotypes and the small product icons (see design/brand). */
 struct Logo
 {
-    enum class Glyph { none, orbitRing, planetRing, blackHole, star, galaxy, key };
+    enum class Glyph { none, orbitRing, planetRing, blackHole, star, galaxy, key, sine };   // sine: LT~TUNE wave between LT and the name
 
     struct Spec
     {

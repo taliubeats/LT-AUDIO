@@ -196,7 +196,7 @@ AUDIO TRIGGER: cada golpe del sidechain reinicia la curva (sin sidechain, o si n
 
 ---
 
-## LT TUNE — afinador vocal propio (próximo plugin)
+## LT TUNE — afinador vocal propio
 (Idea acordada en otra sesión; "Auto-Tune" es marca de Antares, por eso el nombre LT TUNE.)
 
 - Corrección de afinación en tiempo real con **baja latencia** (para grabar con el efecto puesto) y **preservación de formantes** (sin efecto "ardilla").
@@ -214,7 +214,27 @@ AUDIO TRIGGER: cada golpe del sidechain reinicia la curva (sin sidechain, o si n
   MODE LOW LATENCY | HQ, medidores IN/OUT, deshacer/rehacer, ajustes, bypass.
   Correcciones al programar: quitar el texto "planet-style"; volver a poner SAVE, MATCH REFERENCE y THEME en la barra
   superior; en EDIT NOTES encender exactamente las notas de la escala elegida (A minor = A B C D E F G).
-- Pendiente: ventana MATCH REFERENCE y versión clara; luego implementación.
+- Diseño final: `design/tune/main-dark-final.webp`, `main-light.webp`, `match-dark.webp`, `match-light.webp`.
+
+**Estado: v1 hecha** (`plugins/tune`, tests en `tests/TuneTest.cpp`, manual `docs/manuals/LT-TUNE-Manual.pdf`).
+- Motor: detección YIN sobre la mezcla mono (búsqueda decimada a ~11 kHz + refinamiento a resolución completa, <2 cents en tonos estables),
+  corrección con histéresis entre notas, RETUNE (glide de 1 polo), HUMANIZE (notas sostenidas más lentas), FLEX TUNE (zona de corrección
+  alrededor de la nota; 0 = corrige siempre), VIBRATO (aplana el natural o añade 5,5 Hz), DETUNE como referencia del La.
+- Desplazamiento: TD-PSOLA con granos de 2 periodos (Hann) re-espaciados al nuevo periodo, normalizado por la suma de ventanas.
+  PRESERVE = formantes fijos; FORMANT lee los granos a otra velocidad (±12 st). Las partes sin voz pasan sin cambio de tono.
+- Latencia fija por VOICE y MODE (reportada al host): LOW LATENCY = 2 periodos de la nota más grave del rango, HQ = 3 (ventana de análisis doble).
+  48 kHz: Soprano 14/20 ms, Alto 18/26, Tenor 23/33, Baritone 28/40, Bass 36/53 (LL/HQ). Cambiar VOICE o MODE re-prepara el motor.
+- VOICE: Soprano 175–1200 Hz, Alto 130–900, Tenor 100–700, Baritone 80–520, Bass 60–400 (en la imagen ponía "Alto/Tenor": quedó "Alto").
+- EDIT NOTES: parámetros `note0..note11` + `edited`. Con una escala normal se usan sus notas; al tocar un orbe se copia la escala, se cambia esa
+  nota y el nombre muestra "*"; ↺ vuelve a la escala. "Custom" usa directamente los orbes.
+- MATCH REFERENCE: aislamiento simple (canal centro + banda 120 Hz–4,5 kHz; con un stem de voz es exacto), curva de pitch cada 5 ms,
+  tonalidad por perfiles de Krumhansl, RETUNE por el tiempo de transición 15→85 % entre notas conectadas (HARD ≤ 25 ms),
+  FLEX por la desviación media respecto al semitono, HUMANIZE por la deriva de las notas largas frente a las cortas,
+  VIBRATO por autocorrelación 4–8 Hz en notas largas (Kept/Flattened), FORMANT por centroide espectral (±2 st, orientativo).
+  MATCH AMOUNT mezcla el valor actual con el detectado; KEY & SCALE se copia entero. Pendiente/futuro: separación de voz con modelo (ONNX).
+- Presets: 16 de fábrica (POP, NATURAL, HARD, R&B, MELODIC, FX); no tocan VOICE, MODE ni las notas. ‹ › recorren los presets.
+- Deshacer/rehacer (UndoManager del estado), ajustes (latencia, licencia, carpeta de presets, reset), bypass (también el del host).
+- Vista previa para desarrollo: `LT_EDITOR_SNAPSHOT=/x.png [LT_LIGHT=1] [LT_MATCH_FILE=/cancion.wav]` en la app Standalone.
 
 ## Igualador por referencia (proyecto futuro, sin nombre aún)
 Modos **Máster / Voz / Beat**. Cada parámetro (EQ, compresión, brillo, de-esser, saturación, punch, LUFS, estéreo…) con su knob y on/off.

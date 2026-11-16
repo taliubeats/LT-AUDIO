@@ -12,6 +12,7 @@ namespace Products
     inline constexpr const char* nebula    = "NEBULA";
     inline constexpr const char* orbit     = "ORBIT";
     inline constexpr const char* voidVerb  = "VOID";
+    inline constexpr const char* tune      = "TUNE";
     inline constexpr const char* all       = "ALL";
 }
 
