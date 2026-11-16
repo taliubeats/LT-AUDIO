@@ -98,3 +98,7 @@ jobs:
         run: |
           gh release view latest >/dev/null 2>&1 || gh release create latest --title "LT AUDIO - latest build" --notes "Automatic build of the main branch." --prerelease
           gh release upload latest dist/* --clobber
+          # remove files from older builds that are no longer produced
+          for asset in $(gh release view latest --json assets -q '.assets[].name'); do
+            [ -f "dist/$asset" ] || gh release delete-asset latest "$asset" -y
+          done
