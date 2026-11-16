@@ -193,3 +193,18 @@ AUDIO TRIGGER: cada golpe del sidechain reinicia la curva (sin sidechain, o si n
    - El visor debe mostrar la **onda de la señal de sidechain** (el kick) en lugar de la señal procesada (el bajo),
      para ver dónde baja el volumen y dónde vuelve.
    - Opcional: modo "AUDIO TRIGGER" — que el ducking se dispare con los golpes de la señal de sidechain.
+
+---
+
+## LT TUNE — afinador vocal propio (próximo plugin)
+(Idea acordada en otra sesión; "Auto-Tune" es marca de Antares, por eso el nombre LT TUNE.)
+
+- Corrección de afinación en tiempo real con **baja latencia** (para grabar con el efecto puesto) y **preservación de formantes** (sin efecto "ardilla").
+- **MATCH REFERENCE:** cargas una canción de referencia, se separa la voz y se deducen: **tonalidad y escala**, **retune speed**,
+  **humanize / flex**, **vibrato** y **formantes**. Se aplican a LT TUNE y **todo queda editable**, con un control de cuánto se copia.
+- Estética: familia espacial LT (negro/morado y modo claro celeste/amarillo), cristal casi invisible, partículas.
+- Pendiente: diseño (prompts entregados), luego implementación.
+
+## Igualador por referencia (proyecto futuro, sin nombre aún)
+Modos **Máster / Voz / Beat**. Cada parámetro (EQ, compresión, brillo, de-esser, saturación, punch, LUFS, estéreo…) con su knob y on/off.
+Opcional: analizar también la pista propia para compensar mic/sala. Medir el balance voz/beat de la referencia.
