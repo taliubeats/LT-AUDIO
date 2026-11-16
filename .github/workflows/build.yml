@@ -28,6 +28,7 @@ jobs:
         run: |
           ./build/tests/lt_tests_artefacts/Release/lt_tests
           ./build/tests/typebeats_analysis_test_artefacts/Release/typebeats_analysis_test
+          ./build/tests/pulsar_test_artefacts/Release/pulsar_test
 
       - name: Package
         run: |
@@ -61,8 +62,10 @@ jobs:
       - name: Build
         run: cmake --build build --config Release -j 4
 
-      - name: Test licensing
-        run: .\build\tests\lt_tests_artefacts\Release\lt_tests.exe
+      - name: Test licensing and PULSAR
+        run: |
+          .\build\tests\lt_tests_artefacts\Release\lt_tests.exe
+          .\build\tests\pulsar_test_artefacts\Release\pulsar_test.exe
 
       - name: Package
         shell: pwsh

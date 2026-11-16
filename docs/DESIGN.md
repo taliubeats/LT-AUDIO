@@ -58,6 +58,16 @@ Diseño: `design/pulsar/*`. **Solo cambio de nombre** respecto al diseño LTDUCK
   Offbeat 1/8, Gate 1/16, Half Time 1/2, Subtle Glue. **SAVE** para presets de usuario.
 - Botón **EQ** → ventana Frequency Focus.
 
+**Estado: hecho** (`plugins/pulsar`, Frequency Focus en `shared/lt_dsp` para reutilizar en KNOCK).
+- MIX 0 % = sin efecto, 100 % = la curva completa. Con el transporte parado sigue latiendo al BPM del host ("free run").
+- Curva: arrastrar puntos; doble clic añade/borra; arrastrar una línea la curva; SHIFT + arrastrar la mueve en el tiempo;
+  clic derecho: voltear, invertir, quitar desplazamiento, línea recta.
+- 8 formas: Pump, S-Fall, Linear, Fade, Ramp, Arc, Drop, Cut. "Offbeat 1/8" = curva Pump a 1/4 desplazada medio tiempo.
+- MIDI TRIGGER: cada nota MIDI reinicia la curva; tras un ciclo se queda en el valor final.
+- Frequency Focus: LOW 30–150 Hz, MID 150–2500 Hz, HIGH 2.5–20 kHz; arrastrar los bordes = CUSTOM; arrastrar el centro mueve la banda;
+  doble clic = FULL. Crossovers Linkwitz-Riley (sin latencia, suma plana).
+- Presets de usuario: `LT Audio/Presets/LT PULSAR/*.ltpreset` (JSON). Si la prueba de 10 días termina sin licencia, el audio pasa sin procesar.
+
 ## 3. LT KNOCK — procesador de drums y melodías
 Diseño: `design/knock/*`. Logo con la "O" como órbita.
 

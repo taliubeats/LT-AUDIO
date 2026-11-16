@@ -19,3 +19,9 @@ LT License Studio: `LT-License-Studio-Installer-mac.pkg` (se instala en Aplicaci
 2. Si aparece "Windows protegió su PC": **Más información → Ejecutar de todas formas**.
 3. **Siguiente → Instalar**. Se instala en `C:\Program Files\Common Files\VST3`.
 4. En Ableton: *Options → Preferences → Plug-Ins →* **Rescan**.
+
+## LT PULSAR: MIDI TRIGGER en Ableton
+
+1. Pon LT PULSAR en la pista que quieres "bombear" y activa **MIDI TRIGGER**.
+2. Crea una pista MIDI con las notas del bombo (o cualquier ritmo).
+3. En esa pista MIDI: **MIDI To** → la pista con LT PULSAR → **LT PULSAR**.

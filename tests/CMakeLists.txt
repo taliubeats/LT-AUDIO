@@ -7,3 +7,12 @@ target_sources(typebeats_analysis_test PRIVATE AnalysisTest.cpp ${CMAKE_SOURCE_D
 target_include_directories(typebeats_analysis_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/type-beats/Source)
 target_link_libraries(typebeats_analysis_test PRIVATE juce::juce_audio_basics juce::juce_audio_formats juce::juce_dsp)
 lt_configure_target(typebeats_analysis_test)
+
+juce_add_console_app(pulsar_test PRODUCT_NAME "Pulsar Test")
+target_sources(pulsar_test PRIVATE PulsarTest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/pulsar/Source/Curve.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/pulsar/Source/Presets.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/pulsar/Source/DuckEngine.cpp)
+target_include_directories(pulsar_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/pulsar/Source)
+target_link_libraries(pulsar_test PRIVATE lt_dsp juce::juce_audio_basics juce::juce_dsp)
+lt_configure_target(pulsar_test)

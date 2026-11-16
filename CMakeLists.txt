@@ -49,6 +49,9 @@ juce_add_module(shared/lt_shared)
 target_include_directories(lt_shared INTERFACE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(lt_shared INTERFACE lt_monocypher lt_fonts)
 
+# Audio pieces shared by the plugins (Frequency Focus)
+juce_add_module(shared/lt_dsp)
+
 # Common settings for every LT target
 function(lt_configure_target target)
     target_compile_definitions(${target} PRIVATE
@@ -73,6 +76,7 @@ endif()
 
 if(LT_BUILD_PLUGINS)
     add_subdirectory(plugins/type-beats)
+    add_subdirectory(plugins/pulsar)
 endif()
 
 if(LT_BUILD_STUDIO)
