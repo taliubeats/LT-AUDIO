@@ -15,7 +15,7 @@ namespace
 
     float hash2 (int x, int y, int seed)
     {
-        auto h = (juce::uint32) (x * 374761393 + y * 668265263 + seed * 1442695041);
+        auto h = (juce::uint32) x * 374761393u + (juce::uint32) y * 668265263u + (juce::uint32) seed * 1442695041u;
         h = (h ^ (h >> 13)) * 1274126177u;
         h ^= h >> 16;
         return (float) (h & 0xffffff) / (float) 0xffffff;
