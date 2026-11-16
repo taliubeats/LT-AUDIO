@@ -7,7 +7,7 @@ $here = $PSScriptRoot
 $root = Resolve-Path "$here\..\.."
 $plugins = Get-ChildItem -Path "$root\pkg\VST3" -Directory -Filter *.vst3
 foreach ($p in $plugins) {
-  $name = $p.BaseName
+  $name = $p.Name -replace '\.vst3$', ''
   $out = ($name -replace ' ', '-') + "-Installer-windows"
   & $iscc "/DAppName=$name" "/DSourceDir=$($p.FullName)" "/DOutName=$out" "/DAppVersion=$Version" "$here\plugin.iss"
   if ($LASTEXITCODE -ne 0) { throw "ISCC failed for $name" }
