@@ -81,7 +81,11 @@ Editor::Editor (Processor& p)
         auto idx = juce::roundToInt (v);
         for (int i = 0; i < Rates::count; ++i)
             rateButtons[i].setToggleState (i == idx, juce::dontSendNotification);
+        rateTabs.setRate (idx);
     });
+    rateTabs.palette = &palette;
+    rateTabs.onChange = [this] (int r) { rateAttachment->setValueAsCompleteGesture ((float) r); };
+    page.addAndMakeVisible (rateTabs);
     for (int i = 0; i < Rates::count; ++i)
     {
         rateButtons[i].setButtonText (Rates::names()[i]);
@@ -118,6 +122,9 @@ Editor::Editor (Processor& p)
     {
         activation.reset();
         if (juce::SystemStats::getEnvironmentVariable ("LT_LIGHT", {}).isNotEmpty()) themeButton.triggerClick();
+        auto presetName = juce::SystemStats::getEnvironmentVariable ("LT_PRESET", {});
+        if (presetName.isNotEmpty() && proc.presets.indexOf (presetName) >= 0)
+            proc.applyPreset (proc.presets.all()[(size_t) proc.presets.indexOf (presetName)]);
         if (juce::SystemStats::getEnvironmentVariable ("LT_SHOW_EQ", {}).isNotEmpty())
         {
             if (auto* b = proc.state.getParameter (lt::dsp::FocusParams::band)) b->setValueNotifyingHost (b->convertTo0to1 (1.0f));
@@ -269,6 +276,7 @@ void Editor::layout()
     wavePanel = { 16, 380, baseWidth - 32, 150 };
     curveView.setBounds (wavePanel.reduced (14, 10));
     waveToggle.setBounds (wavePanel.getRight() - 14 - 100, wavePanel.getY() + 18, 92, 30);
+    rateTabs.setBounds (wavePanel.getX() + 20, wavePanel.getY() + 16, 200, 24);
 
     bottomBar = { 16, 540, baseWidth - 32, 70 };
     auto row = bottomBar.reduced (14, 8);

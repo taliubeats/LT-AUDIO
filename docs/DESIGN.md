@@ -54,7 +54,7 @@ Diseño: `design/pulsar/*`. **Solo cambio de nombre** respecto al diseño LTDUCK
 - Visualizador con la **onda de audio real** pasando (original tenue detrás, procesada delante) + botón **WAVE** on/off.
 - **Curva editable**: arrastrar puntos y desplazar (SHIFT) izquierda/derecha. 8 formas predefinidas.
 - **MIDI TRIGGER**: el ducking se dispara con notas MIDI.
-- **Presets** de fábrica: Classic Pump 1/4, Soft Duck 1/4, Hard Cut 1/4, Short Duck, Long Release, Double Pump 1/8,
+- **Presets** de fábrica: Smooth S 1/4 (curva de referencia del usuario: abajo, subida en S, arriba), Classic Pump 1/4, Soft Duck 1/4, Hard Cut 1/4, Short Duck, Long Release, Double Pump 1/8,
   Offbeat 1/8, Gate 1/16, Half Time 1/2, Subtle Glue. **SAVE** para presets de usuario.
 - Botón **EQ** → ventana Frequency Focus.
 
@@ -62,6 +62,7 @@ Diseño: `design/pulsar/*`. **Solo cambio de nombre** respecto al diseño LTDUCK
 - MIX 0 % = sin efecto, 100 % = la curva completa. Con el transporte parado sigue latiendo al BPM del host ("free run").
 - Curva: arrastrar puntos; doble clic añade/borra; arrastrar una línea la curva; SHIFT + arrastrar la mueve en el tiempo;
   clic derecho: voltear, invertir, quitar desplazamiento, línea recta.
+- Visualizador estilo osciloscopio (referencia del usuario): onda real como línea, curva blanca gruesa, pestañas 1/16…1/1 arriba a la izquierda.
 - 8 formas: Pump, S-Fall, Linear, Fade, Ramp, Arc, Drop, Cut. "Offbeat 1/8" = curva Pump a 1/4 desplazada medio tiempo.
 - MIDI TRIGGER: cada nota MIDI reinicia la curva; tras un ciclo se queda en el valor final.
 - Frequency Focus: LOW 30–150 Hz, MID 150–2500 Hz, HIGH 2.5–20 kHz; arrastrar los bordes = CUSTOM; arrastrar el centro mueve la banda;

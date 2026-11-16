@@ -128,10 +128,15 @@ void DuckEngine::processChunk (juce::AudioBuffer<float>& buffer, int start, int 
         lastPhase = phase;
         phases[(size_t) i] = (float) phase;
 
-        float peak = 0.0f;
+        float peak = 0.0f, sum = 0.0f;
         for (int c = 0; c < chans; ++c)
-            peak = juce::jmax (peak, std::abs (buffer.getSample (c, start + i)));
+        {
+            auto v = buffer.getSample (c, start + i);
+            peak = juce::jmax (peak, std::abs (v));
+            sum += v;
+        }
         inAbs[(size_t) i] = peak;
+        inMono[(size_t) i] = sum / (float) juce::jmax (1, chans);
     }
 
     // 2) split off the part we work on (all of it when Frequency Focus is FULL)
@@ -155,10 +160,10 @@ void DuckEngine::processChunk (juce::AudioBuffer<float>& buffer, int start, int 
     // 4) what the visualiser shows
     for (int i = 0; i < n; ++i)
     {
-        float peak = 0.0f;
+        float sum = 0.0f;
         for (int c = 0; c < chans; ++c)
-            peak = juce::jmax (peak, std::abs (io.getSample (c, i)));
-        recordDisplay (phases[(size_t) i], inAbs[(size_t) i], peak);
+            sum += io.getSample (c, i);
+        recordDisplay (phases[(size_t) i], inMono[(size_t) i], sum / (float) juce::jmax (1, chans));
         levelFollower = juce::jmax (inAbs[(size_t) i], levelFollower * 0.99995f);
     }
 
@@ -180,8 +185,8 @@ void DuckEngine::recordDisplay (float phase, float in, float out) noexcept
         currentBin = bin;
         binIn = binOut = 0.0f;
     }
-    binIn = juce::jmax (binIn, in);
-    binOut = juce::jmax (binOut, out);
+    if (std::abs (in) > std::abs (binIn)) binIn = in;
+    if (std::abs (out) > std::abs (binOut)) binOut = out;
 }
 
 } // namespace pulsar

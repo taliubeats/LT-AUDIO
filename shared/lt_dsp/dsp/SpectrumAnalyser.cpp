@@ -79,7 +79,7 @@ float SpectrumAnalyser::getLevel (float hz) const noexcept
     auto frac = juce::jlimit (0.0f, 1.0f, binF - (float) b);
 
     // at high frequencies one pixel covers many bins: take the max of the neighbourhood
-    auto width = juce::jmax (1, (int) (binF * 0.03f));
+    auto width = juce::jmax (1, (int) (binF * 0.008f));
     auto level = 0.0f;
     for (int i = juce::jmax (0, b - width / 2); i <= juce::jmin (numBins - 1, b + width / 2); ++i)
         level = juce::jmax (level, levels[(size_t) i]);

@@ -81,6 +81,25 @@ private:
     Curve dragStartCurve;
 };
 
+// ------------------------------------------------------------------ rate tabs inside the visualiser
+
+/** Small "1/16 1/8 1/4 1/2 1/1" tabs in the top-left corner of the visualiser (selected = underlined). */
+class RateTabs : public juce::Component
+{
+public:
+    RateTabs();
+    const Palette* palette = nullptr;
+    std::function<void (int rate)> onChange;
+    void setRate (int);
+    void paint (juce::Graphics&) override;
+    void mouseUp (const juce::MouseEvent&) override;
+
+private:
+    juce::Rectangle<float> tabArea (int) const;
+    int rateForTab (int) const noexcept;
+    int rate = Rates::quarter;
+};
+
 // ------------------------------------------------------------------ shape buttons
 
 class ShapeButton : public juce::Button

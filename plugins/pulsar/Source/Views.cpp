@@ -11,8 +11,9 @@ namespace
     constexpr float startAngle = juce::MathConstants<float>::pi * 1.25f;
     constexpr float endAngle = juce::MathConstants<float>::pi * 2.75f;
 
-    juce::Colour waveColour (const Palette& p)  { return p.isLight ? p.value : p.accent.brighter (0.15f); }
-    juce::Colour curveColour (const Palette& p) { return p.isLight ? juce::Colours::white : p.accent.brighter (0.45f); }
+    juce::Colour waveColour (const Palette& p)  { return p.isLight ? p.value : juce::Colour (0xffd6d3de); }
+    juce::Colour curveColour (const Palette& p) { return p.isLight ? juce::Colours::white : juce::Colours::white; }
+    juce::Colour curveGlow (const Palette& p)   { return p.isLight ? juce::Colours::white : p.accent; }
 }
 
 juce::Path makeCurvePath (const Curve& c, juce::Rectangle<float> r, int steps)
@@ -275,9 +276,8 @@ void CurveView::tick()
 {
     for (int i = 0; i < DuckEngine::displayBins; ++i)
     {
-        auto in = engine.getInputPeak (i), out = engine.getOutputPeak (i);
-        shownIn[(size_t) i] += (in - shownIn[(size_t) i]) * 0.5f;
-        shownOut[(size_t) i] += (out - shownOut[(size_t) i]) * 0.5f;
+        shownIn[(size_t) i] = engine.getInputWave (i);
+        shownOut[(size_t) i] = engine.getOutputWave (i);
     }
     repaint();
 }
@@ -298,11 +298,11 @@ void CurveView::paint (juce::Graphics& g)
         g.drawVerticalLine ((int) (r.getX() + r.getWidth() * (float) i / 32.0f), r.getY(), r.getBottom());
     }
 
-    // real audio: original dim behind, processed in front
+    // real audio, oscilloscope style: original dim behind, processed (ducked by the curve) in front
     if (showWave)
     {
         auto cy = r.getCentreY();
-        auto amp = r.getHeight() * 0.48f;
+        auto amp = r.getHeight() * 0.46f;
         auto makeWave = [&] (const std::array<float, DuckEngine::displayBins>& v)
         {
             juce::Path w;
@@ -310,23 +310,20 @@ void CurveView::paint (juce::Graphics& g)
             for (int i = 0; i < n; ++i)
             {
                 auto x = r.getX() + ((float) i + 0.5f) / (float) n * r.getWidth();
-                auto h = std::pow (juce::jlimit (0.0f, 1.0f, v[(size_t) i]), 0.7f) * amp;
-                if (i == 0) w.startNewSubPath (x, cy - h); else w.lineTo (x, cy - h);
+                auto s = juce::jlimit (-1.0f, 1.0f, v[(size_t) i]);
+                auto y = cy - std::copysign (std::pow (std::abs (s), 0.75f), s) * amp;
+                if (i == 0) w.startNewSubPath (x, y); else w.lineTo (x, y);
             }
-            for (int i = n - 1; i >= 0; --i)
-            {
-                auto x = r.getX() + ((float) i + 0.5f) / (float) n * r.getWidth();
-                auto h = std::pow (juce::jlimit (0.0f, 1.0f, v[(size_t) i]), 0.7f) * amp;
-                w.lineTo (x, cy + h);
-            }
-            w.closeSubPath();
             return w;
         };
 
-        g.setColour (p.isLight ? juce::Colours::white.withAlpha (0.45f) : juce::Colour (0xff8a8794).withAlpha (0.45f));
-        g.fillPath (makeWave (shownIn));
-        g.setColour (waveColour (p).withAlpha (0.95f));
-        g.fillPath (makeWave (shownOut));
+        g.setColour (p.isLight ? juce::Colours::white.withAlpha (0.35f) : juce::Colour (0xff8a8794).withAlpha (0.35f));
+        g.strokePath (makeWave (shownIn), juce::PathStrokeType (1.0f));
+        auto wave = makeWave (shownOut);
+        g.setColour (waveColour (p).withAlpha (0.25f));
+        g.strokePath (wave, juce::PathStrokeType (3.0f));
+        g.setColour (waveColour (p));
+        g.strokePath (wave, juce::PathStrokeType (1.3f));
     }
 
     // the curve
@@ -335,15 +332,15 @@ void CurveView::paint (juce::Graphics& g)
     fill.lineTo (r.getRight(), r.getBottom());
     fill.lineTo (r.getX(), r.getBottom());
     fill.closeSubPath();
-    juce::ColourGradient grad (curveColour (p).withAlpha (p.isLight ? 0.18f : 0.16f), 0, r.getY(),
-                               curveColour (p).withAlpha (0.0f), 0, r.getBottom(), false);
+    juce::ColourGradient grad (curveGlow (p).withAlpha (p.isLight ? 0.18f : 0.14f), 0, r.getY(),
+                               curveGlow (p).withAlpha (0.0f), 0, r.getBottom(), false);
     g.setGradientFill (grad);
     g.fillPath (fill);
 
-    g.setColour (curveColour (p).withAlpha (0.25f));
-    g.strokePath (path, juce::PathStrokeType (7.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    g.setColour (curveGlow (p).withAlpha (0.45f));
+    g.strokePath (path, juce::PathStrokeType (8.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
     g.setColour (curveColour (p));
-    g.strokePath (path, juce::PathStrokeType (2.4f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    g.strokePath (path, juce::PathStrokeType (3.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 
     // hovered segment (it can be bent by dragging)
     if (hoverSegment >= 0 && hoverPoint < 0 && mode == Mode::none)
@@ -535,6 +532,56 @@ void CurveView::showMenu (int pointIndex)
         else return;
         change (curve);
     });
+}
+
+// ================================================================== RateTabs
+
+RateTabs::RateTabs()
+{
+    setRepaintsOnMouseActivity (true);
+}
+
+juce::Rectangle<float> RateTabs::tabArea (int i) const
+{
+    // shown fastest first: 1/16 1/8 1/4 1/2 1/1
+    auto w = (float) getWidth() / (float) Rates::count;
+    return { (float) i * w, 0.0f, w, (float) getHeight() };
+}
+
+int RateTabs::rateForTab (int i) const noexcept { return Rates::count - 1 - i; }
+
+void RateTabs::setRate (int r)
+{
+    if (r != rate) { rate = r; repaint(); }
+}
+
+void RateTabs::paint (juce::Graphics& g)
+{
+    if (palette == nullptr) return;
+    auto& p = *palette;
+    auto mouse = getMouseXYRelative().toFloat();
+    for (int i = 0; i < Rates::count; ++i)
+    {
+        auto r = tabArea (i);
+        auto on = rateForTab (i) == rate;
+        auto hot = isMouseOver() && r.contains (mouse);
+        g.setColour (on ? (p.isLight ? p.text : juce::Colours::white)
+                        : (p.isLight ? p.text : juce::Colours::white).withAlpha (hot ? 0.7f : 0.38f));
+        g.setFont (on ? Fonts::semiBold (13.0f) : Fonts::regular (13.0f));
+        g.drawText (Rates::names()[rateForTab (i)], r, juce::Justification::centred);
+        if (on)
+        {
+            auto tw = juce::GlyphArrangement::getStringWidth (Fonts::semiBold (13.0f), Rates::names()[rateForTab (i)]);
+            g.fillRect (juce::Rectangle<float> (tw, 1.5f).withCentre ({ r.getCentreX(), r.getBottom() - 3.0f }));
+        }
+    }
+}
+
+void RateTabs::mouseUp (const juce::MouseEvent& e)
+{
+    for (int i = 0; i < Rates::count; ++i)
+        if (tabArea (i).contains (e.position) && onChange)
+            onChange (rateForTab (i));
 }
 
 // ================================================================== ShapeButton

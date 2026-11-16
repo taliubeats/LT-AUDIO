@@ -56,6 +56,8 @@ std::vector<Preset> PresetLibrary::factory()
     return {
         make ("Default",         Rates::quarter,   75.0f, classic),
         make ("Classic Pump 1/4", Rates::quarter,  90.0f, classic),
+        make ("Smooth S 1/4",    Rates::quarter,   90.0f, { { 0.0f, 0.0f, 0.0f }, { 0.27f, 0.0f, 0.5f }, { 0.35f, 0.5f, -0.5f },
+                                                            { 0.43f, 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } }),
         make ("Soft Duck 1/4",   Rates::quarter,   70.0f, { { 0.0f, 0.3f, -0.35f }, { 0.65f, 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } }),
         make ("Hard Cut 1/4",    Rates::quarter,  100.0f, { { 0.0f, 0.0f, 0.0f }, { 0.3f, 0.0f, 0.0f }, { 0.32f, 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } }),
         make ("Short Duck",      Rates::quarter,   90.0f, { { 0.0f, 0.0f, -0.45f }, { 0.22f, 1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } }),

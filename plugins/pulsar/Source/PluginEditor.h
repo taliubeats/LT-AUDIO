@@ -52,6 +52,7 @@ private:
     juce::ToggleButton midiToggle { "MIDI TRIGGER" }, waveToggle { "WAVE" };
     MixKnob knob;
     CurveView curveView;
+    RateTabs rateTabs;
     std::vector<std::unique_ptr<ShapeButton>> shapeButtons;
     juce::TextButton rateButtons[Rates::count];
 

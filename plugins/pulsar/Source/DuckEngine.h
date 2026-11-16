@@ -16,7 +16,7 @@ class DuckEngine
 {
 public:
     static constexpr int tableSize = 2048;
-    static constexpr int displayBins = 400;
+    static constexpr int displayBins = 800;
     static constexpr int chunk = 256;
 
     struct Settings
@@ -48,8 +48,9 @@ public:
     int getCycleCount() const noexcept       { return cycleCount.load(); }
     float getInputLevel() const noexcept     { return inputLevel.load(); }
     float getCurrentGain() const noexcept    { return currentGain.load(); }
-    float getInputPeak (int bin) const noexcept  { return inBins[(size_t) bin].load (std::memory_order_relaxed); }
-    float getOutputPeak (int bin) const noexcept { return outBins[(size_t) bin].load (std::memory_order_relaxed); }
+    /** Signed waveform (mono) over one cycle: the sample with the biggest swing in each bin. */
+    float getInputWave (int bin) const noexcept  { return inBins[(size_t) bin].load (std::memory_order_relaxed); }
+    float getOutputWave (int bin) const noexcept { return outBins[(size_t) bin].load (std::memory_order_relaxed); }
 
     lt::dsp::SpectrumAnalyser spectrum;
 
@@ -74,7 +75,7 @@ private:
 
     double freePhase = 0.0, midiPhase = 1.0, lastPhase = 0.0;
     bool midiRunning = false;
-    std::array<float, chunk> phases {}, inAbs {};
+    std::array<float, chunk> phases {}, inAbs {}, inMono {};
 
     // display
     std::array<std::atomic<float>, displayBins> inBins, outBins;

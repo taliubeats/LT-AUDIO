@@ -97,7 +97,7 @@ int main()
     std::cout << "Presets" << std::endl;
     {
         auto f = PresetLibrary::factory();
-        check (f.size() == 11, "10 factory presets + Default");
+        check (f.size() == 12, "11 factory presets + Default");
         bool allOk = true;
         for (auto& p : f)
         {

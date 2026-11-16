@@ -40,14 +40,23 @@ private:
     void setBand (int band);
     void setCutoffs (float lo, float hi);
     Drag dragTargetAt (juce::Point<float>) const;
-    void drawSpectrum (juce::Graphics&, juce::Rectangle<float> graph, bool focused);
+    juce::Path spectrumPath (juce::Rectangle<float> graph) const;
+    void drawGlowBlobs (juce::Graphics&, juce::Rectangle<float> region, float energy);
     void drawHandle (juce::Graphics&, float x, const juce::String& title, float hz, bool hot);
 
     juce::AudioProcessorValueTreeState& state;
     dsp::SpectrumAnalyser& analyser;
     juce::String productId;
     Palette palette = Palette::dark();
-    GlassLookAndFeel lnf;
+
+    /** Rectangular "hardware" buttons and switches like the reference design. */
+    struct FocusLookAndFeel : public GlassLookAndFeel
+    {
+        void drawButtonBackground (juce::Graphics&, juce::Button&, const juce::Colour&, bool hover, bool down) override;
+        void drawButtonText (juce::Graphics&, juce::TextButton&, bool hover, bool down) override;
+        void drawToggleButton (juce::Graphics&, juce::ToggleButton&, bool hover, bool down) override;
+    };
+    FocusLookAndFeel lnf;
 
     juce::RangedAudioParameter *bandParam, *lowParam, *highParam;
     juce::TextButton bandButtons[4] { juce::TextButton ("FULL"), juce::TextButton ("LOW"), juce::TextButton ("MID"), juce::TextButton ("HIGH") };
@@ -55,9 +64,8 @@ private:
     juce::TextButton backButton { "BACK" };
     std::unique_ptr<juce::ButtonParameterAttachment> invertAttachment, soloAttachment;
 
-    juce::Rectangle<float> panel, graph;
-    juce::Image nebula;
-    struct Spark { float x, y, vx, vy, life, size; };
+    juce::Rectangle<float> panel, graph, bottomBar;
+    struct Spark { float x, y, vx, vy, life, size; bool white; };
     std::vector<Spark> sparks;
     juce::Random random;
     Drag dragging = Drag::none, hover = Drag::none;
