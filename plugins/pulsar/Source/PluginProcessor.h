@@ -14,6 +14,7 @@ namespace IDs
     inline constexpr const char* mix = "mix";
     inline constexpr const char* rate = "rate";
     inline constexpr const char* midi = "midiTrigger";
+    inline constexpr const char* audio = "audioTrigger";
 }
 
 /** LT PULSAR: sidechain-style ducking synced to the host tempo (or triggered by MIDI notes). */
@@ -80,6 +81,7 @@ private:
     std::atomic<float>* mixParam = nullptr;
     std::atomic<float>* rateParam = nullptr;
     std::atomic<float>* midiParam = nullptr;
+    std::atomic<float>* audioParam = nullptr;
     lt::dsp::FocusParams::Handles focus;
     std::atomic<float> hostBpm { 120.0f };
     std::atomic<bool> hostPlaying { false };

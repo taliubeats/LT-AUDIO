@@ -14,18 +14,21 @@ juce::AudioProcessorValueTreeState::ParameterLayout Processor::createLayout()
                                                            .withStringFromValueFunction ([] (float v, int) { return String (roundToInt (v)) + "%"; })));
     layout.add (std::make_unique<AudioParameterChoice> (ParameterID { IDs::rate, 1 }, "Rate", Rates::names(), Rates::quarter));
     layout.add (std::make_unique<AudioParameterBool> (ParameterID { IDs::midi, 1 }, "MIDI Trigger", false));
+    layout.add (std::make_unique<AudioParameterBool> (ParameterID { IDs::audio, 1 }, "Audio Trigger", false));
     lt::dsp::FocusParams::addTo (layout);
     return layout;
 }
 
 Processor::Processor()
     : AudioProcessor (BusesProperties().withInput ("Input", juce::AudioChannelSet::stereo(), true)
-                                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
+                                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+                                       .withInput ("Sidechain", juce::AudioChannelSet::stereo(), false)),
       state (*this, nullptr, "PULSAR", createLayout())
 {
     mixParam = state.getRawParameterValue (IDs::mix);
     rateParam = state.getRawParameterValue (IDs::rate);
     midiParam = state.getRawParameterValue (IDs::midi);
+    audioParam = state.getRawParameterValue (IDs::audio);
     focus.attach (state);
 
     applyPreset (PresetLibrary::factory().front());
@@ -104,7 +107,7 @@ void Processor::setCurrentProgram (int i)
 
 void Processor::prepareToPlay (double sr, int)
 {
-    engine.prepare (sr, juce::jmax (getTotalNumInputChannels(), getTotalNumOutputChannels()));
+    engine.prepare (sr, juce::jmax (1, getMainBusNumOutputChannels()));
     license.refresh();
     usable = license.isUsable();
 }
@@ -112,16 +115,26 @@ void Processor::prepareToPlay (double sr, int)
 bool Processor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     auto out = layouts.getMainOutputChannelSet();
-    return (out == juce::AudioChannelSet::stereo() || out == juce::AudioChannelSet::mono())
-            && layouts.getMainInputChannelSet() == out;
+    auto mainOk = (out == juce::AudioChannelSet::stereo() || out == juce::AudioChannelSet::mono())
+                  && layouts.getMainInputChannelSet() == out;
+    if (layouts.inputBuses.size() > 1)
+    {
+        auto sc = layouts.getChannelSet (true, 1);
+        mainOk = mainOk && (sc.isDisabled() || sc == juce::AudioChannelSet::mono() || sc == juce::AudioChannelSet::stereo());
+    }
+    return mainOk;
 }
 
 void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
     juce::ScopedNoDenormals noDenormals;
 
-    for (auto i = getTotalNumInputChannels(); i < getTotalNumOutputChannels(); ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+    auto main = getBusBuffer (buffer, false, 0);
+    juce::AudioBuffer<float> sidechain;
+    auto hasSidechain = getBusCount (true) > 1 && getBus (true, 1) != nullptr && getBus (true, 1)->isEnabled()
+                        && getBus (true, 1)->getNumberOfChannels() > 0;
+    if (hasSidechain)
+        sidechain = getBusBuffer (buffer, true, 1);
 
     DuckEngine::Transport t;
     if (auto* ph = getPlayHead())
@@ -144,8 +157,9 @@ void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
     s.mix = mixParam->load() * 0.01f;
     s.rate = juce::roundToInt (rateParam->load());
     s.midiTrigger = midiParam->load() > 0.5f;
+    s.audioTrigger = audioParam->load() > 0.5f;
 
-    engine.process (buffer, midi, s, t, focus.read());
+    engine.process (main, hasSidechain ? &sidechain : nullptr, midi, s, t, focus.read());
     midi.clear();
 }
 

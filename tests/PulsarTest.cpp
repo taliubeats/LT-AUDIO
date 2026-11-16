@@ -44,7 +44,7 @@ static juce::AudioBuffer<float> sine (int n, double sr, double hz)
 
 /** Runs the engine block by block like a host would. */
 static void run (DuckEngine& e, juce::AudioBuffer<float>& audio, DuckEngine::Settings s, DuckEngine::Transport t,
-                 lt::dsp::FocusSettings f, double sr, const juce::MidiBuffer& midi = {})
+                 lt::dsp::FocusSettings f, double sr, const juce::MidiBuffer& midi = {}, juce::AudioBuffer<float>* key = nullptr)
 {
     constexpr int block = 512;
     for (int start = 0; start < audio.getNumSamples(); start += block)
@@ -55,7 +55,13 @@ static void run (DuckEngine& e, juce::AudioBuffer<float>& audio, DuckEngine::Set
         for (auto meta : midi)
             if (meta.samplePosition >= start && meta.samplePosition < start + n)
                 m.addEvent (meta.getMessage(), meta.samplePosition - start);
-        e.process (view, m, s, t, f);
+        if (key != nullptr)
+        {
+            juce::AudioBuffer<float> kv (key->getArrayOfWritePointers(), key->getNumChannels(), start, n);
+            e.process (view, &kv, m, s, t, f);
+        }
+        else
+            e.process (view, nullptr, m, s, t, f);
         if (t.hasPosition)
             t.ppq += n / (sr * 60.0 / t.bpm);
     }
@@ -177,6 +183,28 @@ int main()
         check (a.getSample (0, 10200) < 0.1f, "a MIDI note starts the duck");
         check (near (a.getSample (0, 10000 + 12000), 0.5f, 0.02f), "the duck follows the curve after the note");
         check (near (a.getSample (0, 39000), 1.0f, 0.01f), "after one cycle the volume stays up");
+    }
+
+    std::cout << "Sidechain (audio trigger)" << std::endl;
+    {
+        DuckEngine e;
+        e.prepare (sr, 2);
+        e.setCurve (Curve::shape (2));
+        DuckEngine::Settings s;
+        s.mix = 1.0f;
+        s.audioTrigger = true;
+        DuckEngine::Transport stopped;
+
+        auto bass = constant (40000, 0.5f);
+        juce::AudioBuffer<float> kick (2, 40000);
+        kick.clear();
+        for (int i = 10000; i < 10600; ++i)
+            for (int c = 0; c < 2; ++c)
+                kick.setSample (c, i, 0.8f * std::sin ((float) i * 0.02f) * std::exp (-(float) (i - 10000) / 200.0f));
+        run (e, bass, s, stopped, full, sr, {}, &kick);
+        check (std::abs (bass.getSample (0, 5000) - 0.5f) < 0.01f, "before the kick the bass is untouched");
+        check (bass.getSample (0, 10300) < 0.1f, "the sidechain kick ducks the bass");
+        check (std::abs (bass.getSample (0, 39000) - 0.5f) < 0.01f, "the bass comes back after one cycle");
     }
 
     std::cout << "Frequency Focus" << std::endl;

@@ -326,6 +326,13 @@ void CurveView::paint (juce::Graphics& g)
         g.strokePath (wave, juce::PathStrokeType (1.3f));
     }
 
+    if (showWave && engine.isSidechainActive())
+    {
+        g.setColour (waveColour (p));
+        g.setFont (Fonts::semiBold (11.5f));
+        g.drawText ("SIDECHAIN", r.reduced (10.0f, 6.0f).removeFromTop (16.0f), juce::Justification::topLeft);
+    }
+
     // the curve
     auto path = makeCurvePath (c, r, 400);
     auto fill = path;

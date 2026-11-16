@@ -49,10 +49,10 @@ private:
 
     juce::TextButton eqButton { "EQ" }, prevButton { "<" }, nextButton { ">" }, presetButton, saveButton { "SAVE" },
                      themeButton { "THEME" }, licenseButton;
-    juce::ToggleButton midiToggle { "MIDI TRIGGER" }, waveToggle { "WAVE" };
+    juce::ToggleButton midiToggle { "MIDI TRIGGER" }, waveToggle { "WAVE" }, audioToggle { "AUDIO TRIGGER" };
+    std::unique_ptr<juce::ButtonParameterAttachment> audioAttachment;
     MixKnob knob;
     CurveView curveView;
-    RateTabs rateTabs;
     std::vector<std::unique_ptr<ShapeButton>> shapeButtons;
     juce::TextButton rateButtons[Rates::count];
 

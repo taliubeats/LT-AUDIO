@@ -52,7 +52,7 @@ float DuckEngine::lookup (float phase) const noexcept
     return table[(size_t) i] + (table[(size_t) i + 1] - table[(size_t) i]) * frac;
 }
 
-void DuckEngine::process (juce::AudioBuffer<float>& buffer, const juce::MidiBuffer& midi, const Settings& s,
+void DuckEngine::process (juce::AudioBuffer<float>& buffer, const juce::AudioBuffer<float>* sidechain, const juce::MidiBuffer& midi, const Settings& s,
                           const Transport& t, const lt::dsp::FocusSettings& focus)
 {
     if (tableDirty.load())
@@ -75,11 +75,11 @@ void DuckEngine::process (juce::AudioBuffer<float>& buffer, const juce::MidiBuff
         auto chunkTransport = t;
         if (t.hasPosition)
             chunkTransport.ppq = t.ppq + (double) start / (sampleRate * 60.0 / juce::jmax (1.0, t.bpm));
-        processChunk (buffer, start, len, midi, s, chunkTransport, focus, start);
+        processChunk (buffer, sidechain, start, len, midi, s, chunkTransport, focus, start);
     }
 }
 
-void DuckEngine::processChunk (juce::AudioBuffer<float>& buffer, int start, int n, const juce::MidiBuffer& midi,
+void DuckEngine::processChunk (juce::AudioBuffer<float>& buffer, const juce::AudioBuffer<float>* sidechain, int start, int n, const juce::MidiBuffer& midi,
                                const Settings& s, const Transport& t, const lt::dsp::FocusSettings& focus, int blockOffset)
 {
     auto chans = juce::jmin (buffer.getNumChannels(), focusBuffer.getNumChannels());
@@ -88,20 +88,62 @@ void DuckEngine::processChunk (juce::AudioBuffer<float>& buffer, int start, int 
     auto cycleBeats = Rates::beats (s.rate);
     auto inc = 1.0 / (cycleBeats * samplesPerBeat);
 
+    // the key signal: external sidechain when connected, else the input itself
+    auto scChans = sidechain != nullptr ? sidechain->getNumChannels() : 0;
+    auto scLen = sidechain != nullptr ? sidechain->getNumSamples() : 0;
+    const auto fastRel = std::exp (-1.0f / (0.005f * (float) sampleRate));
+    const auto slowCoeff = 1.0f - std::exp (-1.0f / (0.06f * (float) sampleRate));
+    const auto envRel = std::exp (-1.0f / (0.5f * (float) sampleRate));
+    const auto holdoff = (int) (0.06 * sampleRate);
+    auto triggered = s.midiTrigger || s.audioTrigger;
+
     // 1) where in the cycle every sample is
     auto midiIt = midi.findNextSamplePosition (blockOffset);
     for (int i = 0; i < n; ++i)
     {
-        double phase;
-        if (s.midiTrigger)
+        float sc = 0.0f;
+        if (scChans > 0 && start + i < scLen)
         {
-            for (; midiIt != midi.cend() && (*midiIt).samplePosition <= blockOffset + i; ++midiIt)
-                if ((*midiIt).getMessage().isNoteOn())
+            for (int c = 0; c < scChans; ++c) sc += sidechain->getSample (c, start + i);
+            sc /= (float) scChans;
+        }
+        scMono[(size_t) i] = sc;
+        scEnv = juce::jmax (std::abs (sc), scEnv * envRel);
+        scSilent = scEnv > 1.0e-4f ? 0 : scSilent + 1;
+
+        double phase;
+        if (triggered)
+        {
+            if (s.midiTrigger)
+                for (; midiIt != midi.cend() && (*midiIt).samplePosition <= blockOffset + i; ++midiIt)
+                    if ((*midiIt).getMessage().isNoteOn())
+                    {
+                        midiPhase = 0.0;
+                        midiRunning = true;
+                        ++cycleCount;
+                    }
+
+            if (s.audioTrigger)
+            {
+                float key = sc;
+                if (scChans == 0 || scSilent > (int) sampleRate)   // no key arriving: follow the input itself
+                {
+                    key = 0.0f;
+                    for (int c = 0; c < chans; ++c) key += buffer.getSample (c, start + i);
+                    key /= (float) juce::jmax (1, chans);
+                }
+                auto a = std::abs (key);
+                trigFast = juce::jmax (a, trigFast * fastRel);
+                trigSlow += (trigFast - trigSlow) * slowCoeff;
+                if (trigHoldoff > 0) --trigHoldoff;
+                else if (trigFast > 0.03f && trigFast > trigSlow * 2.0f + 0.01f)
                 {
                     midiPhase = 0.0;
                     midiRunning = true;
+                    trigHoldoff = holdoff;
                     ++cycleCount;
                 }
+            }
 
             phase = midiPhase;
             if (midiRunning)
@@ -123,7 +165,7 @@ void DuckEngine::processChunk (juce::AudioBuffer<float>& buffer, int start, int 
             freePhase -= std::floor (freePhase);
         }
 
-        if (! s.midiTrigger && phase < lastPhase - 0.5)
+        if (! triggered && phase < lastPhase - 0.5)
             ++cycleCount;
         lastPhase = phase;
         phases[(size_t) i] = (float) phase;
@@ -163,11 +205,16 @@ void DuckEngine::processChunk (juce::AudioBuffer<float>& buffer, int start, int 
         float sum = 0.0f;
         for (int c = 0; c < chans; ++c)
             sum += io.getSample (c, i);
-        recordDisplay (phases[(size_t) i], inMono[(size_t) i], sum / (float) juce::jmax (1, chans));
+        auto out = sum / (float) juce::jmax (1, chans);
+        if (scEnv > 1.0e-4f && scChans > 0)
+            recordDisplay (phases[(size_t) i], out, scMono[(size_t) i]);   // processed behind, the sidechain (kick) in front
+        else
+            recordDisplay (phases[(size_t) i], inMono[(size_t) i], out);
         levelFollower = juce::jmax (inAbs[(size_t) i], levelFollower * 0.99995f);
     }
 
     displayPhase = phases[(size_t) n - 1];
+    sidechainActive = scChans > 0 && scEnv > 1.0e-4f;
     inputLevel = levelFollower;
     currentGain = gain;
 }

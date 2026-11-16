@@ -158,7 +158,12 @@ Diseño: `design/licensing/activation.webp`, `license-studio.webp`.
 - **LT License Studio** entregado. Clave pública instalada en `shared/license_public_key.txt`.
 - **Siguiente:** LT PULSAR.
 
-### LT PULSAR — correcciones pedidas tras la primera prueba (para más adelante)
+### LT PULSAR — correcciones pedidas tras la primera prueba (**hechas**)
+
+Hecho: se quitaron las pestañas de rate del visor; WAVE y AUDIO TRIGGER se movieron fuera del visor (esquina del panel del knob).
+Bus SIDECHAIN (opcional) añadido: el visor muestra la onda del sidechain delante (etiqueta "SIDECHAIN") y la procesada detrás.
+AUDIO TRIGGER: cada golpe del sidechain reinicia la curva (sin sidechain, o si no llega señal en 1 s, sigue a la propia entrada).
+
 
 1. **Quitar los números de rate (1/16, 1/8, 1/4, 1/2, 1/1) de dentro del visor de la curva.** Tapan los puntos de arriba:
    al subir un punto al máximo cae encima de esos números y ya no se puede arrastrar. Dejar solo el selector de abajo a la derecha.

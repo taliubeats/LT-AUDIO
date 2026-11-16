@@ -60,6 +60,10 @@ Editor::Editor (Processor& p)
     curveView.showWave = proc.showWave;
     page.addAndMakeVisible (waveToggle);
 
+    audioAttachment = std::make_unique<juce::ButtonParameterAttachment> (*proc.state.getParameter (IDs::audio), audioToggle);
+    audioToggle.setTooltip ("Duck on every hit of the sidechain (choose the kick in Ableton's Sidechain selector), or of the input");
+    page.addAndMakeVisible (audioToggle);
+
     // ---- shapes and rates
     for (int i = 0; i < Curve::numShapes; ++i)
     {
@@ -81,11 +85,8 @@ Editor::Editor (Processor& p)
         auto idx = juce::roundToInt (v);
         for (int i = 0; i < Rates::count; ++i)
             rateButtons[i].setToggleState (i == idx, juce::dontSendNotification);
-        rateTabs.setRate (idx);
     });
-    rateTabs.palette = &palette;
-    rateTabs.onChange = [this] (int r) { rateAttachment->setValueAsCompleteGesture ((float) r); };
-    page.addAndMakeVisible (rateTabs);
+    // (the small rate tabs inside the visualiser were removed: they covered the top points of the curve)
     for (int i = 0; i < Rates::count; ++i)
     {
         rateButtons[i].setButtonText (Rates::names()[i]);
@@ -157,7 +158,7 @@ Editor::Editor (Processor& p)
                     b.setSample (1, i, 0.6f * kick + pad);
                 }
                 t.ppq = (blk * 512) / (sr * 0.5);
-                proc.engine.process (b, {}, s, t, {});
+                proc.engine.process (b, nullptr, {}, s, t, {});
             }
         });
 
@@ -275,8 +276,9 @@ void Editor::layout()
 
     wavePanel = { 16, 380, baseWidth - 32, 150 };
     curveView.setBounds (wavePanel.reduced (14, 10));
-    waveToggle.setBounds (wavePanel.getRight() - 14 - 100, wavePanel.getY() + 18, 92, 30);
-    rateTabs.setBounds (wavePanel.getX() + 20, wavePanel.getY() + 16, 200, 24);
+    // kept outside the visualiser so nothing covers the top points of the curve
+    waveToggle.setBounds (knobPanel.getRight() - 14 - 96, knobPanel.getBottom() - 42, 92, 30);
+    audioToggle.setBounds (knobPanel.getRight() - 14 - 96 - 176, knobPanel.getBottom() - 42, 168, 30);
 
     bottomBar = { 16, 540, baseWidth - 32, 70 };
     auto row = bottomBar.reduced (14, 8);
@@ -315,7 +317,9 @@ void Editor::MainPage::paint (juce::Graphics& g)
                        Fonts::regular (17.0f), 0.12f, juce::Justification::centred);
 
     // tiny tempo readout under MIX
-    auto info = e.proc.state.getRawParameterValue (IDs::midi)->load() > 0.5f
+    auto info = e.proc.state.getRawParameterValue (IDs::audio)->load() > 0.5f
+                    ? juce::String (e.proc.engine.isSidechainActive() ? "AUDIO TRIGGER (SIDECHAIN)" : "AUDIO TRIGGER (INPUT)")
+                    : e.proc.state.getRawParameterValue (IDs::midi)->load() > 0.5f
                     ? juce::String ("MIDI TRIGGER")
                     : juce::String (juce::roundToInt (e.proc.getHostBpm())) + " BPM" + (e.proc.isHostPlaying() ? "" : "  (free run)");
     g.setColour (p.isLight ? p.text.withAlpha (0.6f) : p.textDim.withAlpha (0.6f));

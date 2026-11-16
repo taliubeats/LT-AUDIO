@@ -24,6 +24,7 @@ public:
         float mix = 0.75f;          // 0..1
         int rate = Rates::quarter;
         bool midiTrigger = false;
+        bool audioTrigger = false;   // duck on every hit of the sidechain (or of the input when no sidechain)
     };
 
     struct Transport
@@ -40,7 +41,8 @@ public:
     /** Message thread: the curve to use from now on. */
     void setCurve (const Curve&);
 
-    void process (juce::AudioBuffer<float>&, const juce::MidiBuffer&, const Settings&, const Transport&,
+    /** `sidechain` may be null (no external key). */
+    void process (juce::AudioBuffer<float>&, const juce::AudioBuffer<float>* sidechain, const juce::MidiBuffer&, const Settings&, const Transport&,
                   const lt::dsp::FocusSettings&);
 
     // ---- for the visualiser (any thread)
@@ -48,6 +50,8 @@ public:
     int getCycleCount() const noexcept       { return cycleCount.load(); }
     float getInputLevel() const noexcept     { return inputLevel.load(); }
     float getCurrentGain() const noexcept    { return currentGain.load(); }
+    /** True while an external sidechain signal is arriving (the visualiser then shows it). */
+    bool isSidechainActive() const noexcept  { return sidechainActive.load(); }
     /** Signed waveform (mono) over one cycle: the sample with the biggest swing in each bin. */
     float getInputWave (int bin) const noexcept  { return inBins[(size_t) bin].load (std::memory_order_relaxed); }
     float getOutputWave (int bin) const noexcept { return outBins[(size_t) bin].load (std::memory_order_relaxed); }
@@ -55,7 +59,7 @@ public:
     lt::dsp::SpectrumAnalyser spectrum;
 
 private:
-    void processChunk (juce::AudioBuffer<float>&, int start, int n, const juce::MidiBuffer&, const Settings&,
+    void processChunk (juce::AudioBuffer<float>&, const juce::AudioBuffer<float>* sidechain, int start, int n, const juce::MidiBuffer&, const Settings&,
                        const Transport&, const lt::dsp::FocusSettings&, int blockOffset);
     float lookup (float phase) const noexcept;
     void recordDisplay (float phase, float in, float out) noexcept;
@@ -83,6 +87,10 @@ private:
     float binIn = 0, binOut = 0, levelFollower = 0;
     std::atomic<float> displayPhase { 0.0f }, inputLevel { 0.0f }, currentGain { 1.0f };
     std::atomic<int> cycleCount { 0 };
+    std::atomic<bool> sidechainActive { false };
+    std::array<float, chunk> scMono {};
+    float trigFast = 0, trigSlow = 0, scEnv = 0;
+    int trigHoldoff = 0, scSilent = 0;
 };
 
 } // namespace pulsar
