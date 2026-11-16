@@ -1,10 +1,7 @@
 #include "monocypher.h"
 #include "LTPublicKey.h"
 
-#if JUCE_WINDOWS
- #define _CRT_RAND_S
- #include <stdlib.h>
-#endif
+#include <random>
 
 namespace lt::licensing
 {
@@ -59,14 +56,15 @@ bool fromHex (const juce::String& hexIn, juce::uint8* out, size_t size)
 bool secureRandomBytes (juce::uint8* out, size_t size)
 {
    #if JUCE_WINDOWS
-    for (size_t i = 0; i < size; ++i)
+    // MSVC's random_device is backed by the OS cryptographic generator
+    try
     {
-        unsigned int v = 0;
-        if (rand_s (&v) != 0)
-            return false;
-        out[i] = (juce::uint8) (v & 0xff);
+        std::random_device rd;
+        for (size_t i = 0; i < size; ++i)
+            out[i] = (juce::uint8) (rd() & 0xff);
+        return true;
     }
-    return true;
+    catch (...) { return false; }
    #else
     juce::FileInputStream in (juce::File ("/dev/urandom"));
     return in.openedOk() && in.read (out, (int) size) == (int) size;
