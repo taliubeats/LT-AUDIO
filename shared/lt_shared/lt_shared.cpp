@@ -1,0 +1,10 @@
+#include "lt_shared.h"
+
+#include "licensing/LicenseCore.cpp"
+#include "licensing/LicenseManager.cpp"
+#include "ui/Fonts.cpp"
+#include "ui/Glass.cpp"
+#include "ui/NebulaBackground.cpp"
+#include "ui/GlassLookAndFeel.cpp"
+#include "ui/Logo.cpp"
+#include "ui/ActivationComponent.cpp"

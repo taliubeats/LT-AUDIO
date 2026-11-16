@@ -1,0 +1,72 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mac:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure (Universal: Apple Silicon + Intel)
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+
+      - name: Build
+        run: cmake --build build --config Release -j 4
+
+      - name: Test licensing
+        run: ./build/tests/lt_tests_artefacts/Release/lt_tests
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          APP="build/apps/license-studio/LTLicenseStudio_artefacts/Release/LT License Studio.app"
+          codesign --force --deep --sign - "$APP"
+          ditto -c -k --keepParent "$APP" "dist/LT-License-Studio-mac.zip"
+          ls -la dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: dist/*
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S . -B build -DLT_BUILD_STUDIO=OFF
+
+      - name: Build
+        run: cmake --build build --config Release -j 4
+
+      - name: Test licensing
+        run: .\build\tests\lt_tests_artefacts\Release\lt_tests.exe
+
+  release:
+    needs: [mac, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Publish to the "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view latest >/dev/null 2>&1 || gh release create latest --title "LT AUDIO - latest build" --notes "Automatic build of the main branch." --prerelease
+          gh release upload latest dist/* --clobber
