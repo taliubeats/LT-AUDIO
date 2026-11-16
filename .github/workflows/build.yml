@@ -42,7 +42,8 @@ jobs:
           for b in pkg/VST3/* pkg/Components/*; do codesign --force --deep --sign - "$b"; done
           cp docs/INSTALL.md pkg/INSTALL.md
           (cd pkg && zip -qry ../dist/LT-AUDIO-Plugins-mac.zip .)
-          ls -la dist pkg/VST3 pkg/Components
+          ./installers/mac/build_pkgs.sh pkg "$APP" dist 0.1.${{ github.run_number }}
+          ls -la dist
 
       - uses: actions/upload-artifact@v4
         with:
@@ -72,7 +73,8 @@ jobs:
             ForEach-Object { Copy-Item $_.FullName -Destination pkg/VST3 -Recurse -Force }
           Copy-Item docs/INSTALL.md pkg/INSTALL.md
           Compress-Archive -Path pkg/* -DestinationPath dist/LT-AUDIO-Plugins-windows.zip -Force
-          Get-ChildItem pkg/VST3
+          ./installers/windows/build_installers.ps1 -Version "0.1.${{ github.run_number }}"
+          Get-ChildItem dist
 
       - uses: actions/upload-artifact@v4
         with:

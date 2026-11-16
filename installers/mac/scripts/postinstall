@@ -1,0 +1,4 @@
+#!/bin/bash
+# Make hosts (Ableton, Logic) see new or updated Audio Units right away.
+killall -9 AudioComponentRegistrar >/dev/null 2>&1 || true
+exit 0
