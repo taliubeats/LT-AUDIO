@@ -135,3 +135,13 @@ Diseño: `design/licensing/activation.webp`, `license-studio.webp`.
 - **LT LICENSE STUDIO** (app Mac): lista de plugins; NEW LICENSE con Nombre, **Email (obligatorio)**, Machine ID,
   "Computers used: x of 2", GENERATE LICENSE, resultado con COPY y SAVE .lic FILE, "Signed & verified";
   RECENT LICENSES con búsqueda; CUSTOMERS; SETTINGS (clave de firma + copia de seguridad).
+
+---
+
+## Estado y pendientes
+
+- **LT TYPE BEATS v0.1** entregado (instaladores Mac/Windows, licencia funcionando).
+  - Pendiente: mejorar precisión de BPM, tonalidad y acordes con canciones reales.
+    Pedir al usuario ejemplos (nombre de canción o archivo + BPM/tonalidad/acordes reales) y ajustar `plugins/type-beats/Source/Analysis.cpp`.
+- **LT License Studio** entregado. Clave pública instalada en `shared/license_public_key.txt`.
+- **Siguiente:** LT PULSAR.
