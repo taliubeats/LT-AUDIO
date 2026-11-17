@@ -246,3 +246,15 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
 - Ideas: herramientas que actúan sobre el proyecto (p. ej. crear clips MIDI de acordes directamente desde LT TYPE BEATS,
   generadores/secuenciadores, modulación LFO que controla cualquier parámetro de Live, utilidades de mezcla).
 - Nota: requieren Ableton Live Suite (o Max for Live) para usarlos.
+
+### LT VOCAL SUITE — cadena vocal completa con asistente (referencia: idea tipo "Vocalings Suite")
+- Un solo plugin para la voz principal con módulos en pestañas: **TUNE** (usa el motor de LT TUNE), **CLEANUP**
+  (puerta de ruido, de-esser, quitar respiraciones/ruido), **TONE** (EQ, brillo, cuerpo), **DYNAMICS** (compresión, saturación),
+  **SPACE** (reverb/delay de LT VOID y LT ORBIT) y **FX** (efectos creativos).
+- **Asistente con chat (y micrófono para dictar):** escribes en lenguaje natural "más brillo", "menos sibilancia",
+  "voz tipo trap melódico, autotune duro y delay"… y el asistente ajusta los módulos. Muestra qué cambió y se puede deshacer.
+  Los presets "estilo artista" describen el **procesamiento** (no clonan la voz de nadie).
+- Pantalla con mascota/personaje espacial LT (en vez del robot de la referencia), estética de la familia LT.
+- Pendiente de decidir: asistente por internet (API de IA, requiere clave y conexión) o versión sin conexión con
+  comandos y presets predefinidos; se puede empezar sin conexión y añadir el modo IA después.
+- BYPASS para comparar con la voz original.
