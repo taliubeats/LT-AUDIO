@@ -271,3 +271,15 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
   (de LT, guardada en un servidor propio, o del usuario). Alternativa sin conexión: biblioteca de presets por estilo.
   Opcional: que la IA también "escuche" un análisis de la voz (brillo, sibilancia, dinámica) para adaptar los ajustes.
 - BYPASS para comparar con la voz original.
+
+### Plugin de AD-LIBS (pedido el 2026-11-17)
+- Analiza la pista de voz y detecta los **espacios vacíos** (huecos entre frases) y los rellena con **ad-libs**
+  ("yeah", "uh", "let's go", risas, gritos…) en el **estilo** elegido: género musical o estilo de un artista concreto.
+- **Cómo se construye el estilo:** el usuario pasa letras de canciones; de ahí se extraen los ad-libs típicos (palabras,
+  frecuencia, en qué parte del compás caen, si van con eco/pitch/panoramizados) para crear un "perfil de estilo".
+- **La voz:** los ad-libs se generan con la voz del artista que se está produciendo (el cantante de la pista, con su
+  permiso), NO con la voz del artista original de las letras de referencia. Requiere clonar/convertir la voz del propio
+  cantante (p. ej. a partir de sus grabaciones) — tecnología de conversión de voz tipo RVC; a definir.
+- Controles previstos: estilo, densidad (cuántos ad-libs), en qué huecos, procesamiento (eco, pitch, pan, filtro),
+  previsualizar y **arrastrar al DAW** o colocarlos alineados al tempo.
+- Consideración: solo con la voz de cantantes que lo autoricen.
