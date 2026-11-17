@@ -219,3 +219,23 @@ AUDIO TRIGGER: cada golpe del sidechain reinicia la curva (sin sidechain, o si n
 ## Igualador por referencia (proyecto futuro, sin nombre aún)
 Modos **Máster / Voz / Beat**. Cada parámetro (EQ, compresión, brillo, de-esser, saturación, punch, LUFS, estéreo…) con su knob y on/off.
 Opcional: analizar también la pista propia para compensar mic/sala. Medir el balance voz/beat de la referencia.
+
+---
+
+## Ideas para plugins futuros (anotadas el 2026-11-17)
+
+### Buscador de sonidos similares (sample finder)
+- Escanea tus librerías de sonidos (carpetas que elijas) y crea un índice.
+- Le das un sonido (un kick, un sample de voz, un loop…) y te muestra los **más parecidos** de tus librerías, ordenados por similitud.
+- Si es tonal (voz, melodía), detecta la **tonalidad**: busca el mismo sample o uno parecido en la misma tonalidad, y si está en otra,
+  te dice **cuántos semitonos subir o bajar** para que coincida (y opcionalmente lo transpone).
+- Filtros por tipo (kick, snare, hat, voz, loop…), BPM y tonalidad; escuchar y arrastrar el resultado directo al DAW.
+
+### Plugin de "strokes" / efectos de transición para voces
+- Reproduce la voz (o el sonido) y genera versiones procesadas para arrastrar directo al DAW:
+  **solo la cola de reverb**, **solo el delay**, **pitch down** (bajada de tono / tape stop), **distorsión**, reverse, etc.
+- Cada efecto como un "stroke" listo: botón para escuchar y arrastrar el audio resultante a una pista.
+
+### Más adelante
+- **Sintetizadores propios LT.**
+- **Efectos de voz:** reversa, voces duplicadas/dobladas, cortes y chops (voces cortadas tipo glitch), y similares.
