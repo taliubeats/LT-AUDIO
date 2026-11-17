@@ -246,7 +246,7 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
     Botones PLAY WORD / PREVIEW / **DRAG TO DAW** (genera el audio ya procesado).
   - **Reverb reversa (tipo "Backverb"):** captura la voz y genera la cola de reverb al revés que "sube" antes de la palabra.
     Knobs LENGTH (en compases), SIZE, TONE, WIDTH, TREMOLO, LOW CUT, OUTPUT; CAPTURE / PLAY / **DRAG TO DAW**.
-  - Idea LT: unirlas con los "strokes" de voz en un solo plugin con pestañas (STUTTER, BACKVERB, TAIL, DELAY THROW,
+  - **DECIDIDO:** unirlas con los "strokes" de voz en un solo plugin con pestañas (STUTTER, BACKVERB, TAIL, DELAY THROW,
     PITCH DOWN, DISTORT…), todas con captura automática de la selección y arrastrar al DAW. Estética espacial LT.
 
 ### Dispositivos Max for Live (Ableton)
