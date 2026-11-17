@@ -239,6 +239,15 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
 ### Más adelante
 - **Sintetizadores propios LT.**
 - **Efectos de voz:** reversa, voces duplicadas/dobladas, cortes y chops (voces cortadas tipo glitch), y similares.
+  Referencia enviada por el usuario (video "The FASTEST Vocal Effects"): dos herramientas rápidas que funcionan igual,
+  **capturar → escuchar → arrastrar al DAW**:
+  - **Stutter de voz (tipo "StutterVox"):** capturas una palabra o frase de la pista, el plugin la repite/corta al ritmo
+    (RATE sincronizado: 1/4, 1/8, 1/16, 1/32…), con FADE IN, PAN, OUTPUT y efectos extra (PHONE, CHORUS, BACKVERB…).
+    Botones PLAY WORD / PREVIEW / **DRAG TO DAW** (genera el audio ya procesado).
+  - **Reverb reversa (tipo "Backverb"):** captura la voz y genera la cola de reverb al revés que "sube" antes de la palabra.
+    Knobs LENGTH (en compases), SIZE, TONE, WIDTH, TREMOLO, LOW CUT, OUTPUT; CAPTURE / PLAY / **DRAG TO DAW**.
+  - Idea LT: unirlas con los "strokes" de voz en un solo plugin con pestañas (STUTTER, BACKVERB, TAIL, DELAY THROW,
+    PITCH DOWN, DISTORT…), todas con captura automática de la selección y arrastrar al DAW. Estética espacial LT.
 
 ### Dispositivos Max for Live (Ableton)
 - Crear dispositivos propios **Max for Live** (.amxd) con la marca LT: se integran directamente en Ableton
