@@ -255,6 +255,10 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
   "voz tipo trap melódico, autotune duro y delay"… y el asistente ajusta los módulos. Muestra qué cambió y se puede deshacer.
   Los presets "estilo artista" describen el **procesamiento** (no clonan la voz de nadie).
 - Pantalla con mascota/personaje espacial LT (en vez del robot de la referencia), estética de la familia LT.
-- Pendiente de decidir: asistente por internet (API de IA, requiere clave y conexión) o versión sin conexión con
-  comandos y presets predefinidos; se puede empezar sin conexión y añadir el modo IA después.
+- **La IA integrada es el centro del plugin:** escribes "quiero un vocal chain estilo X artista" y la IA arma la cadena completa
+  (afinación, EQ, compresión, saturación, de-esser, reverb, delay, FX) con valores concretos, y luego puedes seguir pidiendo cambios.
+  Implementación prevista: el plugin envía la petición + la lista de parámetros disponibles a un modelo de IA (API de Claude),
+  que devuelve los ajustes en formato estructurado (JSON) y el plugin los aplica. Requiere internet y una clave de API
+  (de LT, guardada en un servidor propio, o del usuario). Alternativa sin conexión: biblioteca de presets por estilo.
+  Opcional: que la IA también "escuche" un análisis de la voz (brillo, sibilancia, dinámica) para adaptar los ajustes.
 - BYPASS para comparar con la voz original.
