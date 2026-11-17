@@ -239,3 +239,10 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
 ### Más adelante
 - **Sintetizadores propios LT.**
 - **Efectos de voz:** reversa, voces duplicadas/dobladas, cortes y chops (voces cortadas tipo glitch), y similares.
+
+### Dispositivos Max for Live (Ableton)
+- Crear dispositivos propios **Max for Live** (.amxd) con la marca LT: se integran directamente en Ableton
+  (acceso a clips, pistas, tempo, automatización y escenas de Live).
+- Ideas: herramientas que actúan sobre el proyecto (p. ej. crear clips MIDI de acordes directamente desde LT TYPE BEATS,
+  generadores/secuenciadores, modulación LFO que controla cualquier parámetro de Live, utilidades de mezcla).
+- Nota: requieren Ableton Live Suite (o Max for Live) para usarlos.
