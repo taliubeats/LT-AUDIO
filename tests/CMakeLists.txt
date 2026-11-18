@@ -76,3 +76,20 @@ target_include_directories(nova_real_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/no
 target_link_libraries(nova_real_test PRIVATE juce::juce_audio_basics juce::juce_audio_formats juce::juce_dsp)
 lt_configure_target(nova_real_test)
 set_target_properties(nova_real_test PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+set(LT_VOCAL_ENGINE_SOURCES
+    ${CMAKE_SOURCE_DIR}/plugins/vocal-suite/Source/VocalChain.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/tune/Source/TuneEngine.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/tune/Source/PitchDetector.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/tune/Source/Scales.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/nova/Source/NovaEngine.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/orbit/Source/OrbitEngine.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/void/Source/VoidEngine.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/void/Source/ReverbTypes.cpp)
+juce_add_console_app(vocal_chain_test PRODUCT_NAME "Vocal Chain Test")
+target_sources(vocal_chain_test PRIVATE VocalChainTest.cpp ${LT_VOCAL_ENGINE_SOURCES})
+target_include_directories(vocal_chain_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/vocal-suite/Source ${CMAKE_SOURCE_DIR}/plugins/tune/Source
+    ${CMAKE_SOURCE_DIR}/plugins/nova/Source ${CMAKE_SOURCE_DIR}/plugins/orbit/Source ${CMAKE_SOURCE_DIR}/plugins/void/Source)
+target_link_libraries(vocal_chain_test PRIVATE juce::juce_audio_basics juce::juce_audio_formats juce::juce_dsp)
+lt_configure_target(vocal_chain_test)
+set_target_properties(vocal_chain_test PROPERTIES EXCLUDE_FROM_ALL TRUE)
