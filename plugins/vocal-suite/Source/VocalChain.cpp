@@ -228,7 +228,7 @@ void VocalChain::limit (juce::AudioBuffer<float>& b)
 {
     // Look-ahead peak limiter: the gain starts falling limLook samples before a peak arrives,
     // so normal material passes untouched and overs are caught without clicks.
-    constexpr float ceiling = 0.944f;   // -0.5 dBFS
+    static constexpr float ceiling = 0.944f;   // -0.5 dBFS
     auto n = b.getNumSamples();
     auto* l = b.getWritePointer (0);
     auto* r = b.getWritePointer (1);
