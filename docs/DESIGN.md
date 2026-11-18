@@ -310,3 +310,7 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
   botones de tipo de cinta (MELLO STRINGS, MELLO FLUTE, MELLO CHOIR, CASSETTE, REEL, BROKEN), knob AGE grande, VU IN/OUT,
   knobs WOW, FLUTTER, DRIFT, SATURATION, TONE, BANDWIDTH, HISS, ENSEMBLE, MIX; PRESETS / SAVE / THEME.
   Al programar: los carretes-planeta giran a la velocidad de la cinta (WOW/DRIFT los hacen tambalear), las agujas VU se mueven.
+
+### Estado (2026-11-18)
+- **LT TUNE: HECHO** (sesión "LT tune continua"), en la rama `lt-tune` (commit 1084a81), pendiente de unir a `main`.
+- **Armonías vocales:** el usuario indica que está hecho, pero no hay código en el repositorio (ni en `main` ni en `lt-tune`).
