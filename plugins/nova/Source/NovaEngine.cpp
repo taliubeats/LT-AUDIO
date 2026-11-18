@@ -32,10 +32,10 @@ namespace
     inline float softClip (float x) noexcept { return std::tanh (x); }
 }
 
-float NovaEngine::shape (float x, SatType type, float character) noexcept
+float NovaEngine::shape (float x, SatType type, float character, float sag) noexcept
 {
     // CHARACTER: 0 = even harmonics (asymmetric bias), 1 = odd harmonics (symmetric, harder)
-    auto bias = (1.0f - character) * 0.35f;
+    auto bias = (1.0f - character) * 0.35f + sag;
     auto hard = 1.0f + character * 1.5f;
 
     switch (type)
@@ -102,8 +102,9 @@ void NovaEngine::prepare (double sampleRate, int maxBlockSize, int numChannels)
     dryDelay.setDelay ((float) latency);
 
     auto make = [&] (std::vector<IIR>& v) { v.clear(); v.resize ((size_t) channels); };
-    for (auto* v : { &warmPre, &warmPost, &toneLow, &toneHigh, &airShelf, &tapeLp, &vinylLp, &vinylHp, &exciterHp })
+    for (auto* v : { &emphPre, &emphPost, &emphPre2, &emphPost2, &warmPre, &warmPost, &toneLow, &toneHigh, &airShelf, &tapeLp, &vinylLp, &vinylHp, &exciterHp })
         make (*v);
+    emphType = -1;
 
     dcX.assign ((size_t) channels, 0.0f);
     dcY.assign ((size_t) channels, 0.0f);
@@ -126,11 +127,13 @@ void NovaEngine::reset()
 {
     if (oversampling) oversampling->reset();
     dryDelay.reset();
-    for (auto* v : { &warmPre, &warmPost, &toneLow, &toneHigh, &airShelf, &tapeLp, &vinylLp, &vinylHp, &exciterHp })
+    for (auto* v : { &emphPre, &emphPost, &emphPre2, &emphPost2, &warmPre, &warmPost, &toneLow, &toneHigh, &airShelf, &tapeLp, &vinylLp, &vinylHp, &exciterHp })
         for (auto& f : *v) f.reset();
+    sagEnv = 0.0f;
     std::fill (dcX.begin(), dcX.end(), 0.0f);
     std::fill (dcY.begin(), dcY.end(), 0.0f);
     inPow = outPow = 0.0f;
+    firstBlock = true;
 }
 
 void NovaEngine::updateFilters (const NovaSettings& s)
@@ -164,6 +167,52 @@ void NovaEngine::updateFilters (const NovaSettings& s)
     filtersReady = true;
 }
 
+void NovaEngine::updateEmphasis (SatType type, float drive01)
+{
+    // Frequency-dependent saturation, the way real hardware behaves. Each pair is exactly inverse
+    // (pre: +X dB, post: -X dB), so the tone stays neutral at low drive and only the
+    // distortion becomes frequency dependent.
+    using C = juce::dsp::IIR::Coefficients<float>;
+    auto flat = C::makeAllPass (sr, 1000.0);
+    auto pre = flat, post = flat, pre2 = flat, post2 = flat;
+
+    switch (type)
+    {
+        case SatType::tape:
+            // NAB-style: highs hit the tape harder (soft HF compression), plus the low "head bump"
+            pre   = C::makeHighShelf (sr, 3000.0, 0.6f, juce::Decibels::decibelsToGain (6.0f));
+            post  = C::makeHighShelf (sr, 3000.0, 0.6f, juce::Decibels::decibelsToGain (-6.0f));
+            pre2  = C::makePeakFilter (sr, 75.0, 0.9f, juce::Decibels::decibelsToGain (1.0f + 1.5f * drive01));
+            post2 = C::makePeakFilter (sr, 180.0, 1.2f, juce::Decibels::decibelsToGain (-0.6f * drive01));
+            break;
+        case SatType::transformer:
+            // iron core saturates on low frequencies first
+            pre   = C::makeLowShelf (sr, 150.0, 0.6f, juce::Decibels::decibelsToGain (8.0f));
+            post  = C::makeLowShelf (sr, 150.0, 0.6f, juce::Decibels::decibelsToGain (-8.0f));
+            pre2  = flat;
+            post2 = C::makeHighShelf (sr, 12000.0, 0.6f, juce::Decibels::decibelsToGain (-1.5f * drive01));
+            break;
+        case SatType::console:
+            pre   = C::makeHighShelf (sr, 5000.0, 0.6f, juce::Decibels::decibelsToGain (2.5f));
+            post  = C::makeHighShelf (sr, 5000.0, 0.6f, juce::Decibels::decibelsToGain (-2.0f));
+            break;
+        case SatType::tube:
+            // valves: a little more drive in the mids, the classic "forward" sound
+            pre   = C::makePeakFilter (sr, 1200.0, 0.5f, juce::Decibels::decibelsToGain (3.0f));
+            post  = C::makePeakFilter (sr, 1200.0, 0.5f, juce::Decibels::decibelsToGain (-3.0f));
+            break;
+        default: break;
+    }
+
+    for (int c = 0; c < channels; ++c)
+    {
+        emphPre[(size_t) c].coefficients = pre;   emphPost[(size_t) c].coefficients = post;
+        emphPre2[(size_t) c].coefficients = pre2; emphPost2[(size_t) c].coefficients = post2;
+    }
+    emphType = (int) type;
+    emphDrive = drive01;
+}
+
 void NovaEngine::process (juce::AudioBuffer<float>& buffer, const NovaSettings& s)
 {
     if (oversampling == nullptr) return;
@@ -180,6 +229,14 @@ void NovaEngine::process (juce::AudioBuffer<float>& buffer, const NovaSettings& 
     driveGain.setTargetValue (juce::Decibels::decibelsToGain (drive01 * maxDriveDb[(int) type] + s.inputDb));
     outGain.setTargetValue (juce::Decibels::decibelsToGain (s.outputDb));
     mixSmooth.setTargetValue (juce::jlimit (0.0f, 1.0f, s.mix));
+    if (firstBlock)
+    {
+        // start exactly at the saved settings (no ramp from the defaults when a project loads)
+        driveGain.setCurrentAndTargetValue (driveGain.getTargetValue());
+        outGain.setCurrentAndTargetValue (outGain.getTargetValue());
+        mixSmooth.setCurrentAndTargetValue (mixSmooth.getTargetValue());
+        firstBlock = false;
+    }
 
     // keep a latency-aligned dry copy for MIX and auto gain
     for (int c = 0; c < nc; ++c)
@@ -204,13 +261,25 @@ void NovaEngine::process (juce::AudioBuffer<float>& buffer, const NovaSettings& 
 
     auto& source = type == SatType::exciter ? exciterBand : buffer;
 
+    if (emphType != (int) type || std::abs (emphDrive - drive01) > 0.02f)
+        updateEmphasis (type, drive01);
+
     // pre-emphasis + drive
     juce::AudioBuffer<float> work (source.getArrayOfWritePointers(), nc, n);
+    float peak = 0.0f;
     for (int c = 0; c < nc; ++c)
     {
         auto* x = work.getWritePointer (c);
-        for (int i = 0; i < n; ++i) x[i] = warmPre[(size_t) c].processSample (x[i]);
+        for (int i = 0; i < n; ++i)
+        {
+            x[i] = emphPre2[(size_t) c].processSample (emphPre[(size_t) c].processSample (warmPre[(size_t) c].processSample (x[i])));
+            peak = juce::jmax (peak, std::abs (x[i]));
+        }
     }
+
+    // valve "sag": the bias shifts with the programme level (only for TUBE)
+    auto sagTarget = type == SatType::tube ? juce::jmin (0.25f, peak * driveGain.getTargetValue() * 0.08f) * (1.0f - s.character) : 0.0f;
+    sagEnv += (sagTarget - sagEnv) * (sagTarget > sagEnv ? 0.3f : 0.05f);
     {
         auto g0 = driveGain.getCurrentValue();
         driveGain.skip (n);
@@ -226,7 +295,7 @@ void NovaEngine::process (juce::AudioBuffer<float>& buffer, const NovaSettings& 
         {
             auto* x = up.getChannelPointer (c);
             for (size_t i = 0; i < up.getNumSamples(); ++i)
-                x[i] = shape (x[i], type, s.character);
+                x[i] = shape (x[i], type, s.character, sagEnv);
         }
         oversampling->processSamplesDown (block);
     }
@@ -246,6 +315,7 @@ void NovaEngine::process (juce::AudioBuffer<float>& buffer, const NovaSettings& 
             dcX[(size_t) c] = v; dcY[(size_t) c] = y;
             v = y;
 
+            v = emphPost2[(size_t) c].processSample (emphPost[(size_t) c].processSample (v));
             v = warmPost[(size_t) c].processSample (v);
             if (type == SatType::tape)  v = tapeLp[(size_t) c].processSample (v);
             if (type == SatType::vinyl)

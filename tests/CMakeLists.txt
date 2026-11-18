@@ -69,3 +69,10 @@ target_sources(nova_test PRIVATE NovaTest.cpp ${CMAKE_SOURCE_DIR}/plugins/nova/S
 target_include_directories(nova_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/nova/Source)
 target_link_libraries(nova_test PRIVATE juce::juce_audio_basics juce::juce_dsp)
 lt_configure_target(nova_test)
+
+juce_add_console_app(nova_real_test PRODUCT_NAME "Nova Real Audio Test")
+target_sources(nova_real_test PRIVATE NovaRealAudioTest.cpp ${CMAKE_SOURCE_DIR}/plugins/nova/Source/NovaEngine.cpp)
+target_include_directories(nova_real_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/nova/Source)
+target_link_libraries(nova_real_test PRIVATE juce::juce_audio_basics juce::juce_audio_formats juce::juce_dsp)
+lt_configure_target(nova_real_test)
+set_target_properties(nova_real_test PROPERTIES EXCLUDE_FROM_ALL TRUE)

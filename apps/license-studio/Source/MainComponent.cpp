@@ -11,7 +11,8 @@ using lt::ui::Logo;
 namespace
 {
     const char* productOrder[] = { Products::typeBeats, Products::pulsar, Products::knock,
-                                   Products::nebula, Products::orbit, Products::voidVerb, Products::tune, Products::all };
+                                   Products::nebula, Products::orbit, Products::voidVerb, Products::tune, Products::nova,
+                                   Products::vocalSuite, Products::all };
 
     juce::Font mono (float h)
     {

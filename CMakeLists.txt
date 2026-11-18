@@ -87,6 +87,7 @@ if(LT_BUILD_PLUGINS)
     add_subdirectory(plugins/knock)
     add_subdirectory(plugins/nebula)
     add_subdirectory(plugins/tune)
+    add_subdirectory(plugins/nova)
 endif()
 
 if(LT_BUILD_STUDIO)

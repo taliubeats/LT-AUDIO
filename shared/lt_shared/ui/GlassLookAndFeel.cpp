@@ -55,6 +55,8 @@ void GlassLookAndFeel::drawButtonBackground (juce::Graphics& g, juce::Button& b,
 juce::Font GlassLookAndFeel::getTextButtonFont (juce::TextButton& b, int h)
 {
     auto accent = (bool) b.getProperties().getWithDefault ("accent", false);
+    if (b.getProperties().contains ("fontSize"))
+        return Fonts::regular ((float) b.getProperties()["fontSize"]);
     auto size = juce::jmin ((float) h * 0.42f, accent ? 17.0f : 14.0f);
     return accent ? Fonts::semiBold (size) : Fonts::regular (size);
 }

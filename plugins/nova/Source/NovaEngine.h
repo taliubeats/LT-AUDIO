@@ -46,26 +46,28 @@ public:
     float getAutoGainDb() const noexcept         { return autoGainDb.load(); }
 
     /** The static curve (input -> output) for a sample value, used by tests and the UI. */
-    static float shape (float x, SatType, float character) noexcept;
+    static float shape (float x, SatType, float character, float sag = 0.0f) noexcept;
 
 private:
     void updateFilters (const NovaSettings&);
+    void updateEmphasis (SatType, float drive01);
 
     double sr = 44100.0;
     int channels = 2, latency = 0;
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
 
     using IIR = juce::dsp::IIR::Filter<float>;
-    std::vector<IIR> warmPre, warmPost, toneLow, toneHigh, airShelf, tapeLp, vinylLp, vinylHp, exciterHp;
+    std::vector<IIR> emphPre, emphPost, emphPre2, emphPost2, warmPre, warmPost, toneLow, toneHigh, airShelf, tapeLp, vinylLp, vinylHp, exciterHp;
     std::vector<float> dcX, dcY;                       // DC blocker state (asymmetric curves add DC)
     juce::AudioBuffer<float> dryBuffer, exciterBand;
     juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::None> dryDelay { 1 << 14 };
 
     juce::SmoothedValue<float> driveGain, outGain, mixSmooth, autoGain;
-    float inPow = 0.0f, outPow = 0.0f;
+    float inPow = 0.0f, outPow = 0.0f, sagEnv = 0.0f;
+    int emphType = -1; float emphDrive = -1.0f;
     juce::Random noise;
     NovaSettings last;
-    bool filtersReady = false;
+    bool filtersReady = false, firstBlock = true;
 
     std::atomic<float> energy { 0.0f }, autoGainDb { 0.0f };
 };

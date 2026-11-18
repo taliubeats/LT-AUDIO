@@ -13,6 +13,8 @@ namespace Products
     inline constexpr const char* orbit     = "ORBIT";
     inline constexpr const char* voidVerb  = "VOID";
     inline constexpr const char* tune      = "TUNE";
+    inline constexpr const char* nova      = "NOVA";
+    inline constexpr const char* vocalSuite = "VOCALSUITE";
     inline constexpr const char* all       = "ALL";
 }
 
