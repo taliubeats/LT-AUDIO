@@ -43,8 +43,18 @@ target_include_directories(nebula_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/nebul
 target_link_libraries(nebula_test PRIVATE lt_dsp juce::juce_audio_basics juce::juce_audio_processors juce::juce_dsp)
 lt_configure_target(nebula_test)
 
+juce_add_console_app(tune_test PRODUCT_NAME "Tune Test")
+target_sources(tune_test PRIVATE TuneTest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/tune/Source/Scales.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/tune/Source/PitchDetector.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/tune/Source/TuneEngine.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/tune/Source/MatchAnalysis.cpp)
+target_include_directories(tune_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/tune/Source)
+target_link_libraries(tune_test PRIVATE juce::juce_audio_basics juce::juce_audio_formats juce::juce_dsp)
+lt_configure_target(tune_test)
+
 # Host-like stress tests (one per plugin). Build with -DLT_SANITIZE=ON to catch memory errors.
-foreach(plug IN ITEMS LTNebula LTKnock LTOrbit LTVoid LTPulsar)
+foreach(plug IN ITEMS LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
     if(TARGET ${plug})
         juce_add_console_app(${plug}_stress PRODUCT_NAME "${plug} Stress")
         target_sources(${plug}_stress PRIVATE stress/PluginStress.cpp)

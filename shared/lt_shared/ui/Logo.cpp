@@ -9,6 +9,7 @@ Logo::Spec Logo::specFor (const juce::String& id)
     if (id == "NEBULA")    return { "NEBULA", Glyph::galaxy, 3, false };
     if (id == "ORBIT")     return { "ORBIT", Glyph::planetRing, 0, false };
     if (id == "VOID")      return { "VOID", Glyph::blackHole, 1, false };
+    if (id == "TUNE")      return { "TUNE", Glyph::sine, -1, false };
     if (id == "STUDIO")    return { "LICENSE STUDIO", Glyph::key, 1, false };
     if (id == "ALL")       return { "ALL PLUGINS", Glyph::none, -1, false };
     return { id, Glyph::none, -1, false };
@@ -123,6 +124,24 @@ void Logo::drawSymbol (juce::Graphics& g, juce::Rectangle<float> r, Glyph glyph,
             break;
         }
 
+        case Glyph::sine:
+        {
+            Glass::drawGlow (g, c, s * 0.55f, p.accent, 0.5f);
+            juce::Path wave;
+            for (int i = 0; i <= 48; ++i)
+            {
+                auto t = (float) i / 48.0f;
+                auto env = std::sin (t * juce::MathConstants<float>::pi);
+                auto pt = juce::Point<float> (r.getX() + t * r.getWidth(),
+                                              c.y - std::sin (t * juce::MathConstants<float>::twoPi * 1.5f) * env * s * 0.32f);
+                if (i == 0) wave.startNewSubPath (pt); else wave.lineTo (pt);
+            }
+            g.setColour (p.isLight ? juce::Colours::white : p.accent.brighter (0.5f));
+            g.strokePath (wave, juce::PathStrokeType (juce::jmax (1.2f, s * 0.07f), juce::PathStrokeType::curved,
+                                                      juce::PathStrokeType::rounded));
+            break;
+        }
+
         case Glyph::none:
             break;
     }
@@ -143,7 +162,7 @@ float Logo::draw (juce::Graphics& g, juce::Rectangle<float> area, const Spec& sp
     };
 
     auto ltW = widthOf (ltFont, "LT");
-    auto gap = h * 0.28f;
+    auto gap = spec.glyph == Glyph::sine ? h * 0.62f : h * 0.28f;
     auto nameW = widthOf (nameFont, spec.name);
     auto total = ltW + gap + nameW;
 
@@ -159,6 +178,9 @@ float Logo::draw (juce::Graphics& g, juce::Rectangle<float> area, const Spec& sp
         g.drawText ("LT", ltArea.translated (d, 0), juce::Justification::centredLeft, false);
     g.setColour (ltColour);
     g.drawText ("LT", ltArea, juce::Justification::centredLeft, false);
+
+    if (spec.glyph == Glyph::sine)
+        drawSymbol (g, juce::Rectangle<float> (x + ltW + gap * 0.08f, area.getY() + h * 0.2f, gap * 0.84f, h * 0.6f), Glyph::sine, p);
 
     auto nx = x + ltW + gap;
     auto nameColour = p.isLight ? p.value : juce::Colours::white;
