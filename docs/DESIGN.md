@@ -299,3 +299,14 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
   - DISTORT: DRIVE, TYPE, TONE, BITCRUSH, MIX, OUTPUT.
   - DOUBLE: VOICES, DETUNE, DELAY, WIDTH, MIX, OUTPUT.
   - CHOP: SLICES, RATE, PATTERN, GATE, SHUFFLE, OUTPUT.
+
+### Diseños aprobados (2026-11-18)
+- **LT METEOR:** `design/meteor/main-dark.webp` (pestañas + CAPTURE / PLAY / PREVIEW / DRAG TO DAW).
+  Correcciones al programar: quitar los dos paneles metálicos vacíos de abajo (dejar solo OUTPUT centrado) y la regla de dB
+  sin sentido sobre los knobs; el subtítulo cambia según el modo ("REVERSE REVERB. FASTER.", "VOCAL STUTTERS. FASTER.", …);
+  la ventana puede quedar algo más ancha para que las pestañas no partan el texto en dos líneas.
+- **LT SATURN** (vintage / Mellotron espacial): `design/saturn/main-dark.webp`. Cuerpo de Mellotron (madera + placa crema
+  envejecida), ventana con espacio y dos planetas-carrete con anillos girando unidos por la cinta, cabezal con chispas,
+  botones de tipo de cinta (MELLO STRINGS, MELLO FLUTE, MELLO CHOIR, CASSETTE, REEL, BROKEN), knob AGE grande, VU IN/OUT,
+  knobs WOW, FLUTTER, DRIFT, SATURATION, TONE, BANDWIDTH, HISS, ENSEMBLE, MIX; PRESETS / SAVE / THEME.
+  Al programar: los carretes-planeta giran a la velocidad de la cinta (WOW/DRIFT los hacen tambalear), las agujas VU se mueven.
