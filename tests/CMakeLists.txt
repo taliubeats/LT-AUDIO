@@ -53,3 +53,9 @@ foreach(plug IN ITEMS LTNebula LTKnock LTOrbit LTVoid LTPulsar)
         set_target_properties(${plug}_stress PROPERTIES EXCLUDE_FROM_ALL TRUE)   # only built on request
     endif()
 endforeach()
+
+juce_add_console_app(nova_test PRODUCT_NAME "Nova Test")
+target_sources(nova_test PRIVATE NovaTest.cpp ${CMAKE_SOURCE_DIR}/plugins/nova/Source/NovaEngine.cpp)
+target_include_directories(nova_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/nova/Source)
+target_link_libraries(nova_test PRIVATE juce::juce_audio_basics juce::juce_dsp)
+lt_configure_target(nova_test)
