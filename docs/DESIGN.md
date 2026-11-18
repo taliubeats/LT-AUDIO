@@ -283,3 +283,19 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
 - Controles previstos: estilo, densidad (cuántos ad-libs), en qué huecos, procesamiento (eco, pitch, pan, filtro),
   previsualizar y **arrastrar al DAW** o colocarlos alineados al tempo.
 - Consideración: solo con la voz de cantantes que lo autoricen.
+
+### LT METEOR — diseño (efectos de voz, 2026-11-18)
+- **Estilo propio, SIN galaxia:** UI oscura y brillante en morado/violeta/magenta (como los plugins de referencia del video, en morado).
+  Base aprobada: `design/meteor/backverb-base.webp`. Pestañas de modos: `design/meteor/tabs-reference.png`.
+- Un solo plugin (stutter + backverb + strokes fusionados). Fila de pestañas bajo la cabecera (reemplaza el desplegable MODE):
+  STUTTER · BACKVERB · TAIL · DELAY THROW · PITCH DOWN · DISTORT · DOUBLE · CHOP.
+- Flujo siempre igual: **CAPTURE → PLAY/PREVIEW → DRAG TO DAW**. La onda muestra el resultado del modo activo.
+- La zona de knobs de abajo cambia por modo:
+  - STUTTER: REPEATS, RATE, FADE IN, PAN, OUTPUT + efectos CHORUS / PHONE / BACKVERB (on/off + 2 knobs).
+  - BACKVERB: LENGTH, SIZE, TONE, WIDTH, OUTPUT, TREMOLO (+SYNC), LOW CUT.
+  - TAIL (solo la cola de reverb): LENGTH, SIZE, DECAY, TONE, WIDTH, OUTPUT.
+  - DELAY THROW (solo los ecos): TIME (sync), FEEDBACK, TONE, PING-PONG, WIDTH, OUTPUT.
+  - PITCH DOWN (la voz bajando): AMOUNT (semitonos), LENGTH, CURVE, START, TAPE (on/off), OUTPUT.
+  - DISTORT: DRIVE, TYPE, TONE, BITCRUSH, MIX, OUTPUT.
+  - DOUBLE: VOICES, DETUNE, DELAY, WIDTH, MIX, OUTPUT.
+  - CHOP: SLICES, RATE, PATTERN, GATE, SHUFFLE, OUTPUT.
