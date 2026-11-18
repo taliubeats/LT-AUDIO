@@ -89,6 +89,16 @@ int main()
         CHECK (std::abs (20 * std::log10 (r.rmsOut / r.rmsIn)) < 0.1, "mix 0 changes level");
     }
 
+    // parallel MIX must not comb-filter: 50 % mix keeps the level for every type and frequency
+    for (int t = 0; t < (int) SatType::count; ++t)
+        for (double f : { 120.0, 1000.0, 4000.0 })
+        {
+            NovaSettings s; s.type = t; s.drive = 0.15f; s.mix = 0.5f; s.autoGain = true;
+            auto r = run (s, 0.2f, f);
+            auto db = 20 * std::log10 (r.rmsOut / r.rmsIn);
+            CHECK (std::abs (db) < 1.0, names[t] << " mix 50% at " << f << " Hz changes level by " << db << " dB (phase cancellation)");
+        }
+
     // silence in -> silence out (no DC, no runaway), loud input stays bounded
     {
         NovaSettings s; s.type = (int) SatType::diode; s.drive = 1.0f; s.autoGain = true;

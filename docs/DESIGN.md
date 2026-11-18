@@ -332,5 +332,15 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
   Al programar: los carretes-planeta giran a la velocidad de la cinta (WOW/DRIFT los hacen tambalear), las agujas VU se mueven.
 
 ### Estado (2026-11-18)
-- **LT TUNE: HECHO** (sesión "LT tune continua"), en la rama `lt-tune` (commit 1084a81), pendiente de unir a `main`.
+- **LT TUNE: HECHO** (sesión "LT tune continua"), unido a `main`.
+- **LT NOVA (saturación): HECHO** (`plugins/nova`, tests `tests/NovaTest.cpp` y `tests/NovaRealAudioTest.cpp`, manual).
+  8 tipos con énfasis tipo hardware, sag de válvula, sobremuestreo 4x, AUTO GAIN, MIX en paralelo sin desfases
+  (corregido: los filtros "planos" eran all-pass y cancelaban el MIX en 6 tipos; hay test de regresión), 20 presets, EQ FOCUS.
+- **LT VOCAL SUITE: HECHO v1** (`plugins/vocal-suite`, tests `tests/VocalChainTest.cpp`, `tests/AssistantTest.cpp`,
+  `tests/VocalSuiteRealTest.cpp`, manual). Cadena: CLEANUP → TUNE → TONE → compresor adaptativo con make-up por sonoridad →
+  NOVA en paralelo → FX → delay (ORBIT) → reverb (VOID) → OUTPUT → limitador de seguridad (-0,5 dBFS, look-ahead 1,5 ms).
+  Asistente: integrado sin conexión (español/inglés, 18 estilos, dice qué cambió) y Claude opcional con la clave del usuario
+  (guardada solo en su carpeta de datos; nunca en proyectos/presets). Probado con voz hablada, voz cantada + guitarra,
+  trompeta, batería, mezclas: todos los presets mantienen el volumen (±1 dB en voz), sin clics ni saturación digital.
+  Pendiente v2: que el asistente "escuche" un análisis de la voz; dictado con micrófono propio (hoy usa el dictado del sistema).
 - **Armonías vocales:** el usuario indica que está hecho, pero no hay código en el repositorio (ni en `main` ni en `lt-tune`).

@@ -173,7 +173,8 @@ void NovaEngine::updateEmphasis (SatType type, float drive01)
     // (pre: +X dB, post: -X dB), so the tone stays neutral at low drive and only the
     // distortion becomes frequency dependent.
     using C = juce::dsp::IIR::Coefficients<float>;
-    auto flat = C::makeAllPass (sr, 1000.0);
+    // identity (an all-pass would shift the phase and comb against the dry path at MIX < 100 %)
+    typename C::Ptr flat (new C (1.0f, 0.0f, 1.0f, 0.0f));
     auto pre = flat, post = flat, pre2 = flat, post2 = flat;
 
     switch (type)

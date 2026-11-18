@@ -88,6 +88,7 @@ if(LT_BUILD_PLUGINS)
     add_subdirectory(plugins/nebula)
     add_subdirectory(plugins/tune)
     add_subdirectory(plugins/nova)
+    add_subdirectory(plugins/vocal-suite)
 endif()
 
 if(LT_BUILD_STUDIO)

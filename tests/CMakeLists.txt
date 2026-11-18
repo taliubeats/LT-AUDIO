@@ -54,7 +54,7 @@ target_link_libraries(tune_test PRIVATE juce::juce_audio_basics juce::juce_audio
 lt_configure_target(tune_test)
 
 # Host-like stress tests (one per plugin). Build with -DLT_SANITIZE=ON to catch memory errors.
-foreach(plug IN ITEMS LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
+foreach(plug IN ITEMS LTVocalSuite LTNova LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
     if(TARGET ${plug})
         juce_add_console_app(${plug}_stress PRODUCT_NAME "${plug} Stress")
         target_sources(${plug}_stress PRIVATE stress/PluginStress.cpp)
@@ -93,3 +93,25 @@ target_include_directories(vocal_chain_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/
 target_link_libraries(vocal_chain_test PRIVATE juce::juce_audio_basics juce::juce_audio_formats juce::juce_dsp)
 lt_configure_target(vocal_chain_test)
 set_target_properties(vocal_chain_test PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+# offline assistant of LT VOCAL SUITE
+juce_add_console_app(assistant_test PRODUCT_NAME "Assistant Test")
+target_sources(assistant_test PRIVATE AssistantTest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/vocal-suite/Source/Assistant.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/vocal-suite/Source/Params.cpp
+    ${LT_VOCAL_ENGINE_SOURCES})
+target_include_directories(assistant_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/vocal-suite/Source ${CMAKE_SOURCE_DIR}/plugins/tune/Source
+    ${CMAKE_SOURCE_DIR}/plugins/nova/Source ${CMAKE_SOURCE_DIR}/plugins/orbit/Source ${CMAKE_SOURCE_DIR}/plugins/void/Source)
+target_link_libraries(assistant_test PRIVATE lt_dsp lt_shared juce::juce_audio_processors juce::juce_audio_formats juce::juce_dsp)
+lt_configure_target(assistant_test)
+set_target_properties(assistant_test PROPERTIES EXCLUDE_FROM_ALL TRUE)
+
+# LT VOCAL SUITE: whole plugin, every preset, on real recordings
+if(TARGET LTVocalSuite)
+    juce_add_console_app(vocalsuite_real_test PRODUCT_NAME "Vocal Suite Real Test")
+    target_sources(vocalsuite_real_test PRIVATE VocalSuiteRealTest.cpp)
+    target_link_libraries(vocalsuite_real_test PRIVATE LTVocalSuite juce::juce_audio_processors juce::juce_audio_formats juce::juce_gui_basics)
+    target_compile_definitions(vocalsuite_real_test PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    set_target_properties(vocalsuite_real_test PROPERTIES EXCLUDE_FROM_ALL TRUE)
+endif()
+

@@ -19,7 +19,13 @@ void VocalChain::prepare (double sampleRate, int maxBlockSize, int voice, bool h
     novaEngine.prepare (sr, maxBlock, 2);
     delayEngine.prepare (sr, maxBlock);
     reverbEngine.prepare (sr, maxBlock);
-    latency = tuneEngine.getLatency() + novaEngine.getLatencySamples();
+    limLook = juce::jmax (8, (int) std::lround (sr * 0.0015));
+    for (auto& b : limBuf) b.assign ((size_t) limLook, 0.0f);
+    limReq.assign ((size_t) limLook, 1.0f);
+    limPos = 0; limGain = 1.0f;
+    limAtt = 1.0f - std::exp (-1.0f / ((float) limLook * 0.22f));
+    limRel = std::exp (-1.0f / (float) (sr * 0.12));
+    latency = tuneEngine.getLatency() + novaEngine.getLatencySamples() + limLook;
 
     juce::dsp::ProcessSpec spec { sr, (juce::uint32) maxBlock, 2 };
     essSplit.prepare (spec);
@@ -50,9 +56,12 @@ void VocalChain::reset()
     doubleLine.reset();
     for (auto* f : { &lowCut, &lowCut2, &body, &mud, &presence, &air, &essDetect, &essDetect2, &phoneHp, &phoneLp })
         for (auto& x : *f) x.reset();
+    for (auto& lb : limBuf) std::fill (lb.begin(), lb.end(), 0.0f);
+    std::fill (limReq.begin(), limReq.end(), 1.0f);
+    limGain = 1.0f;
     gateEnv = compEnv = essEnvHi = essEnvAll = 0.0f;
     essGainSm = 1.0f;
-    progDb = -24.0f; makeupDb = 0.0f;
+    progDb = -24.0f; makeupDb = 0.0f; preCompPow = postCompPow = 1.0e-3f;
     essSplit.reset();
     gateGain = 1.0f;
     lfoPhase = 0.0;
@@ -170,12 +179,16 @@ void VocalChain::compress (juce::AudioBuffer<float>& b, const ChainSettings& s)
 
     // Level-adaptive "one knob" vocal compressor: the threshold follows the singer's programme level
     // (slow RMS while the voice is present), so AMOUNT behaves the same on quiet or hot recordings.
-    // Make-up gain follows the average gain reduction (auto make-up).
+    // Make-up gain is loudness-matched: it compares the programme power before and after the gain
+    // reduction (only while the voice is present) and restores it, plus a little "density" lift,
+    // so turning AMOUNT up makes the vocal more even, not quieter.
     auto ratio = 2.0f + 4.0f * s.comp;
     auto knee = 9.0f;
     auto a = coeffFor (sr, s.compAttackMs), r = coeffFor (sr, s.compReleaseMs);
     auto progA = coeffFor (sr, 1500.0f);
-    auto mkA = coeffFor (sr, 800.0f);
+    auto powA = coeffFor (sr, 1200.0f);
+    auto mkA = coeffFor (sr, 250.0f);
+    auto bonusDb = 1.0f * s.comp;
     float worst = 0.0f;
 
     for (int i = 0; i < n; ++i)
@@ -194,12 +207,54 @@ void VocalChain::compress (juce::AudioBuffer<float>& b, const ChainSettings& s)
         else                          grTarget = (1.0f - 1.0f / ratio) * (over + knee * 0.5f) * (over + knee * 0.5f) / (2.0f * knee);
 
         compEnv = grTarget > compEnv ? a * compEnv + (1 - a) * grTarget : r * compEnv + (1 - r) * grTarget;
-        if (rmsDb > -60.0f) makeupDb = mkA * makeupDb + (1 - mkA) * compEnv;
+        auto grLin = dbToGain (-compEnv);
+        if (rmsDb > -60.0f)
+        {
+            preCompPow  = powA * preCompPow  + (1 - powA) * pow2;
+            postCompPow = powA * postCompPow + (1 - powA) * pow2 * grLin * grLin;
+            auto target = juce::jlimit (0.0f, 18.0f, 10.0f * std::log10 ((preCompPow + 1.0e-12f) / (postCompPow + 1.0e-12f)) + bonusDb);
+            makeupDb = mkA * makeupDb + (1 - mkA) * target;
+        }
         worst = juce::jmax (worst, compEnv);
-        auto g = dbToGain (juce::jmin (18.0f, makeupDb * 0.9f) - compEnv);
+        auto g = grLin * dbToGain (makeupDb);
         for (int c = 0; c < nc; ++c) b.setSample (c, i, b.getSample (c, i) * g);
     }
     grDb.store (worst);
+}
+
+// ------------------------------------------------------------------ output safety limiter
+
+void VocalChain::limit (juce::AudioBuffer<float>& b)
+{
+    // Look-ahead peak limiter: the gain starts falling limLook samples before a peak arrives,
+    // so normal material passes untouched and overs are caught without clicks.
+    constexpr float ceiling = 0.944f;   // -0.5 dBFS
+    auto n = b.getNumSamples();
+    auto* l = b.getWritePointer (0);
+    auto* r = b.getWritePointer (1);
+    float worst = 1.0f;
+    for (int i = 0; i < n; ++i)
+    {
+        auto pk = juce::jmax (std::abs (l[i]), std::abs (r[i]));
+        limReq[(size_t) limPos] = pk > ceiling ? ceiling / pk : 1.0f;
+
+        auto target = 1.0f;
+        for (auto v : limReq) target = juce::jmin (target, v);
+        limGain = target < limGain ? limGain + (target - limGain) * limAtt
+                                   : target + (limGain - target) * limRel;
+
+        auto dl = limBuf[0][(size_t) limPos], dr = limBuf[1][(size_t) limPos];
+        limBuf[0][(size_t) limPos] = l[i];
+        limBuf[1][(size_t) limPos] = r[i];
+        limPos = (limPos + 1) % limLook;
+
+        // last line of defence: gentle clip of anything the envelope still let through
+        auto clip = [] (float x) { return std::abs (x) <= ceiling ? x : std::copysign (ceiling + (1.0f - ceiling) * std::tanh ((std::abs (x) - ceiling) / (1.0f - ceiling)), x); };
+        l[i] = clip (dl * limGain);
+        r[i] = clip (dr * limGain);
+        worst = juce::jmin (worst, limGain);
+    }
+    limitDb.store (-gainToDb (worst));
 }
 
 // ------------------------------------------------------------------ FX: doubler, phone, width
@@ -304,15 +359,21 @@ void VocalChain::process (juce::AudioBuffer<float>& buffer, const ChainSettings&
     if (s.reverbOn && s.reverb.mix > 0.001f) reverbEngine.process (work, s.reverb);
 
     outGain.setTargetValue (dbToGain (s.outputDb));
+    for (int i = 0; i < n; ++i)
+    {
+        auto g = outGain.getNextValue();
+        for (int c = 0; c < 2; ++c) work.setSample (c, i, work.getSample (c, i) * g);
+    }
+    limit (work);
+
     bypassMix.setTargetValue (s.bypass ? 1.0f : 0.0f);
     float outPk = 0.0f;
     for (int i = 0; i < n; ++i)
     {
-        auto g = outGain.getNextValue();
         auto bp = bypassMix.getNextValue();
         for (int c = 0; c < 2; ++c)
         {
-            auto v = work.getSample (c, i) * g * (1.0f - bp) + dry.getSample (c, i) * bp;
+            auto v = work.getSample (c, i) * (1.0f - bp) + dry.getSample (c, i) * bp;
             work.setSample (c, i, v);
             outPk = juce::jmax (outPk, std::abs (v));
         }

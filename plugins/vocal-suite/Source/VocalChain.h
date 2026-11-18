@@ -83,12 +83,22 @@ private:
     ChainSettings lastFilters;
     bool filtersReady = false;
 
-    float gateEnv = 0.0f, gateGain = 1.0f, compEnv = 0.0f, essEnvHi = 0.0f, essEnvAll = 0.0f, essGainSm = 1.0f, progDb = -24.0f, makeupDb = 0.0f;
+    float gateEnv = 0.0f, gateGain = 1.0f, compEnv = 0.0f, essEnvHi = 0.0f, essEnvAll = 0.0f, essGainSm = 1.0f, progDb = -24.0f, makeupDb = 0.0f, preCompPow = 1.0e-3f, postCompPow = 1.0e-3f;
     juce::AudioBuffer<float> dry, dbl, workBuf;
     juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::None> dryDelay { 1 << 15 };
     juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> doubleLine { 1 << 13 };
     double lfoPhase = 0.0;
     juce::SmoothedValue<float> outGain, bypassMix;
+
+    // output safety limiter (short look-ahead, -0.5 dBFS ceiling)
+    void limit (juce::AudioBuffer<float>&);
+    int limLook = 64, limPos = 0;
+    std::vector<float> limBuf[2], limReq;
+    float limGain = 1.0f, limAtt = 0.1f, limRel = 0.999f;
+    std::atomic<float> limitDb { 0.0f };
+public:
+    float getLimiterDb() const noexcept { return limitDb.load(); }
+private:
 
     std::atomic<float> inLevel { 0 }, outLevel { 0 }, grDb { 0 }, deEssDb { 0 };
     std::atomic<bool> gateOpen { false };

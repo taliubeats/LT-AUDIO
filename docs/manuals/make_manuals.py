@@ -413,6 +413,81 @@ PRODUCTS.append(dict(
           "Al cantar una nota que no está en la escala, LT TUNE la lleva a la nota permitida más cercana. Apaga notas en EDIT NOTES para forzar una melodía."],
 ))
 
+# ------------------------------------------------------------------ NOVA
+PRODUCTS.append(dict(
+    file="LT-NOVA-Manual.pdf", title="LT NOVA", subtitle="Saturación analógica",
+    image="design/nova/main-dark.webp",
+    intro="LT NOVA es una saturación de estilo analógico con 8 tipos de \"hardware\": cinta, válvula, consola, transformador, transistor, "
+          "diodo, vinilo y excitador. Cada tipo satura como su equipo real: la cinta comprime los agudos, el transformador satura primero los graves, "
+          "la válvula empuja los medios y \"respira\" con la dinámica. Trabaja con <b>sobremuestreo 4x</b> (sin aliasing) y <b>AUTO GAIN</b> "
+          "para que compares a igual volumen. La estrella crece y brilla con el DRIVE.",
+    sections=[("Cómo empezar", [
+        "<b>1.</b> Pon LT NOVA en una pista o bus (voz, 808, batería, master...).",
+        "<b>2.</b> Elige un tipo en la barra (TAPE, TUBE, CONSOLE...) o un preset de fábrica.",
+        "<b>3.</b> Sube el <b>DRIVE</b> (la estrella) hasta que oigas el color. Con AUTO GAIN encendido el volumen se mantiene.",
+        "<b>4.</b> Usa <b>MIX</b> para saturación en paralelo: el original se mezcla con el saturado sin desfases.",
+        "<b>EQ FOCUS</b>: aplica la saturación solo a una banda de frecuencias (por ejemplo solo graves del 808 o solo agudos de la voz).",
+    ])],
+    params=[
+        ("TYPE", "TAPE, TUBE, CONSOLE, TRANSFORMER, TRANSISTOR, DIODE, VINYL, EXCITER", "El carácter de la saturación."),
+        ("DRIVE", "0 – 100 %", "Cantidad de saturación (la estrella). Doble clic = valor por defecto."),
+        ("TONE", "-100 a +100", "Inclina el sonido saturado hacia oscuro (izquierda) o brillante (derecha)."),
+        ("WARMTH", "0 – 100 %", "Más cuerpo y calidez en los graves-medios."),
+        ("AIR", "0 – 100 %", "Brillo y aire arriba de 10 kHz."),
+        ("CHARACTER", "EVEN · BALANCED · ODD", "Armónicos pares (cálido, suave) o impares (más duro y agresivo)."),
+        ("INPUT / OUTPUT", "-18 a +18 dB", "Nivel de entrada (empuja más la saturación) y de salida."),
+        ("MIX", "0 – 100 %", "Mezcla en paralelo con el original (alineado, sin cancelaciones)."),
+        ("AUTO GAIN", "ON / OFF", "Iguala el volumen del saturado al del original."),
+        ("Presets", "20 de fábrica", "Warm Glue, Master Sheen, Expensive Console, Tape Bus, Vocal Warmth, Rap Vocal Grit, Drum Bus Smash, 808 Heat, "
+         "808 Distorted, Lo-Fi Record, Old Cassette, Hi-Hat Shine, Guitar Amp Crunch, Supernova..."),
+    ],
+    tips=["En el master: TAPE o CONSOLE con DRIVE 10–25 % y MIX 100 %. Debe notarse más \"pegado\", no más distorsionado.",
+          "808 que se oiga en altavoces pequeños: TRANSISTOR o DIODE, DRIVE 40–60 %, EQ FOCUS en graves.",
+          "Voz con presencia: TUBE, DRIVE 20–35 %, MIX 50–70 %."],
+))
+
+# ------------------------------------------------------------------ VOCAL SUITE
+PRODUCTS.append(dict(
+    file="LT-VOCAL-SUITE-Manual.pdf", title="LT VOCAL SUITE", subtitle="Cadena vocal completa con asistente",
+    image="design/vocal-suite/main-dark.webp",
+    intro="LT VOCAL SUITE es una cadena vocal completa en un solo plugin: afinación (motor de LT TUNE), limpieza (low cut, puerta de ruido, "
+          "de-esser), ecualizador vocal, compresor, saturación (motor de LT NOVA), doblador, efecto teléfono, anchura estéreo, delay (LT ORBIT) "
+          "y reverb (LT VOID), con un limitador de seguridad a la salida. Le escribes al <b>astronauta</b> lo que quieres "
+          "(\"vocal chain estilo trap melódico\", \"más brillo\", \"menos reverb\") y él ajusta los controles por ti.",
+    sections=[("Cómo empezar", [
+        "<b>1.</b> Pon LT VOCAL SUITE en la pista de voz.",
+        "<b>2.</b> En <b>TUNE</b> elige la <b>KEY</b> de la canción y tu tipo de voz (Soprano...Bass).",
+        "<b>3.</b> Elige un preset de estilo (Melodic Trap Lead, Drill Vocal, R&amp;B Silk, Reggaeton Lead...) o escríbele al asistente y pulsa <b>Send</b>.",
+        "<b>4.</b> Ajusta a oído en cada módulo. <b>UNDO / REDO</b> deshacen también lo que hizo el asistente. <b>BYPASS</b> compara con la voz original.",
+    ]), ("El asistente", [
+        "Sin configurar nada funciona el <b>asistente integrado</b> (sin internet): entiende pedidos comunes en español e inglés y conoce todos los estilos.",
+        "Para que entienda <b>cualquier pedido</b> (incluido \"estilo de tal artista\"), conecta Claude: clic en el astronauta &gt; <b>Connect Claude</b> "
+        "y pega una clave de API de console.anthropic.com. La clave se guarda solo en tu computadora (nunca en el proyecto ni en los presets). "
+        "Cada pedido cuesta muy poco.",
+        "El asistente recrea el <b>procesado</b> (afinación, EQ, compresión, efectos), no la voz de nadie.",
+        "Micrófono: en Mac, con el cuadro de texto seleccionado, pulsa dos veces la tecla <b>Fn</b> (dictado) y habla.",
+    ])],
+    params=[
+        ("TUNE", "Key, Voice, Retune Speed, Humanize, Flex Tune, Mix", "Afinación en tiempo real. Retune 0 = efecto robot; 40–80 ms = natural."),
+        ("CLEANUP", "Low Cut, Gate, De-Ess, De-Ess Freq", "Quita golpes de graves, ruido entre frases (GATE OPEN se enciende con la voz) y eses fuertes."),
+        ("TONE", "Body, Mud Cut, Presence, Air", "EQ vocal: cuerpo (180 Hz), barro (350 Hz), presencia (3,2 kHz) y aire (12 kHz). La curva muestra el resultado."),
+        ("DYNAMICS", "Compression, Attack, Release · Saturation type, drive, mix", "Compresor que se adapta al nivel de tu grabación (siempre suena igual de "
+         "fuerte gracias a la ganancia automática) + saturación de LT NOVA en paralelo."),
+        ("SPACE", "Delay (nota, modo, feedback, mix) · Reverb (tipo, decay, pre-delay, mix)", "Delays sincronizados al tempo y 12 reverbs. "
+         "Se apartan solos cuando cantas (ducking) para que la voz quede clara."),
+        ("FX", "Doubler, Phone, Width, Output", "Doble estéreo, efecto teléfono/radio, anchura y volumen de salida."),
+        ("INPUT / OUTPUT", "Medidores laterales", "Nivel de entrada y salida. La salida nunca pasa de -0,5 dBFS (limitador de seguridad)."),
+        ("Presets", "18 estilos", "Melodic Trap Lead, Hard Tune Robot, Rage Vocal, Drill Vocal, Boom Bap Rap, Modern Rap Upfront, R&amp;B Silk, "
+         "Pop Lead Polished, Ballad Natural, Reggaeton Lead, Afro Smooth, Rock Grit, Lo-Fi Bedroom, Phone Intro, Ad-Lib Wide, Ethereal Shimmer, Dry &amp; Clean."),
+    ],
+    extra_tables=[("Latencia", [
+        ("Total", "≈ 26 ms (voz Tenor, 44,1 kHz)", "Ableton la compensa al reproducir. Para grabar con el efecto, elige una VOICE más aguda o graba sin el plugin."),
+    ])],
+    tips=["Empieza con el preset de tu género y pide cambios pequeños al asistente: \"más aire\", \"autotune más natural\", \"menos delay\".",
+          "Para ad-libs: preset <b>Ad-Lib Wide</b> (doble y ancho) en una pista aparte.",
+          "Si la afinación va a notas raras, revisa la KEY (puedes sacarla con LT TYPE BEATS)."],
+))
+
 # ------------------------------------------------------------------ LICENSE STUDIO
 PRODUCTS.append(dict(
     file="LT-License-Studio-Manual.pdf", title="LT LICENSE STUDIO", subtitle="Generador de licencias (solo para tu Mac)",

@@ -49,6 +49,13 @@ void GlassLookAndFeel::drawButtonBackground (juce::Graphics& g, juce::Button& b,
     if (accent && ! b.isEnabled())
         selected = false;
 
+    if ((bool) b.getProperties().getWithDefault ("textOnly", false))
+    {
+        if (hover && b.isEnabled())
+            Glass::drawGlow (g, r.getCentre(), r.getWidth() * 0.45f, palette.accent, 0.18f);
+        return;
+    }
+
     Glass::drawPill (g, r, palette, selected, hover && b.isEnabled(), down);
 }
 
@@ -68,6 +75,18 @@ void GlassLookAndFeel::drawButtonText (juce::Graphics& g, juce::TextButton& b, b
 
     g.setFont (getTextButtonFont (b, b.getHeight()));
     g.setColour ((selected ? palette.accentText : palette.text).withMultipliedAlpha (b.isEnabled() ? 1.0f : 0.4f));
+    if ((bool) b.getProperties().getWithDefault ("chevron", false))
+    {
+        auto area = b.getLocalBounds().reduced (16, 2);
+        auto c = juce::Point<float> ((float) area.getRight() - 6.0f, (float) area.getCentreY());
+        juce::Path v;
+        v.startNewSubPath (c.x - 5.0f, c.y - 2.5f);
+        v.lineTo (c.x, c.y + 2.5f);
+        v.lineTo (c.x + 5.0f, c.y - 2.5f);
+        g.strokePath (v, juce::PathStrokeType (1.5f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+        g.drawFittedText (b.getButtonText(), area.withTrimmedRight (20), juce::Justification::centredLeft, 1);
+        return;
+    }
     g.drawFittedText (b.getButtonText(), b.getLocalBounds().reduced (8, 2), juce::Justification::centred, 1);
 }
 
@@ -90,8 +109,8 @@ void GlassLookAndFeel::drawToggleButton (juce::Graphics& g, juce::ToggleButton& 
 
 void GlassLookAndFeel::fillTextEditorBackground (juce::Graphics& g, int w, int h, juce::TextEditor& ed)
 {
-    if (ed.isReadOnly())
-        return; // read-only editors sit inside their own glass boxes
+    if (ed.isReadOnly() || (bool) ed.getProperties().getWithDefault ("bare", false))
+        return; // read-only / bare editors sit inside their own glass boxes
 
     auto r = juce::Rectangle<float> (0, 0, (float) w, (float) h).reduced (1.0f);
     Glass::drawPanel (g, r, 8.0f, palette, ed.hasKeyboardFocus (true) ? 1.6f : 1.0f, ed.hasKeyboardFocus (true));
