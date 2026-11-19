@@ -240,6 +240,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
             choice (IDs::fx (b, s, "type"), fn + " Type", fxNames(), 0);
             boolean (IDs::fx (b, s, "on"), fn + " On", true);
             pct (IDs::fx (b, s, "mix"), fn + " Mix", 100.0f);
+            l.add (std::make_unique<AudioParameterFloat> (P (IDs::fx (b, s, "out")), fn + " Output", NormalisableRange<float> (-24, 12, 0.01f), 0.0f,
+                                                          AudioParameterFloatAttributes().withLabel ("dB").withStringFromValueFunction ([] (float v, int) { return (v > 0 ? "+" : "") + String (v, 1) + " dB"; })));
             for (int p = 0; p < numFxParams; ++p)
                 l.add (std::make_unique<AudioParameterFloat> (P (IDs::fxParam (b, s, p)), fn + " P" + String (p + 1), NormalisableRange<float> (0, 1, 0.0001f), 0.5f));
         }

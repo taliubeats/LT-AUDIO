@@ -936,7 +936,23 @@ void SynthEngine::addUiNote (int n, bool on, float vel)
     int s1, n1, s2, n2;
     uiFifo.prepareToWrite (1, s1, n1, s2, n2);
     auto idx = n1 > 0 ? s1 : s2;
-    if (n1 + n2 > 0) uiQueue[(size_t) idx] = { n & 127, on ? 1 : 0, juce::jlimit (1, 127, (int) (vel * 127.0f)) };
+    if (n1 + n2 > 0) uiQueue[(size_t) idx] = { on ? 1 : 0, n & 127, juce::jlimit (1, 127, (int) (vel * 127.0f)) };
+    uiFifo.finishedWrite (n1 + n2);
+}
+
+void SynthEngine::addUiController (int cc, int value)
+{
+    int s1, n1, s2, n2;
+    uiFifo.prepareToWrite (1, s1, n1, s2, n2);
+    if (n1 + n2 > 0) uiQueue[(size_t) (n1 > 0 ? s1 : s2)] = { 2, cc & 127, juce::jlimit (0, 127, value) };
+    uiFifo.finishedWrite (n1 + n2);
+}
+
+void SynthEngine::addUiPitchBend (int value14)
+{
+    int s1, n1, s2, n2;
+    uiFifo.prepareToWrite (1, s1, n1, s2, n2);
+    if (n1 + n2 > 0) uiQueue[(size_t) (n1 > 0 ? s1 : s2)] = { 3, juce::jlimit (0, 16383, value14), 0 };
     uiFifo.finishedWrite (n1 + n2);
 }
 
@@ -1261,7 +1277,17 @@ void SynthEngine::process (juce::MidiBuffer& midi, int numSamples, const juce::A
     {
         int s1, n1, s2, n2;
         uiFifo.prepareToRead (uiFifo.getNumReady(), s1, n1, s2, n2);
-        auto add = [&] (int i) { auto& q = uiQueue[(size_t) i]; midi.addEvent (q[1] ? juce::MidiMessage::noteOn (1, q[0], (juce::uint8) q[2]) : juce::MidiMessage::noteOff (1, q[0]), 0); };
+        auto add = [&] (int i)
+        {
+            auto& q = uiQueue[(size_t) i];
+            switch (q[0])
+            {
+                case 1:  midi.addEvent (juce::MidiMessage::noteOn (1, q[1], (juce::uint8) q[2]), 0); break;
+                case 2:  midi.addEvent (juce::MidiMessage::controllerEvent (1, q[1], q[2]), 0); break;
+                case 3:  midi.addEvent (juce::MidiMessage::pitchWheel (1, q[1]), 0); break;
+                default: midi.addEvent (juce::MidiMessage::noteOff (1, q[1]), 0); break;
+            }
+        };
         for (int i = 0; i < n1; ++i) add (s1 + i);
         for (int i = 0; i < n2; ++i) add (s2 + i);
         uiFifo.finishedRead (n1 + n2);

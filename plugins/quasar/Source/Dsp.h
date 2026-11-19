@@ -9,8 +9,8 @@ namespace quasar::dsp
 inline constexpr float pi = juce::MathConstants<float>::pi;
 inline constexpr float twoPi = juce::MathConstants<float>::twoPi;
 
-/** 75 % level = unity, 100 % = +5 dB, quadratic below. */
-inline float levelToGain (float pct) noexcept { auto x = juce::jmax (0.0f, pct) * 0.01f; return x * x * 1.7777778f; }
+/** Fader law: 75 % = unity (0 dB), 100 % = +6 dB, 50 % = -8.5 dB, 25 % = -26 dB. */
+inline float levelToGain (float pct) noexcept { auto x = juce::jmax (0.0f, pct) * (0.01f / 0.75f); return x <= 0.0f ? 0.0f : std::pow (x, 2.40942f); }
 inline float dbToGain (float db) noexcept { return std::pow (10.0f, db * 0.05f); }
 inline float gainToDb (float g) noexcept { return 20.0f * std::log10 (juce::jmax (1.0e-9f, g)); }
 

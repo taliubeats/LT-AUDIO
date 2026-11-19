@@ -51,6 +51,11 @@ public:
     int addModulation (int source, int dest, float amountPct);
     void removeModulation (int slot);
     int findModulation (int source, int dest) const;
+    struct Route { int slot, source; float amount; bool bipolar; };
+    /** Routes that modulate a destination (message thread, cheap: reads cached parameter pointers). */
+    std::vector<Route> routesFor (int dest) const;
+    juce::RangedAudioParameter* param (const juce::String& id) const { return dynamic_cast<juce::RangedAudioParameter*> (state.getParameter (id)); }
+    void setParam (const juce::String& id, float realValue);
 
     // meters (any thread)
     float getOutputLevel (int ch) const noexcept { return outLevel[(size_t) (ch & 1)].load(); }
@@ -94,6 +99,7 @@ private:
     std::array<std::atomic<float>*, numBuses> busLevelP {}, busPanP {}, busMuteP {}, busSoloP {};
     std::atomic<float>* masterP = nullptr, *limiterP = nullptr;
     std::array<juce::RangedAudioParameter*, numBuses> busLevelParam {};
+    std::array<std::atomic<float>*, numModSlots> modSrcP {}, modDstP {}, modAmtP {}, modBipP {}, modOnP {};
     juce::RangedAudioParameter* masterParameter = nullptr;
     int masterDest = 0;
     std::array<int, numBuses> busLevelDest {}, busPanDest {};

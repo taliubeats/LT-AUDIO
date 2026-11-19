@@ -155,6 +155,8 @@ public:
 
     // keyboard on the UI
     void addUiNote (int note, bool on, float velocity = 0.8f);
+    void addUiController (int cc, int value);      // 0..127
+    void addUiPitchBend (int value14);             // 0..16383
 
     // ---- used by the voices
     BlockParams bp;

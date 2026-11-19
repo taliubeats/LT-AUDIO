@@ -56,7 +56,8 @@ private:
         int fadePos = 0;
         int requested = 0;                    // message thread: type of the newest instance
         dsp::Ramp on, mixR;
-        std::atomic<float>* type = nullptr, *enabled = nullptr, *mix = nullptr;
+        std::atomic<float>* type = nullptr, *enabled = nullptr, *mix = nullptr, *out = nullptr;
+        dsp::Ramp outGain;
         std::array<std::atomic<float>*, numFxParams> p {};
         std::array<int, numFxParams> pDest {};
         int mixDest = 0;

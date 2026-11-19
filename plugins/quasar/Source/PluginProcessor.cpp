@@ -24,6 +24,14 @@ Processor::Processor()
     limiterP = state.getRawParameterValue (IDs::limiter);
     masterDest = ModDefs::destIndex (IDs::master);
     for (int m = 0; m < numMacros; ++m) macroNames.add ("MACRO " + juce::String (m + 1));
+    for (int sl = 0; sl < numModSlots; ++sl)
+    {
+        modSrcP[(size_t) sl] = state.getRawParameterValue (IDs::mod (sl, "src"));
+        modDstP[(size_t) sl] = state.getRawParameterValue (IDs::mod (sl, "dst"));
+        modAmtP[(size_t) sl] = state.getRawParameterValue (IDs::mod (sl, "amt"));
+        modBipP[(size_t) sl] = state.getRawParameterValue (IDs::mod (sl, "bip"));
+        modOnP[(size_t) sl] = state.getRawParameterValue (IDs::mod (sl, "on"));
+    }
     for (auto* p : getParameters()) p->addListener (this);
     startTimerHz (20);
 }
@@ -225,9 +233,23 @@ bool Processor::loadUserTable (int osc, const juce::File& f, juce::String& error
 int Processor::findModulation (int source, int dest) const
 {
     for (int s = 0; s < numModSlots; ++s)
-        if ((int) state.getRawParameterValue (IDs::mod (s, "src"))->load() == source
-            && (int) state.getRawParameterValue (IDs::mod (s, "dst"))->load() == dest) return s;
+        if ((int) modSrcP[(size_t) s]->load() == source && (int) modDstP[(size_t) s]->load() == dest) return s;
     return -1;
+}
+
+std::vector<Processor::Route> Processor::routesFor (int dest) const
+{
+    std::vector<Route> r;
+    if (dest <= 0) return r;
+    for (int s = 0; s < numModSlots; ++s)
+        if ((int) modDstP[(size_t) s]->load() == dest && (int) modSrcP[(size_t) s]->load() > 0 && modOnP[(size_t) s]->load() > 0.5f)
+            r.push_back ({ s, (int) modSrcP[(size_t) s]->load(), modAmtP[(size_t) s]->load() * 0.01f, modBipP[(size_t) s]->load() > 0.5f });
+    return r;
+}
+
+void Processor::setParam (const juce::String& id, float v)
+{
+    if (auto* p = param (id)) { p->beginChangeGesture(); p->setValueNotifyingHost (p->convertTo0to1 (v)); p->endChangeGesture(); }
 }
 
 int Processor::addModulation (int source, int dest, float amountPct)
@@ -238,7 +260,7 @@ int Processor::addModulation (int source, int dest, float amountPct)
     auto existing = findModulation (source, dest);
     if (existing >= 0) return existing;
     for (int s = 0; s < numModSlots; ++s)
-        if ((int) state.getRawParameterValue (IDs::mod (s, "src"))->load() == 0)
+        if ((int) modSrcP[(size_t) s]->load() == 0)
         {
             undo.beginNewTransaction();
             set (IDs::mod (s, "src"), (float) source);

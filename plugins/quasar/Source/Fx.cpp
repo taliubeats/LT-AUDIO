@@ -612,6 +612,8 @@ FxChain::FxChain (juce::AudioProcessorValueTreeState& s, int b) : state (s), bus
         sl.type = s.getRawParameterValue (IDs::fx (b, i, "type"));
         sl.enabled = s.getRawParameterValue (IDs::fx (b, i, "on"));
         sl.mix = s.getRawParameterValue (IDs::fx (b, i, "mix"));
+        sl.out = s.getRawParameterValue (IDs::fx (b, i, "out"));
+        sl.outGain.setLength (256); sl.outGain.snap (1.0f);
         sl.mixDest = ModDefs::destIndex (IDs::fx (b, i, "mix"));
         for (int p = 0; p < numFxParams; ++p)
         {
@@ -693,6 +695,7 @@ void FxChain::setType (int slot, int type)
     };
     set (IDs::fx (bus, slot, "type"), (float) type);
     set (IDs::fx (bus, slot, "on"), 1.0f);
+    set (IDs::fx (bus, slot, "out"), 0.0f);
     set (IDs::fx (bus, slot, "mix"), (type == (int) FxType::reverb || type == (int) FxType::delay) ? 30.0f : 100.0f);
     auto& info = fxInfo (type);
     for (int p = 0; p < numFxParams; ++p) set (IDs::fxParam (bus, slot, p), info.params[(size_t) p].def);
@@ -716,14 +719,14 @@ void FxChain::move (int from, int to)
     auto read = [this] (int slot)
     {
         std::vector<float> v;
-        for (auto* n : { "type", "on", "mix" }) v.push_back (state.getParameter (IDs::fx (bus, slot, n))->getValue());
+        for (auto* n : { "type", "on", "mix", "out" }) v.push_back (state.getParameter (IDs::fx (bus, slot, n))->getValue());
         for (int p = 0; p < numFxParams; ++p) v.push_back (state.getParameter (IDs::fxParam (bus, slot, p))->getValue());
         return v;
     };
     auto write = [this] (int slot, const std::vector<float>& v)
     {
         int k = 0;
-        for (auto* n : { "type", "on", "mix" }) { auto* p = state.getParameter (IDs::fx (bus, slot, n)); p->beginChangeGesture(); p->setValueNotifyingHost (v[(size_t) k++]); p->endChangeGesture(); }
+        for (auto* n : { "type", "on", "mix", "out" }) { auto* p = state.getParameter (IDs::fx (bus, slot, n)); p->beginChangeGesture(); p->setValueNotifyingHost (v[(size_t) k++]); p->endChangeGesture(); }
         for (int p = 0; p < numFxParams; ++p) { auto* pp = state.getParameter (IDs::fxParam (bus, slot, p)); pp->beginChangeGesture(); pp->setValueNotifyingHost (v[(size_t) k++]); pp->endChangeGesture(); }
     };
     std::vector<std::vector<float>> vals;
@@ -799,6 +802,10 @@ void FxChain::process (juce::AudioBuffer<float>& buf, int n, const FxContext& ct
         {
             s.current->process (L, R, n, realParams (s.current), mixEff, ctx);
         }
+        // slot output (the fader of the module), click-free
+        s.outGain.set (dsp::dbToGain (s.out->load()));
+        if (s.outGain.isSmoothing() || std::abs (s.outGain.value - 1.0f) > 1.0e-6f)
+            for (int i = 0; i < n; ++i) { auto g = s.outGain.next(); L[i] *= g; R[i] *= g; }
         activity[(size_t) si].store (onNow);
     }
 }
