@@ -36,6 +36,7 @@ jobs:
           ./build/tests/tune_test_artefacts/Release/tune_test
           ./build/tests/nova_test_artefacts/Release/nova_test
           ./build/tests/quasar_test_artefacts/Release/quasar_test
+          ./build/tests/quasar_ui_test_artefacts/Release/quasar_ui_test
 
       - name: Package
         run: |
@@ -80,6 +81,7 @@ jobs:
           .\build\tests\tune_test_artefacts\Release\tune_test.exe
           .\build\tests\nova_test_artefacts\Release\nova_test.exe
           .\build\tests\quasar_test_artefacts\Release\quasar_test.exe
+          .\build\tests\quasar_ui_test_artefacts\Release\quasar_ui_test.exe
 
       - name: Package
         shell: pwsh

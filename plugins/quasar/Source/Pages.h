@@ -10,6 +10,24 @@ class Page : public juce::Component, protected juce::Timer
 {
 public:
     explicit Page (Processor& p) : proc (p) { setInterceptsMouseClicks (false, true); }
+    /** Pages that handle clicks themselves (lists, rows) declare where: only there they take the mouse. */
+    void setClickAreas (std::vector<juce::Rectangle<int>> areas)
+    {
+        clickAreas = std::move (areas);
+        setInterceptsMouseClicks (! clickAreas.empty(), true);
+    }
+    bool hitTest (int x, int y) override
+    {
+        // the page itself only takes clicks in its areas; everywhere else only its visible controls do,
+        // so pages that overlap (keyboard, voicing...) keep working
+        for (auto& a : clickAreas) if (a.contains (x, y)) return true;
+        for (int i = getNumChildComponents(); --i >= 0;)
+        {
+            auto* c = getChildComponent (i);
+            if (c->isVisible() && c->getBounds().contains (x, y) && c->hitTest (x - c->getX(), y - c->getY())) return true;
+        }
+        return false;
+    }
     ~Page() override { bindings.clear(); }
     void paint (juce::Graphics& g) override { paintPanels (g); }
     virtual void paintPanels (juce::Graphics&) {}
@@ -21,6 +39,7 @@ protected:
     Processor& proc;
     Bindings bindings;
     juce::OwnedArray<juce::Component> owned;
+    std::vector<juce::Rectangle<int>> clickAreas;
     template <typename T, typename... A> T& make (A&&... a) { auto* c = new T (std::forward<A> (a)...); owned.add (c); addAndMakeVisible (c); return *c; }
 };
 

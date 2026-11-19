@@ -714,6 +714,7 @@ FxPage::FxPage (Processor& p) : Page (p)
         addAndMakeVisible (s);
     }
     setBus (0);
+    setClickAreas ({ { 18, 210, 420, 522 } });   // the chain list
     startTimerHz (10);
 }
 
@@ -878,6 +879,7 @@ MatrixPage::MatrixPage (Processor& p) : Page (p)
         for (int s = 0; s < numModSlots; ++s) { set (s, "src", 0); set (s, "dst", 0); set (s, "amt", 0); set (s, "aux", 0); set (s, "curve", 0); set (s, "bip", 0); set (s, "out", 100); set (s, "on", 1); }
         repaint();
     };
+    setClickAreas ({ { 18, 136, 955, 596 } });   // the rows
     startTimerHz (20);
 }
 
@@ -1068,7 +1070,9 @@ void MatrixPage::mouseDown (const juce::MouseEvent& e)
     auto x = e.position.x;
     auto r = rowRect (s - scroll).toNearestInt();
     if (x >= 66 && x < 222) sourceMenu (s, false, r.withX (66).withWidth (156));
-    else if (x >= 232 && x < 460) { dragSlot = s; dragColumn = 0; dragStart = get (s, "amt"); proc.undo.beginNewTransaction(); if (e.getNumberOfClicks() > 1) set (s, "amt", 0); }
+    else if (x >= 232 && x < 460) { dragSlot = s; dragColumn = 0; dragStart = get (s, "amt"); proc.undo.beginNewTransaction();
+                                       if (e.getNumberOfClicks() > 1) set (s, "amt", 0);
+                                       else if (! e.mods.isShiftDown()) set (s, "amt", std::round (juce::jlimit (-100.0f, 100.0f, (e.position.x - 318.0f) / 86.0f * 100.0f))); }
     else if (x >= 470 && x < 632) destMenu (s, r.withX (470).withWidth (162));
     else if (x >= 640 && x < 672) set (s, "curve", (float) (((int) get (s, "curve") + 1) % 4));
     else if (x >= 677 && x < 710) set (s, "bip", get (s, "bip") > 0.5f ? 0.0f : 1.0f);
@@ -1118,7 +1122,11 @@ GlobalPage::GlobalPage (Processor& p) : Page (p)
         auto* b = osButtons.add (new juce::TextButton (Choices::oversamplings()[i]));
         b->getProperties().set ("fontSize", 15.0);
         b->setBounds (138 + i * 113, 232, 106, 32);
-        b->onClick = [this, i] { proc.setParam (IDs::oversampling, (float) i); };
+        b->onClick = [this, i]
+        {
+            proc.setParam (IDs::oversampling, (float) i);
+            if ((int) proc.state.getRawParameterValue (IDs::quality)->load() == 0) proc.setParam (IDs::quality, 1);   // ECO has no oversampling
+        };
         addAndMakeVisible (b);
     }
     knob (IDs::masterTune, "MASTER TUNE", { 449, 196 }, 50, 13.0f).bipolar = true;
@@ -1147,7 +1155,7 @@ void GlobalPage::timerCallback()
     auto q = (int) proc.state.getRawParameterValue (IDs::quality)->load();
     auto o = (int) proc.state.getRawParameterValue (IDs::oversampling)->load();
     for (int i = 0; i < 3; ++i) qualityButtons[i]->setToggleState (i == q, juce::dontSendNotification);
-    for (int i = 0; i < 2; ++i) { osButtons[i]->setToggleState (i == o && q > 0, juce::dontSendNotification); osButtons[i]->setEnabled (q > 0); }
+    for (int i = 0; i < 2; ++i) { osButtons[i]->setToggleState (i == o && q > 0, juce::dontSendNotification); osButtons[i]->setAlpha (q > 0 ? 1.0f : 0.55f); }
     repaint (987, 98, 195, 120);
 }
 
@@ -1282,6 +1290,7 @@ ArpPanel::ArpPanel (Processor& p) : Page (p)
     make<Switch> (*p.param (IDs::arpOn)).setBounds (36, 806, 46, 24);
     make<Wheel> (p, true).setBounds (118, 758, 34, 100);
     make<Wheel> (p, false).setBounds (174, 758, 34, 100);
+    setClickAreas ({ { 24, 768, 76, 34 } });   // "ARP" opens the settings
 }
 
 void ArpPanel::paintPanels (juce::Graphics& g)

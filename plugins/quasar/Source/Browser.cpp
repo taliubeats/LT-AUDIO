@@ -140,6 +140,7 @@ BrowserPage::BrowserPage (Processor& p) : Page (p)
             refresh();
         }), true);
     };
+    setClickAreas ({ { 18, 140, 230, 552 }, { 262, 150, 674, 582 } });   // sections, banks, pills, preset list
     refresh();
 }
 

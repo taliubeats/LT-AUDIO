@@ -125,6 +125,14 @@ if(TARGET LTQuasar)
     target_compile_definitions(quasar_test PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
     lt_configure_target(quasar_test)
 
+    # clicks every control of the editor at its real position
+    juce_add_console_app(quasar_ui_test PRODUCT_NAME "Quasar UI Test")
+    target_sources(quasar_ui_test PRIVATE QuasarUiTest.cpp)
+    target_include_directories(quasar_ui_test PRIVATE ${QUASAR_INCLUDES})
+    target_link_libraries(quasar_ui_test PRIVATE LTQuasar juce::juce_audio_processors juce::juce_gui_basics juce::juce_dsp)
+    target_compile_definitions(quasar_ui_test PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    lt_configure_target(quasar_ui_test)
+
     # renders every factory preset to WAV + loudness report (used to level the banks)
     juce_add_console_app(quasar_render PRODUCT_NAME "Quasar Render")
     target_sources(quasar_render PRIVATE QuasarRender.cpp)
