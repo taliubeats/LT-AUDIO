@@ -309,6 +309,53 @@ void Processor::applyPreset (const Preset& pr)
             auto norm = it != pr.values.end() ? r->convertTo0to1 (it->second) : r->getDefaultValue();
             if (std::abs (norm - r->getValue()) > 1.0e-7f) r->setValueNotifyingHost (norm);
         }
+    // factory presets describe routes and effects by name: robust to future reordering
+    if (auto* mods = pr.mods.getArray())
+    {
+        int slot = 0;
+        for (auto& m : *mods)
+        {
+            if (slot >= numModSlots) break;
+            auto src = ModDefs::sourceNames().indexOf (m.getProperty ("src", "").toString());
+            auto dst = ModDefs::destIndex (m.getProperty ("dst", "").toString());
+            if (src <= 0 || dst <= 0) { DBG ("preset " << pr.name << ": unknown route " << juce::JSON::toString (m)); continue; }
+            auto set = [this, slot] (const char* w, float v) { if (auto* p = param (IDs::mod (slot, w))) p->setValueNotifyingHost (p->convertTo0to1 (v)); };
+            set ("src", (float) src); set ("dst", (float) dst); set ("amt", (float) m.getProperty ("amt", 50.0));
+            set ("curve", (float) Choices::modCurves().indexOf (m.getProperty ("curve", "LINEAR").toString()));
+            set ("bip", (bool) m.getProperty ("bip", false) ? 1.0f : 0.0f);
+            set ("aux", (float) juce::jmax (0, ModDefs::sourceNames().indexOf (m.getProperty ("aux", "NONE").toString())));
+            set ("out", (float) m.getProperty ("out", 100.0)); set ("on", 1.0f);
+            ++slot;
+        }
+    }
+    if (auto* fx = pr.fx.getDynamicObject())
+        for (int b = 0; b < numBuses; ++b)
+            if (auto* list = fx->getProperty (juce::Identifier (b == 0 ? "MAIN" : b == 1 ? "BUS 1" : "BUS 2")).getArray())
+                for (int s = 0; s < juce::jmin (numFxSlots, list->size()); ++s)
+                {
+                    auto e = (*list)[s];
+                    auto type = fxNames().indexOf (e.getProperty ("type", "").toString());
+                    if (type <= 0) continue;
+                    auto& info = fxInfo (type);
+                    auto set = [this] (const juce::String& id, float v) { if (auto* p = param (id)) p->setValueNotifyingHost (p->convertTo0to1 (v)); };
+                    set (IDs::fx (b, s, "type"), (float) type);
+                    set (IDs::fx (b, s, "on"), 1.0f);
+                    set (IDs::fx (b, s, "mix"), (float) e.getProperty ("mix", 100.0));
+                    set (IDs::fx (b, s, "out"), (float) e.getProperty ("out", 0.0));
+                    auto* params = e.getProperty ("params", {}).getDynamicObject();
+                    for (int k = 0; k < numFxParams; ++k)
+                    {
+                        auto& spec = info.params[(size_t) k];
+                        auto norm = spec.def;
+                        if (params != nullptr && k < info.numParams && params->hasProperty (spec.name))
+                        {
+                            auto v = params->getProperty (spec.name);
+                            norm = spec.kind == FxParamSpec::choice && v.isString() ? spec.toNorm ((float) spec.choices.indexOf (v.toString()))
+                                                                                    : spec.toNorm ((float) v);
+                        }
+                        if (auto* p = param (IDs::fxParam (b, s, k))) p->setValueNotifyingHost (norm);
+                    }
+                }
     for (int l = 0; l < numLfos; ++l)
     {
         auto v = pr.lfoShapes.isArray() && l < pr.lfoShapes.size() ? pr.lfoShapes[l] : juce::var();

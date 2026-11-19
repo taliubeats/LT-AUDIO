@@ -18,6 +18,8 @@ juce::var Preset::toVar() const
     for (auto& [id, v] : values) vals->setProperty (id, v);
     o->setProperty ("values", juce::var (vals.release()));
     if (! lfoShapes.isVoid()) o->setProperty ("lfo", lfoShapes);
+    if (! mods.isVoid()) o->setProperty ("mods", mods);
+    if (! fx.isVoid()) o->setProperty ("fx", fx);
     juce::Array<juce::var> macros;
     for (auto& m : macroNames) macros.add (m);
     o->setProperty ("macros", macros);
@@ -38,6 +40,8 @@ Preset Preset::fromVar (const juce::var& v)
     if (auto* vals = v.getProperty ("values", {}).getDynamicObject())
         for (auto& prop : vals->getProperties()) p.values[prop.name.toString()] = (float) prop.value;
     p.lfoShapes = v.getProperty ("lfo", {});
+    p.mods = v.getProperty ("mods", {});
+    p.fx = v.getProperty ("fx", {});
     if (auto* a = v.getProperty ("macros", {}).getArray()) for (auto& m : *a) p.macroNames.add (m.toString());
     if (auto* a = v.getProperty ("samples", {}).getArray())
         for (int i = 0; i < juce::jmin (3, a->size()); ++i) p.samplePaths[(size_t) i] = (*a)[i].toString();

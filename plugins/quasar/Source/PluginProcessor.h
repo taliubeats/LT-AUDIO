@@ -66,6 +66,7 @@ public:
     // juce::AudioProcessor
     void prepareToPlay (double, int) override;
     void releaseResources() override {}
+    void reset() override { engine.reset(); for (auto& c : chains) c->reset(); }
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
     using AudioProcessor::processBlock;

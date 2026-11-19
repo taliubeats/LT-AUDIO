@@ -14,6 +14,7 @@ struct Preset
     juce::String name, category, style, author, bank, description;
     std::map<juce::String, float> values;           // parameter ID -> real value
     juce::var lfoShapes;                            // array of 4 LfoShape vars
+    juce::var mods, fx;                             // factory presets: routes and effects by name (see Processor::applyPreset)
     juce::StringArray macroNames;
     std::array<juce::String, 3> samplePaths;        // relative to the bank folder when inside a bank
     bool factory = false;
