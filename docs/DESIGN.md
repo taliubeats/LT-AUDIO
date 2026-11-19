@@ -344,3 +344,32 @@ Opcional: analizar también la pista propia para compensar mic/sala. Medir el ba
   trompeta, batería, mezclas: todos los presets mantienen el volumen (±1 dB en voz), sin clics ni saturación digital.
   Pendiente v2: que el asistente "escuche" un análisis de la voz; dictado con micrófono propio (hoy usa el dictado del sistema).
 - **Armonías vocales:** el usuario indica que está hecho, pero no hay código en el repositorio (ni en `main` ni en `lt-tune`).
+
+## LT QUASAR — sintetizador (wavetable / analógico / sampler)
+Diseño: `design/quasar/main-dark.webp` (OSC), `mix-dark.webp`, `fx-dark.webp`, `matrix-dark.webp`, `browser-dark.webp`.
+**Solo modo oscuro** (el botón THEME de la imagen se reemplazó por BROWSER). Interfaz estilo Serum / Diva / Analog Lab con la estética LT.
+
+- **Osciladores:** OSC A/B/C, cada uno WAVETABLE (36 tablas de fábrica + USER: arrastrar un .wav), ANALOG (seno → triángulo → sierra →
+  cuadrada → pulso con deriva por voz) o SAMPLE (arrastrar un one-shot; nota base por el nombre). Unison hasta 16, warp (Sync con ventana,
+  Bend, PWM, Mirror, Asym, FM, Ring, Fold, Quantize). SUB y NOISE (8 tipos: vinilo, cinta, aire...).
+- **Sin aliasing:** wavetables con 11 mipmaps 8x sobremuestreados, nivel elegido para el Nyquist del host aunque el motor vaya a 2x/4x;
+  el oversampling (HIGH/ULTRA) es para filtros, drive y WARMTH (en ECO el warmth se apaga para no generar aliasing). Medido: < -77 dB.
+- **Filtros:** Ladder 24/12 (TPT con saturación), SVF LP/HP/BP 24/12, Notch, Peak, Comb ±, Formant, Diode. Keytrack y drive.
+- **Modulación:** 4 envolventes con curvas (ENV 1 = volumen, PITCH ENV con AMOUNT), 4 LFOs dibujables (FREE/RETRIG/ENV, sync al host),
+  8 macros, velocity, note, mod wheel, aftertouch, pitch bend, random, slide (MPE). Matriz de 32 rutas (curva, bipolar, AUX, salida).
+  Arrastrar una fuente sobre cualquier perilla crea la ruta (anillo de color + punto del valor real); ALT + arrastrar cambia la cantidad.
+- **Voces:** poly hasta 32, mono / legato con glide, robo de voz suave (5–10 ms), unison de voces (stack), MPE, sustain. Arpegiador con
+  12 patrones (Trap Roll, Triplet Flow, Dembow 3-3-2, Drill, Plugg, Lo-Fi Swing...).
+- **Mezclador:** cada fuente va a FILTER 1, FILTER 2, ambos o directo a MAIN / BUS 1 / BUS 2, con envíos. 8 efectos por bus
+  (Saturation = curvas de NOVA, Compressor, Chorus, Flanger, Phaser, Delay = motor de ORBIT, Reverb, EQ, Filter, Distortion, Bitcrush,
+  Tape, Stereo Width, Utility). Cambiar / mover un efecto crea la instancia fuera del audio y hace crossfade (sin clics).
+- **Reverb nueva** (no la de VOID): FDN de 16 líneas + 4 etapas de difusión sin pérdidas (Hadamard) + Householder. Limpia al 100 % de
+  mezcla (test: sin resonancias > 15 dB sobre el nivel local en la cola, energía siempre decreciente).
+- **Salida:** limitador de seguridad (-0,3 dBFS, sin latencia), MASTER. Presets nivelados con `quasar_render` (mediana -17 dBFS RMS).
+- **Presets:** formato propio `.ltq` (JSON) y bancos `.ltqbank` (zip con presets, samples y portada). 200 de fábrica en 9 bancos,
+  generados con `tools/quasar/make_banks.py` (los perfiles de referencia anónimos están en `tools/quasar/ref_profiles.json`).
+  Navegador con búsqueda, categorías (BASS REESE 808 SUB PLUCK KEYS LEAD PAD BELL ARP CHORD FX VOX), estilos, favoritos y recientes.
+
+**Estado: hecho** (`plugins/quasar`). Tests: `tests/QuasarTest.cpp` (afinación, aliasing, clics, robo de voz, legato, parches aleatorios,
+reverb al 100 %, todos los efectos, EQ plano = identidad, modulación, CPU), `tests/QuasarRender.cpp` (render de todos los presets),
+stress con ASan (`LTQuasar_stress`). CPU medida: 16 voces × 3 osciladores × 4 unison + 2 filtros + delay + reverb ≈ 34 % de un núcleo M1.

@@ -35,6 +35,7 @@ jobs:
           ./build/tests/nebula_test_artefacts/Release/nebula_test
           ./build/tests/tune_test_artefacts/Release/tune_test
           ./build/tests/nova_test_artefacts/Release/nova_test
+          ./build/tests/quasar_test_artefacts/Release/quasar_test
 
       - name: Package
         run: |
@@ -78,6 +79,7 @@ jobs:
           .\build\tests\nebula_test_artefacts\Release\nebula_test.exe
           .\build\tests\tune_test_artefacts\Release\tune_test.exe
           .\build\tests\nova_test_artefacts\Release\nova_test.exe
+          .\build\tests\quasar_test_artefacts\Release\quasar_test.exe
 
       - name: Package
         shell: pwsh

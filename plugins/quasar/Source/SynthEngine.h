@@ -252,8 +252,9 @@ private:
     // hand-over of samples / user tables
     std::array<std::atomic<const SampleData*>, numOscs> samples {};
     std::array<std::atomic<const Wavetable*>, numOscs> userTables {};
-    std::vector<std::unique_ptr<SampleData>> ownedSamples, retiredSamples;
+    std::vector<std::unique_ptr<SampleData>> ownedSamples;
     std::vector<std::unique_ptr<Wavetable>> ownedTables;
+    std::map<const void*, double> retiredAt;   // freed only 2 s after the audio thread stopped using them
 
     // UI
     juce::AbstractFifo uiFifo { 256 };

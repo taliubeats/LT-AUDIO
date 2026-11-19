@@ -484,7 +484,7 @@ void FxModule::resized()
     if (controls.isEmpty()) return;
     // choices / toggles on the top line, knobs below, MIX knob on the right
     auto& info = fxInfo (type);
-    int topX = 195, knobCount = 0;
+    int topX = 322, knobCount = 0;
     for (int i = 0; i < info.numParams; ++i) if (info.params[(size_t) i].kind == FxParamSpec::linear || info.params[(size_t) i].kind == FxParamSpec::log) ++knobCount;
     auto rows = knobCount > 5 ? 2 : 1;
     auto perRow = (knobCount + rows - 1) / juce::jmax (1, rows);
@@ -496,10 +496,10 @@ void FxModule::resized()
         auto kind = info.params[(size_t) i].kind;
         if (kind == FxParamSpec::choice || kind == FxParamSpec::toggle)
         {
-            auto bw = kind == FxParamSpec::choice ? 104 : 74;
-            c->setBounds (topX + 140, 12, bw, 24);
-            topX += bw + 8;
-            if (topX + 140 + bw > w - 130) topX = 195;
+            // one row of menus / toggles above the knobs, never overlapping
+            auto bw = kind == FxParamSpec::choice ? 96 : 64;
+            c->setBounds (topX, 12, bw, 24);
+            topX += bw + 6;
         }
         else
         {
@@ -761,8 +761,9 @@ void FxPage::layoutModules()
 void FxPage::timerCallback()
 {
     // rebuild the modules when the chain changes (types / order)
-    int sig = bus * 7919;
-    for (int s = 0; s < numFxSlots; ++s) sig = sig * 31 + proc.chains[(size_t) bus]->getType (s);
+    juce::uint32 sigU = (juce::uint32) bus * 7919u;
+    for (int s = 0; s < numFxSlots; ++s) sigU = sigU * 31u + (juce::uint32) proc.chains[(size_t) bus]->getType (s);
+    auto sig = (int) (sigU & 0x7fffffff);
     if (sig != lastSignature) { lastSignature = sig; layoutModules(); }
     auto n = count();
     for (int i = 0; i < numFxSlots; ++i)

@@ -8,9 +8,70 @@
 
 using namespace quasar;
 
+namespace
+{
+    /** The plugin icon: a quasar (tilted accretion disk, two jets, bright core) in an LT rounded tile. */
+    void writeIcon (const juce::File& file)
+    {
+        const int S = 512;
+        juce::Image img (juce::Image::ARGB, S, S, true);
+        juce::Graphics g (img);
+        auto tile = juce::Rectangle<float> (8, 8, S - 16, S - 16);
+        juce::Path clip; clip.addRoundedRectangle (tile, 92.0f);
+        {
+            juce::Graphics::ScopedSaveState ss (g);
+            g.reduceClipRegion (clip);
+            g.fillAll (juce::Colour (0xff07050d));
+            auto neb = lt::ui::NebulaBackground::renderNebula (S, S, lt::ui::Palette::dark(), 31, 0.35f, 0.9f);
+            g.drawImageAt (neb, 0, 0);
+            juce::Random r (3);
+            for (int i = 0; i < 220; ++i)
+            {
+                auto x = r.nextFloat() * S, y = r.nextFloat() * S, sz = 0.6f + r.nextFloat() * 1.8f;
+                g.setColour (juce::Colours::white.withAlpha (0.25f + 0.6f * r.nextFloat())); g.fillEllipse (x, y, sz, sz);
+            }
+            juce::Point<float> c (S * 0.5f, S * 0.52f);
+            auto tilt = juce::AffineTransform::rotation (-0.35f, c.x, c.y);
+            // jets
+            for (int k = 0; k < 2; ++k)
+            {
+                auto dir = k == 0 ? -1.0f : 1.0f;
+                juce::Path jet; jet.addTriangle (c.x - 10, c.y, c.x + 10, c.y, c.x, c.y + dir * 230);
+                juce::ColourGradient jg (juce::Colour (0xeee6d6ff), c.x, c.y, juce::Colour (0x00b98cff), c.x, c.y + dir * 230, false);
+                g.setGradientFill (jg);
+                g.fillPath (jet, juce::AffineTransform::rotation (-0.35f + 0.0f, c.x, c.y));
+                lt::ui::Glass::drawGlow (g, c.transformedBy (juce::AffineTransform::translation (0, dir * 120).followedBy (tilt)), 60, juce::Colour (0xff9b5cff), 0.25f);
+            }
+            // accretion disk: thousands of particles on tilted ellipses, brighter inside
+            for (int i = 0; i < 5000; ++i)
+            {
+                auto rad = 40.0f + std::pow (r.nextFloat(), 0.75f) * 170.0f;
+                auto a = r.nextFloat() * juce::MathConstants<float>::twoPi;
+                juce::Point<float> pt (c.x + std::cos (a) * rad, c.y + std::sin (a) * rad * 0.3f);
+                pt = pt.transformedBy (tilt);
+                auto t = 1.0f - (rad - 40.0f) / 170.0f;
+                auto col = juce::Colour (0xff7b2cff).interpolatedWith (juce::Colour (0xfffff0ff), t * 0.9f);
+                auto sz = 0.8f + r.nextFloat() * 1.8f;
+                g.setColour (col.withAlpha (0.15f + 0.6f * t * r.nextFloat() + 0.15f));
+                g.fillEllipse (pt.x - sz * 0.5f, pt.y - sz * 0.5f, sz, sz);
+            }
+            lt::ui::Glass::drawGlow (g, c, 150, juce::Colour (0xff7b2cff), 0.55f);
+            lt::ui::Glass::drawGlow (g, c, 70, juce::Colour (0xffd9c4ff), 0.9f);
+            lt::ui::Glass::drawGlow (g, c, 22, juce::Colours::white, 1.0f);
+        }
+        juce::ColourGradient rim (juce::Colour (0xffc9a8ff), 0, 0, juce::Colour (0xff6b2cdc), 0, (float) S, false);
+        g.setGradientFill (rim);
+        g.strokePath (clip, juce::PathStrokeType (10.0f));
+        file.deleteFile();
+        juce::FileOutputStream os (file);
+        juce::PNGImageFormat().writeImageToStream (img, os);
+    }
+}
+
 int main (int argc, char** argv)
 {
     juce::ScopedJuceInitialiser_GUI init;
+    if (argc > 2 && juce::String (argv[1]) == "--icon") { writeIcon (juce::File (juce::String (argv[2]))); return 0; }
     juce::File out (argc > 1 ? juce::String (argv[1]) : juce::File::getCurrentWorkingDirectory().getChildFile ("renders").getFullPathName());
     out.createDirectory();
     const double sr = 48000.0; const int block = 256;

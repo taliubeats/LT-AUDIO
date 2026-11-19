@@ -488,6 +488,66 @@ PRODUCTS.append(dict(
           "Si la afinación va a notas raras, revisa la KEY (puedes sacarla con LT TYPE BEATS)."],
 ))
 
+# ------------------------------------------------------------------ QUASAR
+PRODUCTS.append(dict(
+    file="LT-QUASAR-Manual.pdf", title="LT QUASAR", subtitle="Sintetizador wavetable / analógico / sampler",
+    image="design/quasar/main-dark.webp", image2="design/quasar/fx-dark.webp", image2_caption="Página FX (imagen de referencia del diseño)",
+    intro="LT QUASAR es un sintetizador para producir y para diseñar sonido: 3 osciladores (cada uno <b>WAVETABLE</b>, <b>ANALOG</b> o <b>SAMPLE</b>), "
+          "SUB, NOISE, 2 filtros analógicos, 4 envolventes, 4 LFOs dibujables, una matriz de modulación de 32 rutas, mezclador con buses "
+          "y 8 efectos por bus. Trae <b>200 presets</b> en 9 bancos pensados para trap, reggaetón, R&amp;B y lo-fi. Todo se puede modular "
+          "arrastrando una fuente (ENV, LFO, MACRO) sobre cualquier perilla, como en Serum.",
+    sections=[("Cómo empezar", [
+        "<b>1.</b> Crea una pista MIDI en Ableton y carga LT QUASAR (Instrumentos &gt; Plug-ins &gt; LT Audio).",
+        "<b>2.</b> Pulsa <b>BROWSER</b> (o el nombre del preset) y elige un banco o una categoría (BASS, 808, PLUCK, KEYS, PAD...). "
+        "Busca por nombre, filtra por estilo (TRAP, REGGAETON, R&amp;B, LO-FI...) y marca favoritos con la estrella.",
+        "<b>3.</b> Ajusta el sonido con las 8 <b>MACROS</b> (BRIGHTNESS, TIMBRE, TIME, MOVEMENT, DRIVE, WIDTH, DELAY, SPACE). "
+        "En la vista <b>SIMPLE</b> solo ves el preset y las macros, estilo Analog Lab.",
+        "<b>4.</b> Guarda con el icono de disco: nombre, categoría, estilo y banco.",
+    ]), ("Modular (como Serum)", [
+        "Arrastra la pestaña <b>ENV 1-3</b>, <b>PITCH ENV</b>, <b>LFO 1-4</b> o el nombre de una <b>MACRO</b> y suéltala sobre cualquier perilla. "
+        "Aparece un anillo de color con la cantidad y un punto blanco que muestra el valor real en cada momento.",
+        "<b>ALT + arrastrar</b> sobre la perilla cambia la cantidad. Clic derecho: invertir, bipolar, quitar o modular con otra fuente.",
+        "La página <b>MATRIX</b> muestra las 32 rutas: fuente, cantidad, destino, curva, polaridad, fuente AUX (multiplica) y salida.",
+        "LFO: arrastra los puntos, doble clic añade o borra un punto, ALT + arrastrar curva un tramo, clic derecho = formas (seno, S&amp;H, random...).",
+    ]), ("Mezclador, buses y efectos", [
+        "Cada fuente va a FILTER 1, FILTER 2, los dos, o directo a MAIN / BUS 1 / BUS 2 (página <b>MIX</b>, menú DEST). "
+        "FILTER 1 puede ir a FILTER 2 (en serie) o a un bus.",
+        "En <b>FX</b> eliges el bus (MAIN, BUS 1, BUS 2), pulsas <b>+ FX</b> y añades hasta 8 efectos: Saturation (motor de LT NOVA), Compressor, "
+        "Chorus, Flanger, Phaser, Delay (motor de LT ORBIT), Reverb, Equalizer, Filter, Distortion, Bitcrush, Tape, Stereo Width y Utility. "
+        "Arrastra una fila para cambiar el orden. Los buses 1 y 2 terminan en MAIN.",
+        "La reverb de QUASAR es nueva: se mantiene limpia aunque pongas MIX al 100 % (sin efecto de feedback).",
+        "SAMPLE: arrastra un .wav al visor del oscilador. La nota base se detecta del nombre (\"Pluck_C.wav\" = C). "
+        "WAVETABLE: arrastra un .wav (ciclos de 2048 muestras, formato Serum) para importar tu propia wavetable.",
+    ]), ("Bancos para compartir", [
+        "Un banco es una carpeta de presets. <b>NEW BANK</b> crea uno; al guardar eliges en qué banco va el preset.",
+        "<b>EXPORT BANK</b> crea un archivo <b>.ltqbank</b> (presets + samples + portada) para mandarlo por WhatsApp o Drive. "
+        "<b>IMPORT BANK</b> lo instala. <b>EXPORT</b> guarda un solo preset (.ltq).",
+    ])],
+    params=[
+        ("OSC A / B / C", "WAVETABLE · ANALOG · SAMPLE", "36 wavetables de fábrica + USER. ANALOG = osciladores tipo analógico (seno → triángulo → sierra → cuadrada) con deriva. "
+         "OCT, SEM, FIN, PHS (fase) y RND (fase aleatoria). WT POS, UNISON (hasta 16), DETUNE, WARP (modo en el menú: Sync, Bend, PWM, Mirror, Asym, FM, Ring, Fold, Quantize), BLEND, SPREAD, PAN, LEVEL."),
+        ("SUB / NOISE", "OCT, LEVEL · COLOR, LEVEL", "Sub-oscilador (clic en el visor: seno, triángulo, sierra, cuadrada, pulso). Ruido: White, Pink, Brown, Vinyl, Tape Hiss, Air, Crackle, Digital."),
+        ("FILTERS", "Tipo, CUTOFF, RES, DRIVE, KEY, MIX", "Ladder 24/12 (transistor), LP/HP/BP 24/12, Notch, Peak, Comb +/-, Formant (vocales) y Diode."),
+        ("ENV 1 / 2 / 3 / PITCH ENV", "ATK, HOLD, DEC, SUS, REL", "ENV 1 es el volumen. Arrastra los puntos del dibujo. PITCH ENV tiene AMOUNT (semitonos): el golpe del 808."),
+        ("LFO 1-4", "FREE / RETRIG / ENV, SYNC, RATE, RISE, DELAY, SMOOTH, PHASE", "Forma dibujable, sincronía al tempo de Ableton (8/1 a 1/64, tresillos y puntillos)."),
+        ("VOICING", "POLY, MONO, LEGATO, GLIDE", "Polifonía hasta 32. Robo de voz suave (sin clics). Glide para 808 deslizados."),
+        ("ARP", "Clic en ARP", "Modo, velocidad, patrón (Trap Roll, Triplet Flow, Dembow, Drill, Plugg...), octavas, gate, swing y latch."),
+        ("GLOBAL", "Quality, Tuning, Voices, Analog, Output", "ECO/HIGH/ULTRA y oversampling 2x/4x, afinación, pitch bend, escala, unison de voces, voice steal, prioridad, MPE, DRIFT, WARMTH, limitador de seguridad."),
+        ("MASTER", "Arriba a la derecha", "Volumen general. Los presets de fábrica están nivelados para sonar a un volumen parecido."),
+    ],
+    extra_tables=[("Bancos de fábrica", [
+        ("QUASAR FACTORY", "20", "Lo esencial de cada categoría."),
+        ("TRAP ESSENTIALS · PERREO", "24 · 23", "Trap oscuro / reggaetón: plucks, bells, leads, 808s, arps dembow."),
+        ("R&B NIGHTS · LO-FI DUST", "18 · 15", "Keys, pads y leads suaves / sonidos de cinta y vinilo."),
+        ("808 GALAXY · ARP MACHINE · SPACE PADS", "16 · 14 · 11", "808, reese y bajos / arpegiadores / pads enormes y texturas."),
+        ("NEON SERIES", "59", "Sonidos reconstruidos a partir del análisis de one-shots modernos (envolvente, brillo y anchura medidos)."),
+    ])],
+    tips=["808 con slide: pon VOICING en LEGATO con GLIDE 80-150 ms y toca notas que se solapen.",
+          "Pluck de reggaetón: preset de PERREO, MACRO 7 (DELAY) a tu gusto y el delay en 1/8 o 1/8D.",
+          "CPU: en GLOBAL baja a ECO si usas muchas instancias. Con 16 voces muy cargadas QUASAR usa ~35 % de un núcleo del M1.",
+          "Para comparar con el sonido original de un preset, la estrella * junto al nombre indica que lo has cambiado."],
+))
+
 # ------------------------------------------------------------------ LICENSE STUDIO
 PRODUCTS.append(dict(
     file="LT-License-Studio-Manual.pdf", title="LT LICENSE STUDIO", subtitle="Generador de licencias (solo para tu Mac)",

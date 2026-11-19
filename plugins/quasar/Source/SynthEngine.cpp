@@ -914,12 +914,20 @@ void SynthEngine::setUserTable (int o, std::unique_ptr<Wavetable> t)
 
 void SynthEngine::collectGarbage()
 {
-    // keep only what is in use (plus the newest, in case the audio thread has not seen it yet)
+    // a replaced sample / table may still be read by the block that is rendering now: wait 2 s before freeing it
+    auto now = juce::Time::getMillisecondCounterHiRes();
     auto inUse = [this] (const void* p) { for (auto& s : samples) if (s.load() == p) return true; for (auto& t : userTables) if (t.load() == p) return true; return false; };
-    if (ownedSamples.size() > 3)
-        ownedSamples.erase (std::remove_if (ownedSamples.begin(), ownedSamples.end() - 1, [&] (auto& p) { return ! inUse (p.get()); }), ownedSamples.end() - 1);
-    if (ownedTables.size() > 3)
-        ownedTables.erase (std::remove_if (ownedTables.begin(), ownedTables.end() - 1, [&] (auto& p) { return ! inUse (p.get()); }), ownedTables.end() - 1);
+    auto expired = [&] (const void* p)
+    {
+        if (inUse (p)) { retiredAt.erase (p); return false; }
+        auto it = retiredAt.find (p);
+        if (it == retiredAt.end()) { retiredAt[p] = now; return false; }
+        if (now - it->second < 2000.0) return false;
+        retiredAt.erase (it);
+        return true;
+    };
+    ownedSamples.erase (std::remove_if (ownedSamples.begin(), ownedSamples.end(), [&] (auto& p) { return expired (p.get()); }), ownedSamples.end());
+    ownedTables.erase (std::remove_if (ownedTables.begin(), ownedTables.end(), [&] (auto& p) { return expired (p.get()); }), ownedTables.end());
 }
 
 void SynthEngine::ensureTables()
