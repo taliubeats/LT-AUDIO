@@ -2,3499 +2,69 @@
  "name": "LO-FI DUST",
  "author": "LT SOUNDS",
  "colour": "ffc08a4a",
- "description": "Tape, vinyl and crumbled tones for lo-fi.",
+ "description": "Fitted keys and plucks pushed through tape, vinyl and crushed bits.",
  "presets": [
   {
-   "name": "Dusty Keys",
-   "category": "KEYS",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 7,
-    "oscA_wtpos": 85,
-    "oscA_unison": 1,
-    "oscA_detune": 10,
-    "oscA_blend": 60,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "oscB_on": 1,
-    "oscB_type": 0,
-    "oscB_table": 20,
-    "oscB_wtpos": 30,
-    "oscB_unison": 1,
-    "oscB_detune": 25,
-    "oscB_blend": 75,
-    "oscB_spread": 100,
-    "oscB_level": 55,
-    "oscB_pan": 0,
-    "oscB_oct": 0,
-    "oscB_semi": 0,
-    "oscB_fine": 0,
-    "oscB_rand": 100,
-    "oscB_phase": 0,
-    "oscB_dest": 0,
-    "env2_att": 0,
-    "env2_dec": 630.0,
-    "env2_sus": 0,
-    "env2_rel": 400,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 65,
-    "env2_rcurve": 60,
-    "flt1_on": 1,
-    "flt1_type": 3,
-    "flt1_cutoff": 1080.0,
-    "flt1_reso": 8,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 40,
-    "flt1_level": 75,
-    "env1_att": 2,
-    "env1_dec": 1400,
-    "env1_sus": 25,
-    "env1_rel": 420,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 55,
-    "env1_rcurve": 55,
-    "lfo1_sync": 0,
-    "lfo1_rate": 3.5,
-    "lfo1_mode": 0,
-    "lfo1_rise": 0,
-    "lfo1_smooth": 0,
-    "lfo1_delay": 0,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -11.9
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "oscA_wtpos",
-     "amt": -80
-    },
-    {
-     "src": "VELOCITY",
-     "dst": "flt1_cutoff",
-     "amt": 25
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_level",
-     "amt": -12,
-     "bip": true
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_pan",
-     "amt": 22,
-     "bip": true
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscB_level",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 25,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 12,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 20,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.6,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Cassette Piano",
-   "category": "KEYS",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 20,
-    "oscA_wtpos": 20,
-    "oscA_unison": 1,
-    "oscA_detune": 10,
-    "oscA_blend": 60,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "oscB_on": 1,
-    "oscB_type": 0,
-    "oscB_table": 20,
-    "oscB_wtpos": 30,
-    "oscB_unison": 1,
-    "oscB_detune": 25,
-    "oscB_blend": 75,
-    "oscB_spread": 100,
-    "oscB_level": 55,
-    "oscB_pan": 0,
-    "oscB_oct": 0,
-    "oscB_semi": 0,
-    "oscB_fine": 0,
-    "oscB_rand": 100,
-    "oscB_phase": 0,
-    "oscB_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 3,
-    "flt1_cutoff": 1080.0,
-    "flt1_reso": 8,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 40,
-    "flt1_level": 75,
-    "env1_att": 2,
-    "env1_dec": 1400,
-    "env1_sus": 25,
-    "env1_rel": 420,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 55,
-    "env1_rcurve": 55,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -12.9
-   },
-   "mods": [
-    {
-     "src": "VELOCITY",
-     "dst": "flt1_cutoff",
-     "amt": 25
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscB_level",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 25,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 12,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 20,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.6,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Rainy Rhodes",
-   "category": "KEYS",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 7,
-    "oscA_wtpos": 85,
-    "oscA_unison": 1,
-    "oscA_detune": 10,
-    "oscA_blend": 60,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "oscB_on": 1,
-    "oscB_type": 0,
-    "oscB_table": 20,
-    "oscB_wtpos": 30,
-    "oscB_unison": 1,
-    "oscB_detune": 25,
-    "oscB_blend": 75,
-    "oscB_spread": 100,
-    "oscB_level": 55,
-    "oscB_pan": 0,
-    "oscB_oct": 0,
-    "oscB_semi": 0,
-    "oscB_fine": 0,
-    "oscB_rand": 100,
-    "oscB_phase": 0,
-    "oscB_dest": 0,
-    "env2_att": 0,
-    "env2_dec": 630.0,
-    "env2_sus": 0,
-    "env2_rel": 400,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 65,
-    "env2_rcurve": 60,
-    "flt1_on": 1,
-    "flt1_type": 3,
-    "flt1_cutoff": 1080.0,
-    "flt1_reso": 8,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 40,
-    "flt1_level": 75,
-    "env1_att": 2,
-    "env1_dec": 1400,
-    "env1_sus": 25,
-    "env1_rel": 420,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 55,
-    "env1_rcurve": 55,
-    "lfo1_sync": 0,
-    "lfo1_rate": 4.8,
-    "lfo1_mode": 0,
-    "lfo1_rise": 0,
-    "lfo1_smooth": 0,
-    "lfo1_delay": 0,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -12.1
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "oscA_wtpos",
-     "amt": -80
-    },
-    {
-     "src": "VELOCITY",
-     "dst": "flt1_cutoff",
-     "amt": 25
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_level",
-     "amt": -12,
-     "bip": true
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_pan",
-     "amt": 22,
-     "bip": true
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscB_level",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 25,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 12,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 20,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.6,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Crumbled Pluck",
-   "category": "PLUCK",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 0,
-    "oscA_wtpos": 40,
-    "oscA_unison": 2,
-    "oscA_detune": 18,
-    "oscA_blend": 70,
-    "oscA_spread": 90,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 3,
-    "noise_level": 22,
-    "noise_color": 0,
-    "noise_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 0,
-    "flt1_cutoff": 495.00000000000006,
-    "flt1_reso": 18,
-    "flt1_drive": 10,
-    "flt1_mix": 100,
-    "flt1_key": 35,
-    "flt1_level": 75,
-    "env1_att": 2.5,
-    "env1_dec": 720.0,
-    "env1_sus": 0,
-    "env1_rel": 405.0,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 70,
-    "env1_rcurve": 65,
-    "env2_att": 1.5,
-    "env2_dec": 360.0,
-    "env2_sus": 0,
-    "env2_rel": 270.0,
-    "env2_hold": 0,
-    "env2_acurve": 0,
-    "env2_dcurve": 75,
-    "env2_rcurve": 60,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -3.3
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 38
-    },
-    {
-     "src": "VELOCITY",
-     "dst": "flt1_cutoff",
-     "amt": 12
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 30,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 24,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 22,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.2,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     },
-     {
-      "type": "BITCRUSH",
-      "mix": 25,
-      "out": 0,
-      "params": {
-       "RATE": 14000,
-       "BITS": 10
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Warm Lo-Fi Pluck",
-   "category": "PLUCK",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 20,
-    "oscA_wtpos": 40,
-    "oscA_unison": 2,
-    "oscA_detune": 18,
-    "oscA_blend": 70,
-    "oscA_spread": 90,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 3,
-    "noise_level": 22,
-    "noise_color": 0,
-    "noise_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 0,
-    "flt1_cutoff": 495.00000000000006,
-    "flt1_reso": 18,
-    "flt1_drive": 10,
-    "flt1_mix": 100,
-    "flt1_key": 35,
-    "flt1_level": 75,
-    "env1_att": 2.5,
-    "env1_dec": 720.0,
-    "env1_sus": 0,
-    "env1_rel": 405.0,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 70,
-    "env1_rcurve": 65,
-    "env2_att": 1.5,
-    "env2_dec": 360.0,
-    "env2_sus": 0,
-    "env2_rel": 270.0,
-    "env2_hold": 0,
-    "env2_acurve": 0,
-    "env2_dcurve": 75,
-    "env2_rcurve": 60,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -7.0
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 38
-    },
-    {
-     "src": "VELOCITY",
-     "dst": "flt1_cutoff",
-     "amt": 12
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 30,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 24,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 22,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.2,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     },
-     {
-      "type": "BITCRUSH",
-      "mix": 25,
-      "out": 0,
-      "params": {
-       "RATE": 14000,
-       "BITS": 10
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Old Guitar",
-   "category": "PLUCK",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 27,
-    "oscA_wtpos": 40,
-    "oscA_unison": 2,
-    "oscA_detune": 18,
-    "oscA_blend": 70,
-    "oscA_spread": 90,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 3,
-    "noise_level": 22,
-    "noise_color": 0,
-    "noise_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 0,
-    "flt1_cutoff": 495.00000000000006,
-    "flt1_reso": 18,
-    "flt1_drive": 10,
-    "flt1_mix": 100,
-    "flt1_key": 35,
-    "flt1_level": 75,
-    "env1_att": 2.5,
-    "env1_dec": 720.0,
-    "env1_sus": 0,
-    "env1_rel": 405.0,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 70,
-    "env1_rcurve": 65,
-    "env2_att": 1.5,
-    "env2_dec": 360.0,
-    "env2_sus": 0,
-    "env2_rel": 270.0,
-    "env2_hold": 0,
-    "env2_acurve": 0,
-    "env2_dcurve": 75,
-    "env2_rcurve": 60,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -7.0
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 38
-    },
-    {
-     "src": "VELOCITY",
-     "dst": "flt1_cutoff",
-     "amt": 12
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 30,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 24,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 22,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.2,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     },
-     {
-      "type": "BITCRUSH",
-      "mix": 25,
-      "out": 0,
-      "params": {
-       "RATE": 14000,
-       "BITS": 10
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Bit Pluck",
-   "category": "PLUCK",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 17,
-    "oscA_wtpos": 40,
-    "oscA_unison": 2,
-    "oscA_detune": 18,
-    "oscA_blend": 70,
-    "oscA_spread": 90,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 3,
-    "noise_level": 22,
-    "noise_color": 0,
-    "noise_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 0,
-    "flt1_cutoff": 495.00000000000006,
-    "flt1_reso": 18,
-    "flt1_drive": 10,
-    "flt1_mix": 100,
-    "flt1_key": 35,
-    "flt1_level": 75,
-    "env1_att": 2.5,
-    "env1_dec": 720.0,
-    "env1_sus": 0,
-    "env1_rel": 405.0,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 70,
-    "env1_rcurve": 65,
-    "env2_att": 1.5,
-    "env2_dec": 360.0,
-    "env2_sus": 0,
-    "env2_rel": 270.0,
-    "env2_hold": 0,
-    "env2_acurve": 0,
-    "env2_dcurve": 75,
-    "env2_rcurve": 60,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -7.4
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 38
-    },
-    {
-     "src": "VELOCITY",
-     "dst": "flt1_cutoff",
-     "amt": 12
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 30,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 24,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 22,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.2,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     },
-     {
-      "type": "BITCRUSH",
-      "mix": 25,
-      "out": 0,
-      "params": {
-       "RATE": 14000,
-       "BITS": 10
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "VHS Pad",
+   "name": "Duna Lo-Fi",
    "category": "PAD",
    "style": "LO-FI",
    "author": "LT SOUNDS",
-   "description": "",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
    "values": {
     "oscA_on": 1,
     "oscA_type": 0,
-    "oscA_table": 3,
-    "oscA_wtpos": 40,
-    "oscA_unison": 6,
-    "oscA_detune": 30,
-    "oscA_blend": 75,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 4,
-    "noise_level": 18,
-    "noise_color": 0,
-    "noise_dest": 0,
+    "oscA_table": 19,
+    "oscA_wtpos": 3.1,
+    "oscA_unison": 3,
+    "oscA_detune": 4.8,
+    "oscA_spread": 82.3,
+    "oscA_blend": 52.9,
+    "oscA_warpmode": 5,
+    "oscA_warp": 0.7,
+    "oscB_on": 1,
+    "oscB_table": 28,
+    "oscB_wtpos": 24.7,
+    "oscB_oct": 0,
+    "oscB_semi": 0,
+    "oscB_level": 30.0,
     "flt1_on": 1,
-    "flt1_type": 1,
-    "flt1_cutoff": 1190.0,
-    "flt1_reso": 20,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 20,
-    "flt1_level": 75,
-    "env1_att": 900,
-    "env1_dec": 2000,
-    "env1_sus": 85,
-    "env1_rel": 1800,
-    "env1_hold": 0,
-    "env1_acurve": -20,
-    "env1_dcurve": 60,
-    "env1_rcurve": 50,
-    "env2_att": 1350.0,
-    "env2_dec": 3000,
-    "env2_sus": 60,
-    "env2_rel": 1800,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 60,
-    "env2_rcurve": 60,
-    "lfo1_sync": 0,
-    "lfo1_rate": 0.15,
-    "lfo1_mode": 0,
-    "lfo1_rise": 0,
-    "lfo1_smooth": 0,
-    "lfo1_delay": 0,
-    "lfo2_sync": 0,
-    "lfo2_rate": 0.345,
-    "lfo2_mode": 0,
-    "lfo2_rise": 0,
-    "lfo2_smooth": 0,
-    "lfo2_delay": 0,
-    "master": -11.8
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 18
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_wtpos",
-     "amt": 25,
-     "bip": true
-    },
-    {
-     "src": "LFO 2",
-     "dst": "flt1_cutoff",
-     "amt": 10,
-     "bip": true
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_wtpos",
-     "amt": 45,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 15,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 15,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/4D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 35,
-      "out": 0,
-      "params": {
-       "TYPE": "HALL",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 4.5,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 2,
-     "points": [
-      [
-       0,
-       0.5,
-       0
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Bedroom Pad",
-   "category": "PAD",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 23,
-    "oscA_wtpos": 40,
-    "oscA_unison": 6,
-    "oscA_detune": 30,
-    "oscA_blend": 75,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 4,
-    "noise_level": 18,
-    "noise_color": 0,
-    "noise_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 1,
-    "flt1_cutoff": 1190.0,
-    "flt1_reso": 20,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 20,
-    "flt1_level": 75,
-    "env1_att": 900,
-    "env1_dec": 2000,
-    "env1_sus": 85,
-    "env1_rel": 1800,
-    "env1_hold": 0,
-    "env1_acurve": -20,
-    "env1_dcurve": 60,
-    "env1_rcurve": 50,
-    "env2_att": 1350.0,
-    "env2_dec": 3000,
-    "env2_sus": 60,
-    "env2_rel": 1800,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 60,
-    "env2_rcurve": 60,
-    "lfo1_sync": 0,
-    "lfo1_rate": 0.15,
-    "lfo1_mode": 0,
-    "lfo1_rise": 0,
-    "lfo1_smooth": 0,
-    "lfo1_delay": 0,
-    "lfo2_sync": 0,
-    "lfo2_rate": 0.345,
-    "lfo2_mode": 0,
-    "lfo2_rise": 0,
-    "lfo2_smooth": 0,
-    "lfo2_delay": 0,
-    "master": -13.4
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 18
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_wtpos",
-     "amt": 25,
-     "bip": true
-    },
-    {
-     "src": "LFO 2",
-     "dst": "flt1_cutoff",
-     "amt": 10,
-     "bip": true
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_wtpos",
-     "amt": 45,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 15,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 15,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/4D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 35,
-      "out": 0,
-      "params": {
-       "TYPE": "HALL",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 4.5,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 2,
-     "points": [
-      [
-       0,
-       0.5,
-       0
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Tape Choir",
-   "category": "PAD",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 13,
-    "oscA_wtpos": 40,
-    "oscA_unison": 6,
-    "oscA_detune": 30,
-    "oscA_blend": 75,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 4,
-    "noise_level": 18,
-    "noise_color": 0,
-    "noise_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 1,
-    "flt1_cutoff": 1190.0,
-    "flt1_reso": 20,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 20,
-    "flt1_level": 75,
-    "env1_att": 900,
-    "env1_dec": 2000,
-    "env1_sus": 85,
-    "env1_rel": 1800,
-    "env1_hold": 0,
-    "env1_acurve": -20,
-    "env1_dcurve": 60,
-    "env1_rcurve": 50,
-    "env2_att": 1350.0,
-    "env2_dec": 3000,
-    "env2_sus": 60,
-    "env2_rel": 1800,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 60,
-    "env2_rcurve": 60,
-    "lfo1_sync": 0,
-    "lfo1_rate": 0.15,
-    "lfo1_mode": 0,
-    "lfo1_rise": 0,
-    "lfo1_smooth": 0,
-    "lfo1_delay": 0,
-    "lfo2_sync": 0,
-    "lfo2_rate": 0.345,
-    "lfo2_mode": 0,
-    "lfo2_rise": 0,
-    "lfo2_smooth": 0,
-    "lfo2_delay": 0,
-    "master": -13.1
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 18
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_wtpos",
-     "amt": 25,
-     "bip": true
-    },
-    {
-     "src": "LFO 2",
-     "dst": "flt1_cutoff",
-     "amt": 10,
-     "bip": true
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_wtpos",
-     "amt": 45,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 15,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 15,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/4D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 35,
-      "out": 0,
-      "params": {
-       "TYPE": "HALL",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 4.5,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 2,
-     "points": [
-      [
-       0,
-       0.5,
-       0
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Lo-Fi Flute",
-   "category": "LEAD",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 25,
-    "oscA_wtpos": 40,
-    "oscA_unison": 1,
-    "oscA_detune": 20,
-    "oscA_blend": 70,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 0,
-    "flt1_cutoff": 1650.0000000000002,
-    "flt1_reso": 22,
-    "flt1_drive": 15,
-    "flt1_mix": 100,
-    "flt1_key": 40,
-    "flt1_level": 75,
-    "env1_att": 4,
-    "env1_dec": 800,
-    "env1_sus": 80,
-    "env1_rel": 260,
-    "env1_hold": 0,
-    "env1_acurve": -30,
-    "env1_dcurve": 60,
-    "env1_rcurve": 60,
-    "env2_att": 0,
-    "env2_dec": 500,
-    "env2_sus": 30,
-    "env2_rel": 300,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 60,
-    "env2_rcurve": 60,
-    "lfo1_sync": 0,
-    "lfo1_rate": 5.5,
-    "lfo1_mode": 1,
-    "lfo1_rise": 400,
-    "lfo1_smooth": 0,
-    "lfo1_delay": 280,
-    "voice_mode": 2,
-    "glide": 60,
-    "glide_legato": 1,
-    "poly": 16,
-    "stack": 1,
-    "master": -12.4
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "flt1_cutoff",
-     "amt": 20
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_fine",
-     "amt": 9,
-     "bip": true
-    },
-    {
-     "src": "MOD WHEEL",
-     "dst": "oscA_fine",
-     "amt": 12,
-     "bip": true
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_fine",
-     "amt": 20,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 15,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 24,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 18,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.2,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Lo-Fi Bass",
-   "category": "BASS",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 20,
-    "oscA_wtpos": 60,
-    "oscA_unison": 1,
-    "oscA_detune": 25,
-    "oscA_blend": 75,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "sub_on": 1,
-    "sub_level": 70,
-    "sub_shape": 0,
-    "sub_oct": -1,
-    "sub_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 0,
-    "flt1_cutoff": 500,
-    "flt1_reso": 20,
-    "flt1_drive": 25,
-    "flt1_mix": 100,
-    "flt1_key": 30,
-    "flt1_level": 75,
-    "env1_att": 2,
-    "env1_dec": 700,
-    "env1_sus": 60,
-    "env1_rel": 120,
-    "env1_hold": 0,
+    "flt1_type": 3,
+    "flt1_cutoff": 80,
+    "flt1_reso": 1.5,
+    "flt1_drive": 15.6,
+    "flt1_key": 59.4,
+    "env1_att": 409.64,
+    "env1_dec": 165,
+    "env1_sus": 46.1,
+    "env1_rel": 1922,
     "env1_acurve": 0,
-    "env1_dcurve": 60,
-    "env1_rcurve": 60,
-    "env2_att": 0,
-    "env2_dec": 350,
-    "env2_sus": 10,
-    "env2_rel": 120,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 60,
-    "env2_rcurve": 60,
-    "voice_mode": 2,
-    "glide": 40,
-    "glide_legato": 1,
-    "poly": 16,
-    "stack": 1,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -6.6
+    "env2_att": 0.5,
+    "env2_dec": 60,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.207,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -2.0
    },
    "mods": [
     {
      "src": "ENV 2",
      "dst": "flt1_cutoff",
-     "amt": 30
+     "amt": 25.8
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": -44.5
+    },
+    {
+     "src": "LFO 1",
+     "dst": "oscA_wtpos",
+     "amt": 38.5,
+     "bip": true
     },
     {
      "src": "VELOCITY",
@@ -3504,7 +74,820 @@
     {
      "src": "MACRO 1",
      "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 1",
+     "dst": "oscA_wtpos",
+     "amt": 35,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "fxM1_p2",
      "amt": 45
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "fxM4_mix",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 7",
+     "dst": "fxM5_mix",
+     "amt": 50
+    },
+    {
+     "src": "MACRO 8",
+     "dst": "fxM6_mix",
+     "amt": 50
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "SATURATION",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "DRIVE": 24.6
+      }
+     },
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "CHORUS",
+      "mix": 19.4,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "DELAY",
+      "mix": 6.7,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "REVERB",
+      "mix": 10.2,
+      "out": 0,
+      "params": {
+       "DECAY": 0.81
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Canon Lo-Fi",
+   "category": "PAD",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 21,
+    "oscA_wtpos": 36.0,
+    "oscA_unison": 2,
+    "oscA_detune": 0.0,
+    "oscA_spread": 78.1,
+    "oscA_blend": 30.0,
+    "oscA_warpmode": 7,
+    "oscA_warp": 16.5,
+    "flt1_on": 1,
+    "flt1_type": 12,
+    "flt1_cutoff": 1690,
+    "flt1_reso": 20.6,
+    "flt1_drive": 0.0,
+    "flt1_key": 31.3,
+    "env1_att": 723.55,
+    "env1_dec": 63,
+    "env1_sus": 55.9,
+    "env1_rel": 1121,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 2150,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.798,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -17.3
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 23.0
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": -8.5
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 4",
+     "dst": "oscA_wtpos",
+     "amt": 30,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "flt1_drive",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "fxM3_mix",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 7",
+     "dst": "fxM4_mix",
+     "amt": 50
+    },
+    {
+     "src": "MACRO 8",
+     "dst": "fxM5_mix",
+     "amt": 50
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "CHORUS",
+      "mix": 22.5,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "DELAY",
+      "mix": 33.2,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "REVERB",
+      "mix": 31.6,
+      "out": 0,
+      "params": {
+       "DECAY": 3.84
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Jengibre Lo-Fi",
+   "category": "PLUCK",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pluck sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 23,
+    "oscA_wtpos": 67.0,
+    "oscA_unison": 2,
+    "oscA_detune": 10.3,
+    "oscA_spread": 90.2,
+    "oscA_blend": 35.2,
+    "oscA_warpmode": 5,
+    "oscA_warp": 37.5,
+    "flt1_on": 1,
+    "flt1_type": 3,
+    "flt1_cutoff": 1199,
+    "flt1_reso": 15.2,
+    "flt1_drive": 28.6,
+    "flt1_key": 53.3,
+    "env1_att": 0.5,
+    "env1_dec": 1778,
+    "env1_sus": 0.0,
+    "env1_rel": 2842,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 606,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.401,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -11.0
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 14.3
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": -19.2
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 4",
+     "dst": "oscA_wtpos",
+     "amt": 30,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "flt1_drive",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "fxM3_mix",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 8",
+     "dst": "fxM4_mix",
+     "amt": 50
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "CHORUS",
+      "mix": 70.0,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "REVERB",
+      "mix": 44.8,
+      "out": 0,
+      "params": {
+       "DECAY": 1.38
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Encanto Lo-Fi",
+   "category": "PLUCK",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pluck sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 5,
+    "oscA_wtpos": 93.9,
+    "oscA_unison": 2,
+    "oscA_detune": 26.8,
+    "oscA_spread": 87.2,
+    "oscA_blend": 92.4,
+    "oscA_warpmode": 9,
+    "oscA_warp": 55.7,
+    "flt1_on": 1,
+    "flt1_type": 2,
+    "flt1_cutoff": 1306,
+    "flt1_reso": 21.4,
+    "flt1_drive": 32.1,
+    "flt1_key": 21.0,
+    "env1_att": 0.69,
+    "env1_dec": 223,
+    "env1_sus": 9.5,
+    "env1_rel": 38,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 55,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.369,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -5.3
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 12.5
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": 33.1
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
     },
     {
      "src": "MACRO 2",
@@ -3531,7 +914,263 @@
     {
      "src": "MACRO 5",
      "dst": "fxM1_p2",
-     "amt": 50
+     "amt": 45
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "fxM4_mix",
+     "amt": 60
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "SATURATION",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "DRIVE": 20.7
+      }
+     },
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "CHORUS",
+      "mix": 41.0,
+      "out": 0,
+      "params": {}
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Tormenta Rosa Lo-Fi",
+   "category": "KEYS",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference keys sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 10,
+    "oscA_wtpos": 53.2,
+    "oscA_unison": 1,
+    "oscA_detune": 24.6,
+    "oscA_spread": 68.1,
+    "oscA_blend": 27.5,
+    "oscA_warpmode": 7,
+    "oscA_warp": 7.1,
+    "flt1_on": 1,
+    "flt1_type": 0,
+    "flt1_cutoff": 136,
+    "flt1_reso": 54.7,
+    "flt1_drive": 21.9,
+    "flt1_key": 57.2,
+    "env1_att": 1.09,
+    "env1_dec": 3002,
+    "env1_sus": 0.0,
+    "env1_rel": 1778,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 20,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.819,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -2.8
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 14.0
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": 57.0
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 4",
+     "dst": "oscA_wtpos",
+     "amt": 30,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "fxM1_p2",
+     "amt": 45
     },
     {
      "src": "MACRO 6",
@@ -3546,275 +1185,7 @@
       "mix": 100,
       "out": 0,
       "params": {
-       "MODE": "TUBE",
-       "DRIVE": 25,
-       "WARMTH": 40,
-       "CHARACTER": 35
-      }
-     },
-     {
-      "type": "EQUALIZER",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "LOW FREQ": 60,
-       "LOW GAIN": 2,
-       "MID FREQ": 900,
-       "MID GAIN": -2,
-       "MID Q": 0.8,
-       "HIGH FREQ": 9000,
-       "HIGH GAIN": -3
-      }
-     },
-     {
-      "type": "STEREO WIDTH",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WIDTH": 110,
-       "BASS MONO": 180
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Lo-Fi Bell",
-   "category": "BELL",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 26,
-    "oscA_wtpos": 30,
-    "oscA_unison": 2,
-    "oscA_detune": 8,
-    "oscA_blend": 55,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "flt1_on": 1,
-    "flt1_type": 3,
-    "flt1_cutoff": 4500.0,
-    "flt1_reso": 10,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 50,
-    "flt1_level": 75,
-    "env1_att": 1.5,
-    "env1_dec": 900,
-    "env1_sus": 0,
-    "env1_rel": 720.0,
-    "env1_hold": 0,
-    "env1_acurve": 0,
-    "env1_dcurve": 72,
-    "env1_rcurve": 70,
-    "env2_att": 0,
-    "env2_dec": 360.0,
-    "env2_sus": 0,
-    "env2_rel": 300,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 60,
-    "env2_rcurve": 60,
-    "lfo4_sync": 1,
-    "lfo4_div": 4,
-    "lfo4_mode": 0,
-    "lfo4_rise": 0,
-    "lfo4_smooth": 0,
-    "lfo4_delay": 0,
-    "master": -8.0
-   },
-   "mods": [
-    {
-     "src": "ENV 2",
-     "dst": "oscA_wtpos",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env2_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 4",
-     "dst": "oscA_wtpos",
-     "amt": 30,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 10,
-       "WARMTH": 35,
-       "TONE": -10
+       "DRIVE": 35.8
       }
      },
      {
@@ -3822,50 +1193,20 @@
       "mix": 100,
       "out": 0,
       "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
       }
      },
      {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
+      "type": "BITCRUSH",
       "mix": 22,
       "out": 0,
       "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 30,
-      "out": 0,
-      "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 3.0,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
+       "RATE": 16000,
+       "BITS": 11
       }
      }
     ]
@@ -3989,379 +1330,324 @@
    ]
   },
   {
-   "name": "Vinyl Room",
-   "category": "FX",
+   "name": "Fiordo Lo-Fi",
+   "category": "PAD",
    "style": "LO-FI",
    "author": "LT SOUNDS",
-   "description": "",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
    "values": {
     "oscA_on": 1,
     "oscA_type": 0,
-    "oscA_table": 34,
-    "oscA_wtpos": 40,
-    "oscA_unison": 5,
-    "oscA_detune": 40,
-    "oscA_blend": 80,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "noise_on": 1,
-    "noise_type": 3,
-    "noise_level": 24.0,
-    "noise_color": -30,
-    "noise_dest": 0,
+    "oscA_table": 14,
+    "oscA_wtpos": 76.7,
+    "oscA_unison": 4,
+    "oscA_detune": 32.7,
+    "oscA_spread": 95.2,
+    "oscA_blend": 12.0,
+    "oscA_warpmode": 7,
+    "oscA_warp": 38.5,
     "flt1_on": 1,
-    "flt1_type": 7,
-    "flt1_cutoff": 1250.0,
-    "flt1_reso": 45,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 30,
-    "flt1_level": 75,
-    "env1_att": 1500,
-    "env1_dec": 3000,
-    "env1_sus": 70,
-    "env1_rel": 3500,
-    "env1_hold": 0,
-    "env1_acurve": -30,
-    "env1_dcurve": 60,
-    "env1_rcurve": 60,
-    "lfo1_sync": 0,
-    "lfo1_rate": 0.08,
-    "lfo1_mode": 0,
-    "lfo1_rise": 0,
-    "lfo1_smooth": 0,
-    "lfo1_delay": 0,
-    "master": -9.1
-   },
-   "mods": [
-    {
-     "src": "LFO 1",
-     "dst": "flt1_cutoff",
-     "amt": 40,
-     "bip": true
-    },
-    {
-     "src": "LFO 1",
-     "dst": "oscA_wtpos",
-     "amt": 50,
-     "bip": true
-    },
-    {
-     "src": "MACRO 1",
-     "dst": "flt1_cutoff",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 2",
-     "dst": "oscA_wtpos",
-     "amt": 40
-    },
-    {
-     "src": "MACRO 3",
-     "dst": "env1_dec",
-     "amt": 35
-    },
-    {
-     "src": "LFO 1",
-     "dst": "flt1_cutoff",
-     "amt": 50,
-     "bip": true,
-     "aux": "MACRO 4"
-    },
-    {
-     "src": "MACRO 5",
-     "dst": "fxM1_p2",
-     "amt": 45
-    },
-    {
-     "src": "MACRO 6",
-     "dst": "fxM3_mix",
-     "amt": 60
-    },
-    {
-     "src": "MACRO 7",
-     "dst": "fxM4_mix",
-     "amt": 50
-    },
-    {
-     "src": "MACRO 8",
-     "dst": "fxM5_mix",
-     "amt": 50
-    }
-   ],
-   "fx": {
-    "MAIN": [
-     {
-      "type": "SATURATION",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "DRIVE": 25,
-       "WARMTH": 35,
-       "TONE": -10
-      }
-     },
-     {
-      "type": "TAPE",
-      "mix": 100,
-      "out": 0,
-      "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
-      }
-     },
-     {
-      "type": "CHORUS",
-      "mix": 45,
-      "out": 0,
-      "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
-      }
-     },
-     {
-      "type": "DELAY",
-      "mix": 30,
-      "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/4D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
-     },
-     {
-      "type": "REVERB",
-      "mix": 50,
-      "out": 0,
-      "params": {
-       "TYPE": "SPACE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 8,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
-      }
-     }
-    ]
-   },
-   "lfo": [
-    {
-     "kind": 2,
-     "points": [
-      [
-       0,
-       0.5,
-       0
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    },
-    {
-     "kind": 0,
-     "points": [
-      [
-       0,
-       0.5,
-       -0.45
-      ],
-      [
-       0.25,
-       1,
-       0.45
-      ],
-      [
-       0.5,
-       0.5,
-       -0.45
-      ],
-      [
-       0.75,
-       0,
-       0.45
-      ]
-     ]
-    }
-   ],
-   "macros": [
-    "BRIGHTNESS",
-    "TIMBRE",
-    "TIME",
-    "MOVEMENT",
-    "DRIVE",
-    "WIDTH",
-    "DELAY",
-    "SPACE"
-   ],
-   "samples": [
-    "",
-    "",
-    ""
-   ]
-  },
-  {
-   "name": "Lazy Arp",
-   "category": "ARP",
-   "style": "LO-FI",
-   "author": "LT SOUNDS",
-   "description": "",
-   "values": {
-    "oscA_on": 1,
-    "oscA_type": 0,
-    "oscA_table": 7,
-    "oscA_wtpos": 85,
-    "oscA_unison": 1,
-    "oscA_detune": 10,
-    "oscA_blend": 60,
-    "oscA_spread": 100,
-    "oscA_level": 75,
-    "oscA_pan": 0,
-    "oscA_oct": 0,
-    "oscA_semi": 0,
-    "oscA_fine": 0,
-    "oscA_rand": 100,
-    "oscA_phase": 0,
-    "oscA_dest": 0,
-    "oscB_on": 1,
-    "oscB_type": 0,
-    "oscB_table": 20,
-    "oscB_wtpos": 30,
-    "oscB_unison": 1,
-    "oscB_detune": 25,
-    "oscB_blend": 75,
-    "oscB_spread": 100,
-    "oscB_level": 55,
-    "oscB_pan": 0,
-    "oscB_oct": 0,
-    "oscB_semi": 0,
-    "oscB_fine": 0,
-    "oscB_rand": 100,
-    "oscB_phase": 0,
-    "oscB_dest": 0,
-    "env2_att": 0,
-    "env2_dec": 630.0,
-    "env2_sus": 0,
-    "env2_rel": 400,
-    "env2_hold": 0,
-    "env2_acurve": -30,
-    "env2_dcurve": 65,
-    "env2_rcurve": 60,
-    "flt1_on": 1,
-    "flt1_type": 3,
-    "flt1_cutoff": 960.0,
-    "flt1_reso": 8,
-    "flt1_drive": 0,
-    "flt1_mix": 100,
-    "flt1_key": 40,
-    "flt1_level": 75,
-    "env1_att": 2,
-    "env1_dec": 1400,
-    "env1_sus": 25,
-    "env1_rel": 420,
-    "env1_hold": 0,
+    "flt1_type": 0,
+    "flt1_cutoff": 282,
+    "flt1_reso": 0.8,
+    "flt1_drive": 4.8,
+    "flt1_key": 20.4,
+    "env1_att": 724.08,
+    "env1_dec": 718,
+    "env1_sus": 61.8,
+    "env1_rel": 1419,
     "env1_acurve": 0,
-    "env1_dcurve": 55,
-    "env1_rcurve": 55,
+    "env2_att": 0.5,
+    "env2_dec": 202,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 7.03,
     "lfo4_sync": 1,
     "lfo4_div": 4,
     "lfo4_mode": 0,
     "lfo4_rise": 0,
     "lfo4_smooth": 0,
     "lfo4_delay": 0,
-    "arp_on": 1,
-    "arp_mode": 0,
-    "arp_rate": 10,
-    "arp_pattern": 11,
-    "arp_oct": 1,
-    "arp_gate": 55,
-    "arp_swing": 35,
-    "master": -7.7
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": 8.0
    },
    "mods": [
     {
      "src": "ENV 2",
      "dst": "oscA_wtpos",
-     "amt": -80
+     "amt": -10.3
     },
     {
      "src": "VELOCITY",
      "dst": "flt1_cutoff",
-     "amt": 25
+     "amt": 10
     },
     {
      "src": "MACRO 1",
      "dst": "flt1_cutoff",
-     "amt": 45
+     "amt": 40
     },
     {
      "src": "MACRO 2",
-     "dst": "oscB_level",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 4",
+     "dst": "oscA_wtpos",
+     "amt": 30,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "flt1_drive",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "oscA_spread",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 8",
+     "dst": "fxM3_mix",
+     "amt": 50
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "REVERB",
+      "mix": 36.5,
+      "out": 0,
+      "params": {
+       "DECAY": 2.05
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Farol Lo-Fi",
+   "category": "PLUCK",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pluck sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 14,
+    "oscA_wtpos": 73.0,
+    "oscA_unison": 1,
+    "oscA_detune": 32.2,
+    "oscA_spread": 99.1,
+    "oscA_blend": 92.8,
+    "oscA_warpmode": 7,
+    "oscA_warp": 4.4,
+    "flt1_on": 1,
+    "flt1_type": 2,
+    "flt1_cutoff": 784,
+    "flt1_reso": 7.3,
+    "flt1_drive": 24.5,
+    "flt1_key": 48.5,
+    "env1_att": 11.36,
+    "env1_dec": 6000,
+    "env1_sus": 3.3,
+    "env1_rel": 20,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 20,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 7.355,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": 6.9
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 38.3
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": 24.1
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
      "amt": 40
     },
     {
@@ -4388,7 +1674,538 @@
     },
     {
      "src": "MACRO 6",
-     "dst": "fxM3_mix",
+     "dst": "fxM4_mix",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 8",
+     "dst": "fxM5_mix",
+     "amt": 50
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "SATURATION",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "DRIVE": 14.0
+      }
+     },
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "CHORUS",
+      "mix": 63.1,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "REVERB",
+      "mix": 24.7,
+      "out": 0,
+      "params": {
+       "DECAY": 0.5
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Vortice Lo-Fi",
+   "category": "PAD",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 18,
+    "oscA_wtpos": 49.1,
+    "oscA_unison": 3,
+    "oscA_detune": 33.4,
+    "oscA_spread": 95.3,
+    "oscA_blend": 84.4,
+    "oscA_warpmode": 2,
+    "oscA_warp": 74.0,
+    "flt1_on": 1,
+    "flt1_type": 12,
+    "flt1_cutoff": 16000,
+    "flt1_reso": 15.5,
+    "flt1_drive": 26.2,
+    "flt1_key": 51.8,
+    "env1_att": 1500.0,
+    "env1_dec": 412,
+    "env1_sus": 55.1,
+    "env1_rel": 593,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 241,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.132,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -14.2
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": 43.0
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 4",
+     "dst": "oscA_wtpos",
+     "amt": 30,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "fxM1_p2",
+     "amt": 45
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "fxM4_mix",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 7",
+     "dst": "fxM5_mix",
+     "amt": 50
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "SATURATION",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "DRIVE": 24.8
+      }
+     },
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "CHORUS",
+      "mix": 61.1,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "DELAY",
+      "mix": 6.4,
+      "out": 0,
+      "params": {}
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Nexo Lo-Fi",
+   "category": "PAD",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 12,
+    "oscA_wtpos": 54.3,
+    "oscA_unison": 3,
+    "oscA_detune": 11.6,
+    "oscA_spread": 74.0,
+    "oscA_blend": 91.3,
+    "oscA_warpmode": 9,
+    "oscA_warp": 8.1,
+    "oscB_on": 1,
+    "oscB_table": 15,
+    "oscB_wtpos": 15.4,
+    "oscB_oct": 0,
+    "oscB_semi": 0,
+    "oscB_level": 61.9,
+    "env1_att": 69.39,
+    "env1_dec": 33,
+    "env1_sus": 82.4,
+    "env1_rel": 172,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 73,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 4.121,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -18.0
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 25.4
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": 38.8
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "oscA_wtpos",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 4",
+     "dst": "oscA_wtpos",
+     "amt": 30,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "fxM1_p2",
+     "amt": 45
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "oscA_spread",
      "amt": 60
     },
     {
@@ -4409,10 +2226,7 @@
       "mix": 100,
       "out": 0,
       "params": {
-       "MODE": "TAPE",
-       "DRIVE": 25,
-       "WARMTH": 35,
-       "TONE": -10
+       "DRIVE": 13.7
       }
      },
      {
@@ -4420,50 +2234,809 @@
       "mix": 100,
       "out": 0,
       "params": {
-       "WOW": 30,
-       "FLUTTER": 22,
-       "SATURATION": 30,
-       "HISS": 12,
-       "AGE": 40
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
       }
      },
      {
-      "type": "CHORUS",
-      "mix": 45,
+      "type": "BITCRUSH",
+      "mix": 22,
       "out": 0,
       "params": {
-       "RATE": 0.5,
-       "DEPTH": 40,
-       "DELAY": 9,
-       "WIDTH": 100
+       "RATE": 16000,
+       "BITS": 11
       }
      },
      {
       "type": "DELAY",
-      "mix": 12,
+      "mix": 28.0,
       "out": 0,
-      "params": {
-       "MODE": "TAPE",
-       "TIME": "1/8D",
-       "FEEDBACK": 32,
-       "LO CUT": 220,
-       "HI CUT": 5500,
-       "WIDTH": 110
-      }
+      "params": {}
      },
      {
       "type": "REVERB",
-      "mix": 20,
+      "mix": 47.7,
       "out": 0,
       "params": {
-       "TYPE": "PLATE",
-       "SIZE": 62,
-       "PRE-DLY": 14,
-       "DECAY": 2.6,
-       "DAMP": 7000,
-       "WIDTH": 100,
-       "LO CUT": 180,
-       "MOD": 40
+       "DECAY": 3.83
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Horizonte Rojo Lo-Fi",
+   "category": "PAD",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 9,
+    "oscA_wtpos": 7.0,
+    "oscA_unison": 3,
+    "oscA_detune": 8.6,
+    "oscA_spread": 77.1,
+    "oscA_blend": 78.6,
+    "oscA_warpmode": 2,
+    "oscA_warp": 16.8,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "flt1_on": 1,
+    "flt1_type": 1,
+    "flt1_cutoff": 5383,
+    "flt1_reso": 11.2,
+    "flt1_drive": 2.6,
+    "flt1_key": 26.4,
+    "env1_att": 539.23,
+    "env1_dec": 1705,
+    "env1_sus": 84.3,
+    "env1_rel": 418,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 2446,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.795,
+    "master": -13.7
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 53.9
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": 27.1
+    },
+    {
+     "src": "LFO 1",
+     "dst": "oscA_wtpos",
+     "amt": 38.2,
+     "bip": true
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 1",
+     "dst": "oscA_wtpos",
+     "amt": 35,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "fxM1_p2",
+     "amt": 45
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "oscA_spread",
+     "amt": 60
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "SATURATION",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "DRIVE": 12.4
+      }
+     },
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Ruiseñor Lo-Fi",
+   "category": "PAD",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 0,
+    "oscA_table": 17,
+    "oscA_wtpos": 89.7,
+    "oscA_unison": 2,
+    "oscA_detune": 41.3,
+    "oscA_spread": 48.4,
+    "oscA_blend": 95.7,
+    "oscA_warpmode": 0,
+    "oscA_warp": 47.7,
+    "flt1_on": 1,
+    "flt1_type": 3,
+    "flt1_cutoff": 240,
+    "flt1_reso": 31.1,
+    "flt1_drive": 40.5,
+    "flt1_key": 17.9,
+    "env1_att": 1500.0,
+    "env1_dec": 634,
+    "env1_sus": 82.0,
+    "env1_rel": 815,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 97,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 0.401,
+    "lfo4_sync": 1,
+    "lfo4_div": 4,
+    "lfo4_mode": 0,
+    "lfo4_rise": 0,
+    "lfo4_smooth": 0,
+    "lfo4_delay": 0,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -12.6
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 31.0
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": 10.7
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 4",
+     "dst": "oscA_wtpos",
+     "amt": 30,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "fxM1_p2",
+     "amt": 45
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "fxM4_mix",
+     "amt": 60
+    },
+    {
+     "src": "MACRO 8",
+     "dst": "fxM5_mix",
+     "amt": 50
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "SATURATION",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "DRIVE": 14.6
+      }
+     },
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
+      }
+     },
+     {
+      "type": "CHORUS",
+      "mix": 60.5,
+      "out": 0,
+      "params": {}
+     },
+     {
+      "type": "REVERB",
+      "mix": 30.2,
+      "out": 0,
+      "params": {
+       "DECAY": 1.05
+      }
+     }
+    ]
+   },
+   "lfo": [
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    },
+    {
+     "kind": 0,
+     "points": [
+      [
+       0,
+       0.5,
+       -0.45
+      ],
+      [
+       0.25,
+       1,
+       0.45
+      ],
+      [
+       0.5,
+       0.5,
+       -0.45
+      ],
+      [
+       0.75,
+       0,
+       0.45
+      ]
+     ]
+    }
+   ],
+   "macros": [
+    "BRIGHTNESS",
+    "TIMBRE",
+    "TIME",
+    "MOVEMENT",
+    "DRIVE",
+    "WIDTH",
+    "DELAY",
+    "SPACE"
+   ],
+   "samples": [
+    "",
+    "",
+    ""
+   ]
+  },
+  {
+   "name": "Canela Lo-Fi",
+   "category": "PAD",
+   "style": "LO-FI",
+   "author": "LT SOUNDS",
+   "description": "Fitted by QUASAR to a reference pad sound (envelope, spectrum over time, width).",
+   "values": {
+    "oscA_on": 1,
+    "oscA_type": 1,
+    "oscA_table": 16,
+    "oscA_wtpos": 100.0,
+    "oscA_unison": 1,
+    "oscA_detune": 0.0,
+    "oscA_spread": 37.1,
+    "oscA_blend": 0.0,
+    "oscA_warpmode": 5,
+    "oscA_warp": 23.9,
+    "oscB_on": 1,
+    "oscB_table": 26,
+    "oscB_wtpos": 4.9,
+    "oscB_oct": 1,
+    "oscB_semi": 0,
+    "oscB_level": 65.5,
+    "flt1_on": 1,
+    "flt1_type": 3,
+    "flt1_cutoff": 2489,
+    "flt1_reso": 19.8,
+    "flt1_drive": 13.8,
+    "flt1_key": 19.5,
+    "env1_att": 7.65,
+    "env1_dec": 564,
+    "env1_sus": 56.0,
+    "env1_rel": 671,
+    "env1_acurve": 0,
+    "env2_att": 0.5,
+    "env2_dec": 1453,
+    "env2_sus": 0,
+    "lfo1_sync": 0,
+    "lfo1_mode": 0,
+    "lfo1_rate": 4.045,
+    "noise_on": 1,
+    "noise_type": 3,
+    "noise_level": 18,
+    "master": -13.1
+   },
+   "mods": [
+    {
+     "src": "ENV 2",
+     "dst": "flt1_cutoff",
+     "amt": 7.6
+    },
+    {
+     "src": "ENV 2",
+     "dst": "oscA_wtpos",
+     "amt": -31.5
+    },
+    {
+     "src": "LFO 1",
+     "dst": "oscA_wtpos",
+     "amt": 30.7,
+     "bip": true
+    },
+    {
+     "src": "VELOCITY",
+     "dst": "flt1_cutoff",
+     "amt": 10
+    },
+    {
+     "src": "MACRO 1",
+     "dst": "flt1_cutoff",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 2",
+     "dst": "oscA_wtpos",
+     "amt": 40
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env1_dec",
+     "amt": 35
+    },
+    {
+     "src": "MACRO 3",
+     "dst": "env2_dec",
+     "amt": 35
+    },
+    {
+     "src": "LFO 1",
+     "dst": "oscA_wtpos",
+     "amt": 35,
+     "bip": true,
+     "aux": "MACRO 4"
+    },
+    {
+     "src": "MACRO 5",
+     "dst": "fxM1_p2",
+     "amt": 45
+    },
+    {
+     "src": "MACRO 6",
+     "dst": "oscA_spread",
+     "amt": 60
+    }
+   ],
+   "fx": {
+    "MAIN": [
+     {
+      "type": "SATURATION",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "DRIVE": 5.7
+      }
+     },
+     {
+      "type": "TAPE",
+      "mix": 100,
+      "out": 0,
+      "params": {
+       "WOW": 35,
+       "FLUTTER": 25,
+       "SATURATION": 35,
+       "HISS": 15,
+       "AGE": 50
+      }
+     },
+     {
+      "type": "BITCRUSH",
+      "mix": 22,
+      "out": 0,
+      "params": {
+       "RATE": 16000,
+       "BITS": 11
       }
      }
     ]

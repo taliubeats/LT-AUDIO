@@ -494,7 +494,7 @@ PRODUCTS.append(dict(
     image="design/quasar/main-dark.webp", image2="design/quasar/fx-dark.webp", image2_caption="Página FX (imagen de referencia del diseño)",
     intro="LT QUASAR es un sintetizador para producir y para diseñar sonido: 3 osciladores (cada uno <b>WAVETABLE</b>, <b>ANALOG</b> o <b>SAMPLE</b>), "
           "SUB, NOISE, 2 filtros analógicos, 4 envolventes, 4 LFOs dibujables, una matriz de modulación de 32 rutas, mezclador con buses "
-          "y 8 efectos por bus. Trae <b>200 presets</b> en 9 bancos pensados para trap, reggaetón, R&amp;B y lo-fi. Todo se puede modular "
+          "y 8 efectos por bus. Trae <b>239 presets</b> en 8 bancos pensados para trap, reggaetón, R&amp;B y lo-fi. Todo se puede modular "
           "arrastrando una fuente (ENV, LFO, MACRO) sobre cualquier perilla, como en Serum.",
     sections=[("Cómo empezar", [
         "<b>1.</b> Crea una pista MIDI en Ableton y carga LT QUASAR (Instrumentos &gt; Plug-ins &gt; LT Audio).",
@@ -536,11 +536,11 @@ PRODUCTS.append(dict(
         ("MASTER", "Arriba a la derecha", "Volumen general. Los presets de fábrica están nivelados para sonar a un volumen parecido."),
     ],
     extra_tables=[("Bancos de fábrica", [
-        ("QUASAR FACTORY", "20", "Lo esencial de cada categoría."),
-        ("TRAP ESSENTIALS · PERREO", "24 · 23", "Trap oscuro / reggaetón: plucks, bells, leads, 808s, arps dembow."),
-        ("R&B NIGHTS · LO-FI DUST", "18 · 15", "Keys, pads y leads suaves / sonidos de cinta y vinilo."),
-        ("808 GALAXY · ARP MACHINE · SPACE PADS", "16 · 14 · 11", "808, reese y bajos / arpegiadores / pads enormes y texturas."),
-        ("NEON SERIES", "59", "Sonidos reconstruidos a partir del análisis de one-shots modernos (envolvente, brillo y anchura medidos)."),
+        ("Cómo se hicieron", "239 presets", "Cada preset se ajustó automáticamente a un one-shot de referencia distinto (espectro en el tiempo, envolvente y anchura estéreo) y se quitaron los que sonaban iguales."),
+        ("QUASAR FACTORY", "Lo mejor", "Los ajustes más fieles de cada categoría + sonidos insignia (808 con glide, reese, arps)."),
+        ("TRAP ESSENTIALS · PERREO · R&B NIGHTS", "Por género", "Plucks, leads, keys y bells de trap, reggaetón y R&amp;B."),
+        ("LO-FI DUST · 808 GALAXY", "", "Versiones con cinta y vinilo / bajos, 808, reese y subs."),
+        ("ARP MACHINE · SPACE PADS", "", "Cada arp es un sonido distinto con su patrón / pads, texturas y FX."),
     ])],
     tips=["808 con slide: pon VOICING en LEGATO con GLIDE 80-150 ms y toca notas que se solapen.",
           "Pluck de reggaetón: preset de PERREO, MACRO 7 (DELAY) a tu gusto y el delay en 1/8 o 1/8D.",

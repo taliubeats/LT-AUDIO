@@ -160,7 +160,9 @@ int main (int argc, char** argv)
             if (body > 1.0e-4f) clickRatio = juce::jmax (clickRatio, onset / body);
         }
         auto currentMaster = p->state.getRawParameterValue (IDs::master)->load();
-        auto gain = juce::jlimit (-18.0f, 18.0f, currentMaster + (targetDb - rmsDb));
+        auto gain = currentMaster + 0.6f * (targetDb - rmsDb);   // damped: converges without oscillating
+        if (peak > 0.95f) gain = juce::jmin (gain, currentMaster - 1.0f);   // the limiter is working: leave headroom for the attack
+        gain = juce::jlimit (-18.0f, 18.0f, gain);
         levels->setProperty (preset->name, std::round (gain * 10.0f) / 10.0f);
 
         auto file = out.getChildFile (juce::File::createLegalFileName (preset->bank + " - " + preset->name) + ".wav");

@@ -121,9 +121,13 @@ int main()
         check (ui.is<ui::SimplePage> ({ 600, 330 }) || p.simpleView, "SIMPLE shows the simple view");
         ui.click ({ 1024, 63 });  // ADVANCED
         check (! p.simpleView, "ADVANCED goes back");
-        p.setParam (IDs::osc (0, "level"), 75);
+        auto original = ui.value (IDs::osc (0, "level"));
+        auto changed = original > 50.0f ? 20.0f : 90.0f;
+        p.undo.beginNewTransaction();
+        p.setParam (IDs::osc (0, "level"), changed);
+        ui.pump (100);   // the parameter reaches the undo history through the state tree
         ui.click ({ 842, 47 });   // UNDO
-        check (std::abs (ui.value (IDs::osc (0, "level")) - 75.0f) > 0.01f || p.undo.canRedo(), "UNDO undoes the last change");
+        check (std::abs (ui.value (IDs::osc (0, "level")) - changed) > 0.01f, "UNDO undoes the last change");
     }
 
     std::cout << "PAGES" << std::endl;

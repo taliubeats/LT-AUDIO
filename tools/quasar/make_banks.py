@@ -633,41 +633,155 @@ def bank_inspired(profiles):
     return [from_profile(p, i, rnd) for i, p in enumerate(picked)]
 
 
-BANKS = [
-    ("00_factory", "QUASAR FACTORY", "ff7b2cff", "The essential QUASAR sounds: plucks, keys, pads, 808s, reese, leads and arps.", bank_factory),
-    ("01_trap", "TRAP ESSENTIALS", "ff5b21b6", "Dark plucks, bells, 808s and pads for modern trap.", bank_trap),
-    ("02_perreo", "PERREO", "ffe0458b", "Reggaeton: bright plucks, dembow arps, leads and basses.", bank_perreo),
-    ("03_rnb", "R&B NIGHTS", "ff3b6bd6", "Warm keys, silky pads and smooth leads for R&B.", bank_rnb),
-    ("04_lofi", "LO-FI DUST", "ffc08a4a", "Tape, vinyl and crumbled tones for lo-fi.", bank_lofi),
-    ("05_808", "808 GALAXY", "ffff6a3d", "808s, subs, reese and dirty basses.", bank_808),
-    ("06_arps", "ARP MACHINE", "ff2ec4b6", "Arpeggiated patches with trap, dembow, drill and plugg patterns: hold a chord.", bank_arps),
-    ("07_space", "SPACE PADS", "ff6a5cff", "Huge evolving pads and cinematic textures.", bank_space),
+
+# ================================================================== presets fitted to the reference sounds (quasar_match)
+
+def lgv(t, lo, hi):
+    return lo * (hi / lo) ** max(0.0, min(1.0, t))
+
+
+def from_match(m, name, style, extra_fx=None):
+    """matched.json entry -> preset. Mirrors Rig::apply in tests/QuasarMatch.cpp."""
+    c, cat = m["params"], m["category"]
+    bass = cat in ("BASS", "808", "SUB", "REESE")
+    category = {"ARP": "PLUCK", "OTHER": "FX"}.get(cat, cat)
+    p = P(name, category, style, "Fitted by QUASAR to a reference %s sound (envelope, spectrum over time, width)." % cat.lower())
+    p.v.update({"oscA_on": 1, "oscA_type": int(c["typeA"]), "oscA_table": int(c["tableA"]), "oscA_wtpos": round(c["posA"] * 100, 1),
+                "oscA_unison": int(c["uniA"]), "oscA_detune": round(c["detA"] * 60, 1), "oscA_spread": round(c["spread"] * 100, 1),
+                "oscA_blend": round(c["blend"] * 100, 1), "oscA_warpmode": int(c["warpA"]), "oscA_warp": round(c["warpAmt"] * 80, 1)})
+    if c["onB"] > 0.5:
+        p.v.update({"oscB_on": 1, "oscB_table": int(c["tableB"]), "oscB_wtpos": round(c["posB"] * 100, 1), "oscB_oct": int(c["octB"]),
+                    "oscB_semi": int(c["semiB"]), "oscB_level": round(30 + c["levelB"] * 50, 1)})
+    if c["sub"] > 0.5: p.v.update({"sub_on": 1, "sub_level": round(30 + c["subLevel"] * 50, 1), "sub_shape": int(c["subShape"])})
+    if c["noise"] > 0.5: p.v.update({"noise_on": 1, "noise_type": int(c["noiseType"]), "noise_level": round(10 + c["noiseLevel"] * 45, 1)})
+    if c["filt"] > 0.5:
+        p.v.update({"flt1_on": 1, "flt1_type": int(c["ftype"]), "flt1_cutoff": round(lgv(c["cutoff"], 80, 16000)), "flt1_reso": round(c["reso"] * 70, 1),
+                    "flt1_drive": round(c["drive"] * 60, 1), "flt1_key": round(c["key"] * 60, 1)})
+    p.v.update({"env1_att": round(lgv(c["att"], 0.5, 1500), 2), "env1_dec": round(lgv(c["dec"], 30, 6000)), "env1_sus": round(c["sus"] * 100, 1),
+                "env1_rel": round(lgv(c["rel"], 20, 4000)), "env1_acurve": 0,
+                "env2_att": 0.5, "env2_dec": round(lgv(c["dec2"], 20, 3000)), "env2_sus": 0,
+                "lfo1_sync": 0, "lfo1_mode": 0, "lfo1_rate": round(lgv(c["lfoRate"], 0.1, 8), 3)})
+    if bass:
+        p.v.update({"envP_amt": round(c["pitch"] * 24, 2), "envP_att": 0, "envP_dec": 80, "envP_sus": 0, "voice_mode": 2, "glide": 70, "glide_legato": 1})
+    if c["envCut"] > 0.02: p.mod("ENV 2", "flt1_cutoff", round(c["envCut"] * 60, 1))
+    if abs(c["envPos"] - 0.5) > 0.02: p.mod("ENV 2", "oscA_wtpos", round((c["envPos"] - 0.5) * 120, 1))
+    if c["lfoPos"] > 0.02: p.mod("LFO 1", "oscA_wtpos", round(c["lfoPos"] * 40, 1), bip=True)
+    p.mod("VELOCITY", "flt1_cutoff", 10)
+    if c["sat"] > 0.05: p.add_fx("SATURATION", 100, drive=round(c["sat"] * 60, 1))
+    if extra_fx: extra_fx(p)
+    if c["chorus"] > 0.03: p.add_fx("CHORUS", round(c["chorus"] * 70, 1))
+    if c["delay"] > 0.03: p.add_fx("DELAY", round(c["delay"] * 40, 1))
+    if c["verb"] > 0.03: p.add_fx("REVERB", round(c["verb"] * 50, 1), decay=round(lgv(c["verbDecay"], 0.5, 6.0), 2))
+    if bass: p.add_fx("STEREO WIDTH", 100, width=100, bass_mono=150)
+    # macros that make sense for this sound
+    bright = ("flt1_cutoff", 40) if c["filt"] > 0.5 else ("oscA_wtpos", 35)
+    if not p.lfo[3] and c["lfoPos"] <= 0.02: pass
+    macros(p, bright=bright, movement=("LFO 1", "oscA_wtpos", 35) if c["lfoPos"] > 0.02 else None)
+    return p
+
+
+def lofi_fx(p):
+    p.add_fx("TAPE", 100, wow=35, flutter=25, saturation=35, hiss=15, age=50)
+    p.add_fx("BITCRUSH", 22, rate=16000, bits=11)
+
+
+def build_matched_banks(matched, levels):
+    rnd = random.Random(11)
+    pools = {k: list(v) for k, v in NAME_POOL.items()}
+    extra = ["Kairos", "Lumen", "Ether", "Onda", "Fractal", "Prana", "Nexo", "Umbral", "Vortice", "Cenizas", "Atlas", "Arcano", "Brujula",
+             "Cumbre", "Delta", "Fulgor", "Gema", "Hiedra", "Indigo", "Jazmin", "Karma", "Lirio", "Mística", "Nectar", "Ostra", "Pétalo",
+             "Quasar Dust", "Raices", "Sauce", "Tinta", "Ultra", "Vidrio Azul", "Xenon", "Yuca", "Zenda", "Alquimia", "Bahia", "Caramelo",
+             "Dorado", "Encanto", "Farol", "Girasol", "Horizonte Rojo", "Isla Negra", "Jungla", "Kiwi", "Lima", "Mango", "Naranja", "Azahar", "Bruma Rosa", "Canela", "Duna Azul", "Estela", "Fuga", "Gaviota", "Humo", "Iman", "Jade Negro", "Koi", "Lava Fria", "Mareo", "Nimbo", "Obsequio", "Papiro", "Quietud", "Remolino", "Salitre", "Tregua", "Ulises", "Vertigo", "Wabi", "Xilofono", "Yugo", "Zarza", "Alba Roja", "Brillo Lunar", "Cascabel", "Desvelo", "Embrujo", "Fogata", "Granizo", "Hechizo Azul", "Ilusion", "Jengibre", "Lagrima", "Mosaico", "Neblina Roja", "Orquidea", "Pirata", "Ruiseñor", "Serenata", "Tormenta Rosa", "Umbria", "Vals", "Zafra"]
+    used = set()
+    def name_for(cat):
+        pool = pools.get({"ARP": "PLUCK", "OTHER": "PAD", "FX": "PAD", "VOX": "PAD"}.get(cat, cat)) or []
+        while pool:
+            n = pool.pop(rnd.randrange(len(pool)))
+            if n not in used: used.add(n); return n
+        while True:
+            n = extra.pop(rnd.randrange(len(extra))) if extra else "Quasar %d" % len(used)
+            if n not in used: used.add(n); return n
+
+    style_of = {"PERREO": "REGGAETON", "TRAP": "TRAP", "R&B": "R&B"}
+    banks = {k: [] for k in ["QUASAR FACTORY", "TRAP ESSENTIALS", "PERREO", "R&B NIGHTS", "LO-FI DUST", "808 GALAXY", "ARP MACHINE", "SPACE PADS"]}
+    # best fits of each category open the factory bank
+    best = {}
+    for m in matched:
+        best.setdefault(m["category"], []).append(m)
+    factory_ids = set()
+    for cat, ms in best.items():
+        for m in sorted(ms, key=lambda x: x["distance"])[:3 if cat in ("PLUCK", "LEAD", "KEYS", "PAD", "BELL", "BASS") else 1]:
+            factory_ids.add(id(m))
+    arps, lofi = [], []
+    for m in matched:
+        cat, genre = m["category"], m.get("genre", "TRAP")
+        style = style_of.get(genre, "TRAP")
+        p = from_match(m, name_for(cat), style)
+        if id(m) in factory_ids: banks["QUASAR FACTORY"].append(p)
+        elif cat in ("BASS", "808", "SUB", "REESE"): banks["808 GALAXY"].append(p)
+        elif cat in ("PAD", "FX", "VOX", "OTHER"): banks["SPACE PADS"].append(p)
+        elif genre == "PERREO": banks["PERREO"].append(p)
+        elif genre == "R&B": banks["R&B NIGHTS"].append(p)
+        else: banks["TRAP ESSENTIALS"].append(p)
+        if cat in ("PLUCK", "BELL", "ARP") and m["distance"] < 6: arps.append(m)
+        if cat in ("KEYS", "PLUCK", "PAD") and genre in ("R&B", "TRAP"): lofi.append(m)
+    # arps: different fitted sounds, each with its own pattern
+    pats = [("TRAP ROLL", "UP", "1/16", 2), ("DEMBOW", "UP", "1/16", 1), ("TRIPLET FLOW", "UP", "1/16T", 2), ("BOUNCE", "UP/DOWN", "1/16", 2),
+            ("DRILL", "UP", "1/16", 2), ("PLUGG", "UP/DOWN", "1/16", 2), ("SKIP", "DOWN", "1/16", 2), ("STAIRS", "UP", "1/16", 2),
+            ("RATCHET", "RANDOM", "1/8", 2), ("OCT JUMP", "ORDER", "1/16", 1), ("LO-FI SWING", "UP", "1/8", 1), ("STRAIGHT", "DOWN/UP", "1/8T", 2)]
+    rnd.shuffle(arps)
+    for i, m in enumerate(arps[:24]):
+        pat, mode, rate, octs = pats[i % len(pats)]
+        p = from_match(m, name_for("ARP") + " Arp", "REGGAETON" if pat in ("DEMBOW", "BOUNCE") else "TRAP")
+        p.category = "ARP"
+        p.arp(mode, rate, pat, octs, 55, 30 if pat == "LO-FI SWING" else 0)
+        banks["ARP MACHINE"].append(p)
+    rnd.shuffle(lofi)
+    for m in lofi[:18]:
+        p = from_match(m, name_for(m["category"]) + " Lo-Fi", "LO-FI", extra_fx=lofi_fx)
+        p.v["noise_on"] = 1; p.v["noise_type"] = 3; p.v["noise_level"] = 18
+        banks["LO-FI DUST"].append(p)
+    return banks
+
+
+BANK_INFO = [
+    ("00_factory", "QUASAR FACTORY", "ff7b2cff", "The best fits of every category, plus signature QUASAR sounds."),
+    ("01_trap", "TRAP ESSENTIALS", "ff5b21b6", "Trap plucks, bells, leads and keys fitted to modern trap one-shots."),
+    ("02_perreo", "PERREO", "ffe0458b", "Reggaeton plucks, leads, keys and bells fitted to modern reggaeton one-shots."),
+    ("03_rnb", "R&B NIGHTS", "ff3b6bd6", "Warm keys, plucks and leads for R&B."),
+    ("04_lofi", "LO-FI DUST", "ffc08a4a", "Fitted keys and plucks pushed through tape, vinyl and crushed bits."),
+    ("05_808", "808 GALAXY", "ffff6a3d", "Basses, 808s, reese and subs."),
+    ("06_arps", "ARP MACHINE", "ff2ec4b6", "Each arp is a different fitted sound with its own pattern: hold a chord."),
+    ("07_space", "SPACE PADS", "ff6a5cff", "Pads, textures and FX."),
 ]
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--profiles", default=os.path.join(HERE, "ref_profiles.json"))
+    ap.add_argument("--matched", default=os.path.join(HERE, "matched.json"))
     ap.add_argument("--levels", default=os.path.join(HERE, "levels.json"))
+    ap.add_argument("--drop", default=os.path.join(HERE, "drop.json"))
     args = ap.parse_args()
     random.seed(42)
     levels = json.load(open(args.levels)) if os.path.exists(args.levels) else {}
-    banks = list(BANKS)
-    if os.path.exists(args.profiles):
-        profiles = json.load(open(args.profiles))
-        banks.append(("08_inspired", "NEON SERIES", "ffb98cff", "Sounds rebuilt from the analysis of modern trap / reggaeton one-shots: same envelopes, brightness and width.",
-                      lambda: bank_inspired(profiles)))
+    drop = set(json.load(open(args.drop))) if os.path.exists(args.drop) else set()
+    # fits that stay far from their reference (> 9 dB average error) are left out
+    matched = [m for m in json.load(open(args.matched)) if m["distance"] <= 9.0]
+    banks = build_matched_banks(matched, levels)
+    # hand-designed signature sounds that the references do not cover (808 glides, reese motion, arps of the factory)
+    sig = bank_factory()
+    keep = {"Galaxy 808", "Slide 808", "Event Horizon", "Orbit Arp", "Dembow Arp", "Cosmic Dust", "Quasar Dream", "Midnight Keys", "Analog Brass Pad"}
+    banks["QUASAR FACTORY"] += [p for p in sig if p.name in keep]
+    banks["808 GALAXY"] += [p for p in bank_808() if p.name in ("Distorted 808", "Long Slide 808", "Folded 808", "Reese Champagne", "Growl Bass")]
+    banks["SPACE PADS"] += [p for p in bank_space() if p.name in ("Black Hole", "Radio Signal", "Saturn Rings")]
     os.makedirs(OUT, exist_ok=True)
+    for f in os.listdir(OUT):
+        if f.endswith(".json"): os.remove(os.path.join(OUT, f))
     total = 0
-    seen = set()
-    for fname, name, colour, desc, fn in banks:
+    for fname, name, colour, desc in BANK_INFO:
         presets = []
-        for p in fn():
-            base = p.name
-            k = 2
-            while p.name in seen:
-                p.name = "%s %d" % (base, k); k += 1
-            seen.add(p.name)
+        for p in banks[name]:
+            if p.name in drop: continue
             j = p.json()
             j["values"]["master"] = round(levels.get(p.name, 0.0), 2)
             presets.append(j)

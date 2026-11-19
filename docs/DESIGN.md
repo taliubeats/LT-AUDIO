@@ -366,10 +366,12 @@ Diseño: `design/quasar/main-dark.webp` (OSC), `mix-dark.webp`, `fx-dark.webp`, 
 - **Reverb nueva** (no la de VOID): FDN de 16 líneas + 4 etapas de difusión sin pérdidas (Hadamard) + Householder. Limpia al 100 % de
   mezcla (test: sin resonancias > 15 dB sobre el nivel local en la cola, energía siempre decreciente).
 - **Salida:** limitador de seguridad (-0,3 dBFS, sin latencia), MASTER. Presets nivelados con `quasar_render` (mediana -17 dBFS RMS).
-- **Presets:** formato propio `.ltq` (JSON) y bancos `.ltqbank` (zip con presets, samples y portada). 200 de fábrica en 9 bancos,
-  generados con `tools/quasar/make_banks.py` (los perfiles de referencia anónimos están en `tools/quasar/ref_profiles.json`).
+- **Presets:** formato propio `.ltq` (JSON) y bancos `.ltqbank` (zip con presets, samples y portada). 239 de fábrica en 8 bancos.
+  Cada uno se ajustó a un one-shot de referencia distinto con `quasar_match` (busca osciladores, wavetable, filtro, envolventes,
+  unison, ruido y efectos hasta igualar 40 bandas x 20 ms y la anchura; error medio ~4 dB) -> `tools/quasar/matched.json`
+  (solo parámetros, sin audio) -> `make_banks.py`. Se descartan ajustes > 9 dB y los presets casi idénticos (`drop.json`).
   Navegador con búsqueda, categorías (BASS REESE 808 SUB PLUCK KEYS LEAD PAD BELL ARP CHORD FX VOX), estilos, favoritos y recientes.
 
-**Estado: hecho** (`plugins/quasar`). Tests: `tests/QuasarTest.cpp` (afinación, aliasing, clics, robo de voz, legato, parches aleatorios,
+**Estado: hecho** (`plugins/quasar`). Tests: `tests/QuasarUiTest.cpp` (clic real en cada control), `tests/QuasarTest.cpp` (afinación, aliasing, clics, robo de voz, legato, parches aleatorios,
 reverb al 100 %, todos los efectos, EQ plano = identidad, modulación, CPU), `tests/QuasarRender.cpp` (render de todos los presets),
 stress con ASan (`LTQuasar_stress`). CPU medida: 16 voces × 3 osciladores × 4 unison + 2 filtros + delay + reverb ≈ 34 % de un núcleo M1.
