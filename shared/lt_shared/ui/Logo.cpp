@@ -11,6 +11,7 @@ Logo::Spec Logo::specFor (const juce::String& id)
     if (id == "VOID")      return { "VOID", Glyph::blackHole, 1, false };
     if (id == "NOVA")      return { "NOVA", Glyph::star, 1, false };
     if (id == "VOCALSUITE") return { "VOCAL SUITE", Glyph::none, -1, false };
+    if (id == "QUASAR")    return { "QUASAR", Glyph::none, -1, false };
     if (id == "TUNE")      return { "TUNE", Glyph::sine, -1, false };
     if (id == "STUDIO")    return { "LICENSE STUDIO", Glyph::key, 1, false };
     if (id == "ALL")       return { "ALL PLUGINS", Glyph::none, -1, false };

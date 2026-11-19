@@ -15,6 +15,7 @@ namespace Products
     inline constexpr const char* tune      = "TUNE";
     inline constexpr const char* nova      = "NOVA";
     inline constexpr const char* vocalSuite = "VOCALSUITE";
+    inline constexpr const char* quasar    = "QUASAR";
     inline constexpr const char* all       = "ALL";
 }
 

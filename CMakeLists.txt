@@ -89,6 +89,7 @@ if(LT_BUILD_PLUGINS)
     add_subdirectory(plugins/tune)
     add_subdirectory(plugins/nova)
     add_subdirectory(plugins/vocal-suite)
+    add_subdirectory(plugins/quasar)
 endif()
 
 if(LT_BUILD_STUDIO)

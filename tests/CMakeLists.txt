@@ -54,7 +54,7 @@ target_link_libraries(tune_test PRIVATE juce::juce_audio_basics juce::juce_audio
 lt_configure_target(tune_test)
 
 # Host-like stress tests (one per plugin). Build with -DLT_SANITIZE=ON to catch memory errors.
-foreach(plug IN ITEMS LTVocalSuite LTNova LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
+foreach(plug IN ITEMS LTQuasar LTVocalSuite LTNova LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
     if(TARGET ${plug})
         juce_add_console_app(${plug}_stress PRODUCT_NAME "${plug} Stress")
         target_sources(${plug}_stress PRIVATE stress/PluginStress.cpp)
@@ -115,3 +115,13 @@ if(TARGET LTVocalSuite)
     set_target_properties(vocalsuite_real_test PROPERTIES EXCLUDE_FROM_ALL TRUE)
 endif()
 
+
+# LT QUASAR: tuning, aliasing, clicks, stealing, reverb at 100 % wet, effects, modulation, CPU
+if(TARGET LTQuasar)
+    juce_add_console_app(quasar_test PRODUCT_NAME "Quasar Test")
+    target_sources(quasar_test PRIVATE QuasarTest.cpp)
+    target_include_directories(quasar_test PRIVATE ${QUASAR_INCLUDES})
+    target_link_libraries(quasar_test PRIVATE LTQuasar juce::juce_audio_processors juce::juce_audio_formats juce::juce_gui_basics juce::juce_dsp)
+    target_compile_definitions(quasar_test PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    lt_configure_target(quasar_test)
+endif()
