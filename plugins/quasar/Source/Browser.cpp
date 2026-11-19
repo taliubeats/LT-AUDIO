@@ -66,6 +66,8 @@ BrowserPage::BrowserPage (Processor& p) : Page (p)
     search.setFont (Fonts::regular (16.0f));
     search.setIndents (36, 8);
     search.onTextChange = [this] { scroll = 0; filter(); };
+    search.onReturnKey = [this] { search.release(); };
+    search.onEscapeKey = [this] { search.release(); };
     addAndMakeVisible (search);
     search.setBounds (274, 112, 650, 34);
     for (auto* b : { &importButton, &exportBankButton })
@@ -146,7 +148,7 @@ BrowserPage::BrowserPage (Processor& p) : Page (p)
 
 BrowserPage::~BrowserPage() = default;
 
-void BrowserPage::refresh() { filter(); repaint(); }
+void BrowserPage::refresh() { search.release(); filter(); repaint(); }
 
 juce::Rectangle<int> BrowserPage::catPill (int i) const
 {
@@ -339,6 +341,7 @@ void BrowserPage::step (int delta)
 
 void BrowserPage::mouseDown (const juce::MouseEvent& e)
 {
+    search.release();   // a click anywhere else gives the keyboard back to the host
     auto pos = e.getPosition();
     for (int i = 0; i < 4; ++i) if (sectionRow (i).contains (pos)) { section = i; bankFilter = {}; scroll = 0; refresh(); return; }
     int vb = 0;

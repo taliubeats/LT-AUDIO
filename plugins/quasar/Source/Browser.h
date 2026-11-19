@@ -36,7 +36,24 @@ private:
     void load (const Preset&);
     const juce::Image& coverFor (const Bank&);
 
-    juce::TextEditor search;
+    /** Search box that only takes the keyboard when the user clicks it (Ableton keeps its keys otherwise). */
+    struct SearchBox : public juce::TextEditor
+    {
+        SearchBox() { setWantsKeyboardFocus (false); }
+        void mouseDown (const juce::MouseEvent& e) override
+        {
+            setWantsKeyboardFocus (true);
+            grabKeyboardFocus();
+            juce::TextEditor::mouseDown (e);
+        }
+        void focusLost (FocusChangeType t) override
+        {
+            juce::TextEditor::focusLost (t);
+            setWantsKeyboardFocus (false);
+        }
+        void release() { if (hasKeyboardFocus (true)) giveAwayKeyboardFocus(); setWantsKeyboardFocus (false); }
+    };
+    SearchBox search;
     juce::TextButton importButton { "IMPORT BANK" }, exportBankButton { "EXPORT BANK" },
                      saveButton { "SAVE PRESET" }, newBankButton { "NEW BANK" }, exportButton { "EXPORT" };
     int section = 0;                     // 0 all 1 favourites 2 recent 3 user, 4 = a bank

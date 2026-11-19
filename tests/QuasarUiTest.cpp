@@ -160,6 +160,16 @@ int main()
         check (true, "star click did not crash");
         ui.click ({ 292, 340 });   // and back
         juce::ignoreUnused (wasFav);
+        // the search box must not take the keyboard by itself
+        auto* box = dynamic_cast<juce::TextEditor*> (ui.at ({ 600, 129 }));
+        check (box != nullptr && ! box->hasKeyboardFocus (true) && ! box->getWantsKeyboardFocus(), "search box does not take the keyboard when the browser opens");
+        if (box != nullptr)
+        {
+            ui.click ({ 600, 129 });
+            check (box->getWantsKeyboardFocus(), "clicking the search box lets you type");
+            ui.click ({ 400, 340 });   // click a preset
+            check (! box->getWantsKeyboardFocus(), "clicking elsewhere gives the keyboard back");
+        }
         ui.click ({ 660, 46 });    // close
     }
 

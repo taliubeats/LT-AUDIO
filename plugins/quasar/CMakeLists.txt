@@ -9,7 +9,7 @@ juce_add_plugin(LTQuasar
     NEEDS_MIDI_INPUT TRUE
     NEEDS_MIDI_OUTPUT FALSE
     IS_MIDI_EFFECT FALSE
-    EDITOR_WANTS_KEYBOARD_FOCUS TRUE
+    EDITOR_WANTS_KEYBOARD_FOCUS FALSE
     VST3_CATEGORIES Instrument Synth
     AU_MAIN_TYPE kAudioUnitType_MusicDevice
     ICON_BIG ${CMAKE_SOURCE_DIR}/shared/brand/icon-quasar.png
