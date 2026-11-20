@@ -1,8 +1,8 @@
 #!/bin/bash
 # Builds macOS installers (.pkg): one per plugin, one with every plugin, one for LT License Studio.
-# Usage: build_pkgs.sh <dir with VST3/ and Components/> <License Studio .app> <output dir> <version>
+# Usage: build_pkgs.sh <dir with VST3/ and Components/> <License Studio .app> <output dir> <version> [LT WARP .app]
 set -euo pipefail
-SRC="$1"; APP="$2"; OUT="$3"; VERSION="$4"
+SRC="$1"; APP="$2"; OUT="$3"; VERSION="$4"; WARP_APP="${5:-}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 WORK="$(mktemp -d)"
 mkdir -p "$OUT" "$WORK/components"
@@ -61,3 +61,10 @@ fi
 pkgbuild --component "$APP" --install-location /Applications \
          --identifier com.ltaudio.licensestudio --version "$VERSION" "$WORK/components/LT-License-Studio.pkg" >/dev/null
 finish "LT License Studio" "$OUT/LT-License-Studio-Installer-mac.pkg" "$WORK/components/LT-License-Studio.pkg"
+
+# LT WARP (media converter) -> /Applications
+if [ -n "$WARP_APP" ] && [ -d "$WARP_APP" ]; then
+  pkgbuild --component "$WARP_APP" --install-location /Applications \
+           --identifier com.ltaudio.warp --version "$VERSION" "$WORK/components/LT-WARP.pkg" >/dev/null
+  finish "LT WARP" "$OUT/LT-WARP-Installer-mac.pkg" "$WORK/components/LT-WARP.pkg"
+fi

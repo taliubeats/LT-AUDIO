@@ -37,6 +37,10 @@ jobs:
           ./build/tests/nova_test_artefacts/Release/nova_test
           ./build/tests/quasar_test_artefacts/Release/quasar_test
           ./build/tests/quasar_ui_test_artefacts/Release/quasar_ui_test
+          ./build/tests/cosmos_test_artefacts/Release/cosmos_test
+          ./build/tests/lyra_test_artefacts/Release/lyra_test
+          /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc m4l/vacuum/tests/vacuum_test.js
+          if command -v ffmpeg >/dev/null; then ./build/tests/warp_test_artefacts/Release/warp_test; else echo "no ffmpeg on the runner: warp_test skipped"; fi
 
       - name: Package
         run: |
@@ -51,7 +55,16 @@ jobs:
           for b in pkg/VST3/* pkg/Components/*; do codesign --force --deep --sign - "$b"; done
           cp docs/INSTALL.md pkg/INSTALL.md
           (cd pkg && zip -qry ../dist/LT-AUDIO-Plugins-mac.zip .)
-          ./installers/mac/build_pkgs.sh pkg "$APP" dist 0.1.${{ github.run_number }}
+          WARP="build/apps/warp/LTWarp_artefacts/Release/LT WARP.app"
+          codesign --force --deep --sign - "$WARP"
+          ditto -c -k --keepParent "$WARP" "dist/LT-WARP-mac.zip"
+          # Max for Live device: the .amxd, its script and the plain patch, zipped together
+          python3 m4l/vacuum/make_device.py
+          mkdir -p "m4l-pkg/LT VACUUM"
+          cp "m4l/vacuum/LT VACUUM.amxd" "m4l/vacuum/LT VACUUM.maxpat" m4l/vacuum/lt_vacuum.js "m4l-pkg/LT VACUUM/"
+          cp docs/LT-VACUUM.md "m4l-pkg/LT VACUUM/README.md"
+          (cd m4l-pkg && zip -qry "../dist/LT-VACUUM-MaxForLive.zip" "LT VACUUM")
+          ./installers/mac/build_pkgs.sh pkg "$APP" dist 0.1.${{ github.run_number }} "$WARP"
           ls -la dist
 
       - uses: actions/upload-artifact@v4
@@ -82,6 +95,8 @@ jobs:
           .\build\tests\nova_test_artefacts\Release\nova_test.exe
           .\build\tests\quasar_test_artefacts\Release\quasar_test.exe
           .\build\tests\quasar_ui_test_artefacts\Release\quasar_ui_test.exe
+          .\build\tests\cosmos_test_artefacts\Release\cosmos_test.exe
+          .\build\tests\lyra_test_artefacts\Release\lyra_test.exe
 
       - name: Package
         shell: pwsh
@@ -92,6 +107,8 @@ jobs:
             ForEach-Object { Copy-Item $_.FullName -Destination pkg/VST3 -Recurse -Force }
           Copy-Item docs/INSTALL.md pkg/INSTALL.md
           Compress-Archive -Path pkg/* -DestinationPath dist/LT-AUDIO-Plugins-windows.zip -Force
+          $warp = Get-ChildItem -Path build/apps/warp -Recurse -Filter "LT WARP.exe" | Where-Object { $_.FullName -match 'Release' } | Select-Object -First 1
+          if ($warp) { Compress-Archive -Path $warp.FullName -DestinationPath dist/LT-WARP-windows.zip -Force }
           ./installers/windows/build_installers.ps1 -Version "0.1.${{ github.run_number }}"
           Get-ChildItem dist
 
