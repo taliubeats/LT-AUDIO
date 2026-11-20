@@ -356,7 +356,8 @@ void Editor::showActivation (bool show)
     activation->onDismiss = [this]
     {
         proc.refreshLicense();
-        juce::MessageManager::callAsync ([safe = juce::Component::SafePointer<Editor> (this)] { if (safe != nullptr) safe->showActivation (false); });
+        juce::Component::SafePointer<Editor> safe (this);
+        juce::MessageManager::callAsync ([safe] { if (safe != nullptr) safe->showActivation (false); });
     };
     addAndMakeVisible (*activation);
     activation->setBounds (getLocalBounds());
