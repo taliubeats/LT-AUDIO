@@ -54,7 +54,7 @@ target_link_libraries(tune_test PRIVATE juce::juce_audio_basics juce::juce_audio
 lt_configure_target(tune_test)
 
 # Host-like stress tests (one per plugin). Build with -DLT_SANITIZE=ON to catch memory errors.
-foreach(plug IN ITEMS LTQuasar LTVocalSuite LTNova LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
+foreach(plug IN ITEMS LTLyra LTCosmos LTQuasar LTVocalSuite LTNova LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
     if(TARGET ${plug})
         juce_add_console_app(${plug}_stress PRODUCT_NAME "${plug} Stress")
         target_sources(${plug}_stress PRIVATE stress/PluginStress.cpp)
@@ -151,3 +151,23 @@ if(TARGET LTQuasar)
     lt_configure_target(quasar_render)
     set_target_properties(quasar_render PROPERTIES EXCLUDE_FROM_ALL TRUE)
 endif()
+
+juce_add_console_app(cosmos_test PRODUCT_NAME "Cosmos Test")
+target_sources(cosmos_test PRIVATE CosmosTest.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/cosmos/Source/Loudness.cpp
+    ${CMAKE_SOURCE_DIR}/plugins/cosmos/Source/Analysis.cpp)
+target_include_directories(cosmos_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/cosmos/Source)
+target_link_libraries(cosmos_test PRIVATE juce::juce_audio_basics juce::juce_dsp)
+lt_configure_target(cosmos_test)
+
+juce_add_console_app(lyra_test PRODUCT_NAME "Lyra Test")
+target_sources(lyra_test PRIVATE LyraTest.cpp ${CMAKE_SOURCE_DIR}/plugins/lyra/Source/ChordEngine.cpp)
+target_include_directories(lyra_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/lyra/Source)
+target_link_libraries(lyra_test PRIVATE juce::juce_core)
+lt_configure_target(lyra_test)
+
+juce_add_console_app(warp_test PRODUCT_NAME "Warp Test")
+target_sources(warp_test PRIVATE WarpTest.cpp ${CMAKE_SOURCE_DIR}/apps/warp/Source/Converter.cpp)
+target_include_directories(warp_test PRIVATE ${CMAKE_SOURCE_DIR}/apps/warp/Source)
+target_link_libraries(warp_test PRIVATE juce::juce_events)
+lt_configure_target(warp_test)

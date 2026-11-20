@@ -90,10 +90,17 @@ if(LT_BUILD_PLUGINS)
     add_subdirectory(plugins/nova)
     add_subdirectory(plugins/vocal-suite)
     add_subdirectory(plugins/quasar)
+    add_subdirectory(plugins/cosmos)
+    add_subdirectory(plugins/lyra)
 endif()
 
 if(LT_BUILD_STUDIO)
     add_subdirectory(apps/license-studio)
+endif()
+
+option(LT_BUILD_WARP "Build LT WARP (media converter app)" ON)
+if(LT_BUILD_WARP)
+    add_subdirectory(apps/warp)
 endif()
 
 add_subdirectory(tests)

@@ -46,7 +46,7 @@ int main (int argc, char** argv)
             if (rnd.nextFloat() < 0.1f) midi.addEvent (juce::MidiMessage::noteOff (1, 36 + rnd.nextInt (48)), rnd.nextInt (n));
 
             // occasionally tweak a parameter mid-stream
-            if (rnd.nextFloat() < 0.3f)
+            if (rnd.nextFloat() < 0.3f && ! p->getParameters().isEmpty())
             {
                 auto& params = p->getParameters();
                 params[rnd.nextInt (params.size())]->setValueNotifyingHost (rnd.nextFloat());
