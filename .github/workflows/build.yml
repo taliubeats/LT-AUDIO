@@ -39,7 +39,7 @@ jobs:
           ./build/tests/quasar_ui_test_artefacts/Release/quasar_ui_test
           ./build/tests/cosmos_test_artefacts/Release/cosmos_test
           ./build/tests/lyra_test_artefacts/Release/lyra_test
-          /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc m4l/vacuum/tests/vacuum_test.js
+          for t in m4l/*/tests/*_test.js; do /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Helpers/jsc "$t"; done
           if command -v ffmpeg >/dev/null; then ./build/tests/warp_test_artefacts/Release/warp_test; else echo "no ffmpeg on the runner: warp_test skipped"; fi
 
       - name: Package
@@ -59,12 +59,11 @@ jobs:
           codesign --force --deep --sign - "$WARP"
           ditto -c -k --keepParent "$WARP" "dist/LT-WARP-mac.zip"
           # Max for Live device: the .amxd, its script and the plain patch, zipped together
-          python3 m4l/vacuum/make_device.py
-          mkdir -p "m4l-pkg/LT VACUUM"
-          cp "m4l/vacuum/LT VACUUM.amxd" "m4l/vacuum/LT VACUUM.maxpat" m4l/vacuum/lt_vacuum.js "m4l-pkg/LT VACUUM/"
-          cp docs/LT-VACUUM.md "m4l-pkg/LT VACUUM/README.md"
-          (cd m4l-pkg && zip -qry "../dist/LT-VACUUM-MaxForLive.zip" "LT VACUUM")
-          ./installers/mac/build_pkgs.sh pkg "$APP" dist 0.1.${{ github.run_number }} "$WARP"
+          ./m4l/package_m4l.sh dist
+          COSMOS_APP="build/plugins/cosmos/LTCosmos_artefacts/Release/Standalone/LT COSMOS.app"
+          LYRA_APP="build/plugins/lyra/LTLyra_artefacts/Release/Standalone/LT LYRA.app"
+          for a in "$COSMOS_APP" "$LYRA_APP"; do codesign --force --deep --sign - "$a"; done
+          ./installers/mac/build_pkgs.sh pkg "$APP" dist 0.1.${{ github.run_number }} "$WARP" "$COSMOS_APP" "$LYRA_APP"
           ls -la dist
 
       - uses: actions/upload-artifact@v4

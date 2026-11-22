@@ -1,5 +1,10 @@
 #include "PluginEditor.h"
 
+#if JucePlugin_Build_Standalone
+ #include <juce_audio_utils/juce_audio_utils.h>
+ #include <juce_audio_plugin_client/Standalone/juce_StandaloneFilterWindow.h>
+#endif
+
 namespace lyra
 {
 
@@ -213,6 +218,12 @@ void Editor::buildPills()
         { tr ("colour", L), juce::String (juce::CharPointer_UTF8 ("\xe2\x97\x8f")), [this] { showColourMenu(); }, false },
         { tr ("language", L), langs[proc.language], [this] { showLanguageMenu(); }, false },
     };
+    if (proc.wrapperType == juce::AudioProcessor::wrapperType_Standalone)
+        list.insert (list.begin(), { "MIDI", tr ("input", L), [] {
+           #if JucePlugin_Build_Standalone
+            if (auto* holder = juce::StandalonePluginHolder::getInstance()) holder->showAudioSettingsDialog();
+           #endif
+        }, false });
     if (! proc.license.isLicensed())
         list.push_back ({ "LICENSE", proc.license.isUsable() ? "TRIAL " + juce::String (proc.license.getTrialDaysLeft()) + "D" : juce::String ("ACTIVATE"),
                           [this] { showActivation (true); }, true });
@@ -248,7 +259,7 @@ void Editor::paintBar (juce::Graphics& g)
         g.setColour (t.dim);
         g.setFont (ui (9.5f));
         g.drawText (p.label, p.bounds.withTrimmedTop (6).withHeight (12), juce::Justification::centred);
-        auto isColour = i == 4;
+        auto isColour = p.label == tr ("colour", lang());
         g.setColour (isColour ? t.hi : p.accent ? t.hi : t.text);
         g.setFont (isColour ? ui (18.0f) : ui (13.0f, true));
         g.drawText (p.value, p.bounds.withTrimmedTop (18).withTrimmedBottom (4), juce::Justification::centred);

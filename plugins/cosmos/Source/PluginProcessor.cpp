@@ -52,24 +52,51 @@ void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
         }
     }
 
-    if (inCh > 0 && usable.load())
-    {
-        meter.process (buffer.getArrayOfReadPointers(), inCh, n);
-
-        int s1, n1, s2, n2;
-        fifo.prepareToWrite (n, s1, n1, s2, n2);
-        auto* l = buffer.getReadPointer (0);
-        auto* r = buffer.getReadPointer (inCh > 1 ? 1 : 0);
-        if (n1 > 0) { fifoBuffer.copyFrom (0, s1, l, n1); fifoBuffer.copyFrom (1, s1, r, n1); }
-        if (n2 > 0) { fifoBuffer.copyFrom (0, s2, l + n1, n2); fifoBuffer.copyFrom (1, s2, r + n1, n2); }
-        fifo.finishedWrite (n1 + n2);
-        samplesWritten += n1 + n2;
-    }
+    if (inCh > 0 && usable.load() && ! externalSource.load())
+        feed (buffer.getArrayOfReadPointers(), inCh, n);
 
     for (int c = inCh; c < buffer.getNumChannels(); ++c)
         buffer.clear (c, 0, n);
     // the app listens to an input: never play it back out (no feedback, no doubled audio)
     if (isStandalone()) buffer.clear();
+}
+
+void Processor::feed (const float* const* ch, int numCh, int n)
+{
+    meter.process (ch, numCh, n);
+    int s1, n1, s2, n2;
+    fifo.prepareToWrite (n, s1, n1, s2, n2);
+    auto* l = ch[0];
+    auto* r = ch[numCh > 1 ? 1 : 0];
+    if (n1 > 0) { fifoBuffer.copyFrom (0, s1, l, n1); fifoBuffer.copyFrom (1, s1, r, n1); }
+    if (n2 > 0) { fifoBuffer.copyFrom (0, s2, l + n1, n2); fifoBuffer.copyFrom (1, s2, r + n1, n2); }
+    fifo.finishedWrite (n1 + n2);
+    samplesWritten += n1 + n2;
+}
+
+juce::String Processor::startSystemAudio()
+{
+    externalSource = true;   // the input device stops feeding the meter from now on
+    auto err = system.start ([this] (const float* l, const float* r, int n, double rate)
+    {
+        if (std::abs (rate - currentRate.load()) > 1.0)
+        {
+            currentRate = rate;          // the editor sees the new rate and restarts its analysis
+            meter.prepare (rate, 2);     // once, on the first block at a new rate
+        }
+        const float* ch[2] = { l, r };
+        if (usable.load()) feed (ch, 2, n);
+    });
+    if (! err.empty()) externalSource = false;
+    return juce::String (err);
+}
+
+void Processor::stopSystemAudio()
+{
+    system.stop();
+    externalSource = false;
+    currentRate = getSampleRate() > 0 ? getSampleRate() : 48000.0;
+    meter.prepare (currentRate.load(), juce::jmax (1, getTotalNumInputChannels()));
 }
 
 int Processor::readAudio (float* l, float* r, int maxSamples)
@@ -109,6 +136,7 @@ void Processor::getStateInformation (juce::MemoryBlock& dest)
     tree.setProperty ("width", width, nullptr);
     tree.setProperty ("height", height, nullptr);
     tree.setProperty ("pinned", pinned, nullptr);
+    tree.setProperty ("system", wantSystemAudio, nullptr);
     if (auto xml = tree.createXml())
         copyXmlToBinary (*xml, dest);
 }
@@ -124,6 +152,7 @@ void Processor::setStateInformation (const void* data, int size)
     width = tree.getProperty ("width", 0);
     height = tree.getProperty ("height", 0);
     pinned = tree.getProperty ("pinned", false);
+    wantSystemAudio = tree.getProperty ("system", true);
     if (onStateRestored) onStateRestored();
 }
 

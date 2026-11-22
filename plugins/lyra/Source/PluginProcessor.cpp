@@ -4,15 +4,24 @@
 namespace lyra
 {
 
+#if LYRA_MIDI_FX
+// MIDI FX build (Logic's MIDI FX slot): no audio at all
+Processor::Processor() : AudioProcessor (BusesProperties())
+#else
 Processor::Processor()
     : AudioProcessor (BusesProperties().withOutput ("Output", juce::AudioChannelSet::stereo(), true))
+#endif
 {
 }
 
 bool Processor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
+   #if LYRA_MIDI_FX
+    return layouts.getMainOutputChannelSet().isDisabled();
+   #else
     auto out = layouts.getMainOutputChannelSet();
     return out == juce::AudioChannelSet::stereo() || out == juce::AudioChannelSet::mono();
+   #endif
 }
 
 static void setBit (std::array<std::atomic<juce::uint64>, 2>& bits, int note, bool on)
@@ -56,7 +65,7 @@ void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer
 {
     for (const auto meta : midi)
         handle (meta.getMessage());
-    buffer.clear();   // never makes sound
+    buffer.clear();   // never makes sound; the MIDI stays in the buffer, so a synth after LYRA still plays
 }
 
 std::array<bool, 128> Processor::getSounding() const

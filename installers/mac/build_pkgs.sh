@@ -1,8 +1,9 @@
 #!/bin/bash
 # Builds macOS installers (.pkg): one per plugin, one with every plugin, one for LT License Studio.
-# Usage: build_pkgs.sh <dir with VST3/ and Components/> <License Studio .app> <output dir> <version> [LT WARP .app]
+# Usage: build_pkgs.sh <dir with VST3/ and Components/> <License Studio .app> <output dir> <version> [more .apps...]
+# Every extra .app (LT WARP, LT COSMOS, LT LYRA...) gets its own installer into /Applications.
 set -euo pipefail
-SRC="$1"; APP="$2"; OUT="$3"; VERSION="$4"; WARP_APP="${5:-}"
+SRC="$1"; APP="$2"; OUT="$3"; VERSION="$4"; shift 4; EXTRA_APPS=("$@")
 HERE="$(cd "$(dirname "$0")" && pwd)"
 WORK="$(mktemp -d)"
 mkdir -p "$OUT" "$WORK/components"
@@ -46,12 +47,15 @@ finish () {   # <title> <output pkg> <component pkgs...>
 }
 
 ALL=()
-for vst in "$SRC"/VST3/*.vst3; do
-  NAME="$(basename "$vst" .vst3)"
+# every plugin name found as a VST3 or an AU (some, like LT LYRA MIDI, are AU only)
+NAMES="$( { for f in "$SRC"/VST3/*.vst3; do [ -e "$f" ] && basename "$f" .vst3; done; \
+            for f in "$SRC"/Components/*.component; do [ -e "$f" ] && basename "$f" .component; done; } | sort -u )"
+while IFS= read -r NAME; do
+  [ -n "$NAME" ] || continue
   COMP="$(make_component "$NAME")"
   ALL+=("$COMP")
   finish "$NAME" "$OUT/$(echo "$NAME" | tr ' ' '-')-Installer-mac.pkg" "$COMP"
-done
+done <<< "$NAMES"
 
 if [ ${#ALL[@]} -ge 1 ]; then
   finish "LT AUDIO - All plugins" "$OUT/LT-AUDIO-All-Plugins-Installer-mac.pkg" "${ALL[@]}"
@@ -62,9 +66,12 @@ pkgbuild --component "$APP" --install-location /Applications \
          --identifier com.ltaudio.licensestudio --version "$VERSION" "$WORK/components/LT-License-Studio.pkg" >/dev/null
 finish "LT License Studio" "$OUT/LT-License-Studio-Installer-mac.pkg" "$WORK/components/LT-License-Studio.pkg"
 
-# LT WARP (media converter) -> /Applications
-if [ -n "$WARP_APP" ] && [ -d "$WARP_APP" ]; then
-  pkgbuild --component "$WARP_APP" --install-location /Applications \
-           --identifier com.ltaudio.warp --version "$VERSION" "$WORK/components/LT-WARP.pkg" >/dev/null
-  finish "LT WARP" "$OUT/LT-WARP-Installer-mac.pkg" "$WORK/components/LT-WARP.pkg"
-fi
+# Apps (LT WARP, LT COSMOS, LT LYRA...) -> /Applications, one installer each
+for A in "${EXTRA_APPS[@]+"${EXTRA_APPS[@]}"}"; do
+  [ -d "$A" ] || continue
+  NAME="$(basename "$A" .app)"
+  SLUG="$(echo "$NAME" | tr ' ' '-')"
+  ID="com.ltaudio.app.$(echo "$NAME" | tr -d ' ' | tr '[:upper:]' '[:lower:]')"
+  pkgbuild --component "$A" --install-location /Applications --identifier "$ID" --version "$VERSION" "$WORK/components/$SLUG-App.pkg" >/dev/null
+  finish "$NAME" "$OUT/$SLUG-App-Installer-mac.pkg" "$WORK/components/$SLUG-App.pkg"
+done

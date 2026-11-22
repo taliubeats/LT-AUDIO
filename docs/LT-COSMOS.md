@@ -58,8 +58,14 @@ MIDNIGHT, PAPER, NEBULA, PHOSPHOR, BLUEPRINT, NEON, ROSE, GLACIER. A skin change
   - **INPUT** opens the audio device dialog.
 - Layout, skin, target, size and pin are saved in the DAW project.
 
+## System audio (app)
+- The app listens to everything the Mac plays by default: **SOURCE: SYSTEM**. It uses a Core Audio process tap on the whole system mix (macOS 14.2 or later) and needs no BlackHole.
+- The first time, macOS asks for **System Audio Recording**; allow it. Nothing is recorded or sent anywhere.
+- **SOURCE: INPUT** (or **INPUT**) switches back to an audio interface input.
+- Verified here: the tap starts and delivers 48 kHz audio. Without the permission (as in a headless test) macOS delivers silence.
+- On Windows the app still uses an input device.
+
 ## Not done yet
-- System-audio capture in the app. For now, route the Mac's output through a loopback device (BlackHole, Loopback) and pick it under INPUT.
 - No icon (`shared/brand/icon-cosmos.png`) and no installer entry yet.
 
 ## Developer preview

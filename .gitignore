@@ -2,3 +2,6 @@ build*/
 cmake-build*/
 .DS_Store
 *.user
+dist/
+pkg/
+m4l-pkg/

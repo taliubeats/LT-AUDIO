@@ -14,9 +14,15 @@ Descargas: pestaña **Releases** del repositorio → **latest**.
 LT License Studio: `LT-License-Studio-Installer-mac.pkg` (se instala en Aplicaciones).
 
 LT COSMOS y LT LYRA vienen como plugin (en el instalador de todos los plugins o en el suyo propio)
-y también como app: la app standalone está dentro de los artefactos del build.
+y también como app: `LT-COSMOS-App-Installer-mac.pkg` y `LT-LYRA-App-Installer-mac.pkg` (se instalan en Aplicaciones).
+- La app COSMOS escucha todo lo que suena en el Mac (Spotify, YouTube...). La primera vez macOS pide
+  permiso de "Grabación de audio del sistema": dale a Permitir. Botón SOURCE: SYSTEM / INPUT.
+- La app LYRA: botón MIDI para elegir tu teclado.
+- En Logic, LYRA también aparece como **MIDI FX** ("LT LYRA MIDI"): ponlo antes del instrumento.
+- En Ableton (no acepta efectos MIDI de terceros): crea un Instrument Rack con dos cadenas,
+  una con tu sintetizador y otra con LT LYRA. Los dos reciben las mismas notas y suena tu sinte.
 
-LT WARP (conversor): `LT-WARP-Installer-mac.pkg` (se instala en Aplicaciones). Por ahora necesita
+LT WARP (conversor): `LT-WARP-App-Installer-mac.pkg` (se instala en Aplicaciones). Por ahora necesita
 ffmpeg instalado en el Mac: en Terminal, `brew install ffmpeg`.
 
 ## Windows

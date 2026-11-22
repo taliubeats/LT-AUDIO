@@ -3,6 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <lt_shared/lt_shared.h>
 #include "Loudness.h"
+#include "SystemAudio.h"
 
 namespace cosmos
 {
@@ -16,6 +17,7 @@ class Processor : public juce::AudioProcessor
 {
 public:
     Processor();
+    ~Processor() override { system.stop(); }   // the capture thread writes into members below
 
     LoudnessMeter meter;
     lt::licensing::LicenseManager license { lt::licensing::Products::cosmos, "LT COSMOS" };
@@ -26,10 +28,16 @@ public:
     int target = -14;                  // LUFS target (0 = off)
     int width = 0, height = 0;         // editor size (0 = default)
     bool pinned = false;
+    bool wantSystemAudio = true;       // app: listen to the whole Mac by default
 
     // ------------------------------------------------------------------ audio -> editor
     /** Reads up to maxSamples into l / r. Returns the number read. */
     int readAudio (float* l, float* r, int maxSamples);
+
+    /** App only: listen to everything the computer plays instead of the audio input. */
+    juce::String startSystemAudio();
+    void stopSystemAudio();
+    bool isSystemAudio() const noexcept { return externalSource.load(); }
     /** Discards whatever is waiting (call when an editor opens). */
     void flushAudio();
     juce::int64 getSamplesRead() const noexcept { return samplesRead; }
@@ -71,6 +79,9 @@ public:
     std::function<void()> onStateRestored;
 
 private:
+    void feed (const float* const* channels, int numChannels, int numSamples);
+    SystemAudio system;
+    std::atomic<bool> externalSource { false };
     static constexpr int fifoSize = 1 << 17;
     juce::AbstractFifo fifo { fifoSize };
     juce::AudioBuffer<float> fifoBuffer { 2, fifoSize };

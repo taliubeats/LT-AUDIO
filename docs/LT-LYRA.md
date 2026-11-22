@@ -7,6 +7,12 @@ Formats: VST3, AU and a standalone app. LYRA loads as an instrument, so put it o
 - Plugin code: `Ltly`
 - License product id: `LYRA`
 
+## Where to put it
+- **Logic**: insert **LT LYRA MIDI** in the **MIDI FX** slot, before the instrument. Notes pass through to the synth.
+- **Reaper, Bitwig, FL Studio (Patcher), Cubase**: LT LYRA passes its MIDI straight through, so a synth after it still plays.
+- **Ableton**: Live does not load third-party MIDI effects. Make an **Instrument Rack** with two chains, one with your synth and one with LT LYRA. Both get the same notes and you hear the synth. Alternatively, put LT LYRA on its own MIDI track with *MIDI From* set to the track you play.
+- **App** (`LT LYRA.app`): the **MIDI** button picks your keyboard, so it works outside any DAW.
+
 ## What it shows
 - **Chord name**
   - Extensions and alterations: `Cmaj9`, `D7♯9`, `C9♯11`, `C13`, `G7♭9`, `Em7♭5`, `Cdim7`, `CmMaj7`, `C6/9`, `Cadd9`, `C7sus4`.

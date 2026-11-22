@@ -43,8 +43,13 @@ public:
     bool hasEditor() const override                      { return true; }
     const juce::String getName() const override          { return "LT LYRA"; }
     bool acceptsMidi() const override                    { return true; }
-    bool producesMidi() const override                   { return false; }
+    bool producesMidi() const override                   { return true; }    // notes pass straight through
+#if LYRA_MIDI_FX
+    bool isMidiEffect() const override                   { return true; }
+#endif
+#if ! LYRA_MIDI_FX
     bool isMidiEffect() const override                   { return false; }
+#endif
     double getTailLengthSeconds() const override         { return 0.0; }
     int getNumPrograms() override                        { return 1; }
     int getCurrentProgram() override                     { return 0; }

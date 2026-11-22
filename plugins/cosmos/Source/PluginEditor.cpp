@@ -55,6 +55,11 @@ Editor::Editor (Processor& p)
 
     startTimerHz (60);
 
+    // the app listens to the whole computer by default (Spotify, YouTube, any player)
+    if (proc.isStandalone() && proc.wantSystemAudio && SystemAudio::isSupported()
+        && juce::SystemStats::getEnvironmentVariable ("LT_EDITOR_SNAPSHOT", {}).isEmpty())
+        juce::MessageManager::callAsync ([safe = juce::Component::SafePointer<Editor> (this)] { if (safe != nullptr) safe->setSystemAudio (true); });
+
     if (proc.isStandalone() && proc.pinned)
         juce::MessageManager::callAsync ([safe = juce::Component::SafePointer<Editor> (this)] { if (safe != nullptr) safe->setPinned (true); });
 
@@ -143,7 +148,8 @@ void Editor::buildBar()
         add ("PIN", [this] { setPinned (! proc.pinned); }, proc.pinned);
         add ("DOCK", [this] { setDocked (! docked); }, docked);
         add ("FULL", [this] { setFullscreen (! fullscreen); }, fullscreen);
-        add ("INPUT", [this] { showAudioSettings(); });
+        add (proc.isSystemAudio() ? "SOURCE: SYSTEM" : "SOURCE: INPUT", [this] { setSystemAudio (! proc.isSystemAudio()); }, proc.isSystemAudio());
+        add ("INPUT", [this] { setSystemAudio (false); showAudioSettings(); });
     }
     if (! proc.license.isLicensed())
     {
@@ -335,6 +341,24 @@ void Editor::setFullscreen (bool on)
     w->setFullScreen (on);
     if (! on) w->setBounds (undockedBounds);
     fullscreen = on;
+}
+
+void Editor::setSystemAudio (bool on)
+{
+    proc.wantSystemAudio = on;
+    if (! on) { if (proc.isSystemAudio()) proc.stopSystemAudio(); }
+    else if (! proc.isSystemAudio())
+    {
+        auto err = proc.startSystemAudio();
+        if (err.isNotEmpty())
+        {
+            proc.wantSystemAudio = false;
+            juce::AlertWindow::showMessageBoxAsync (juce::MessageBoxIconType::InfoIcon, "System audio", err);
+        }
+    }
+    analyzer.clear();
+    buildBar();
+    repaint();
 }
 
 void Editor::showAudioSettings()
