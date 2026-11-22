@@ -19,8 +19,11 @@ y también como app: `LT-COSMOS-App-Installer-mac.pkg` y `LT-LYRA-App-Installer-
   permiso de "Grabación de audio del sistema": dale a Permitir. Botón SOURCE: SYSTEM / INPUT.
 - La app LYRA: botón MIDI para elegir tu teclado.
 - En Logic, LYRA también aparece como **MIDI FX** ("LT LYRA MIDI"): ponlo antes del instrumento.
-- En Ableton (no acepta efectos MIDI de terceros): crea un Instrument Rack con dos cadenas,
-  una con tu sintetizador y otra con LT LYRA. Los dos reciben las mismas notas y suena tu sinte.
+- LT LYRA (instrumento) suena con su propio **piano**: ponlo en una pista MIDI y toca.
+- **LT LYRA FX** aparece en los **efectos de audio**: va detrás de Serum o de cualquier sinte y deja pasar su sonido.
+  Ojo: Ableton solo manda notas a los instrumentos, nunca a los efectos. Para que LT LYRA FX vea las notas:
+  crea otra pista MIDI con tu teclado y pon su *MIDI To* en la pista de Serum → *LT LYRA FX*.
+  Lo más fácil en una sola pista: un Instrument Rack con Serum en una cadena y LT LYRA (PIANO OFF) en otra.
 
 LT WARP (conversor): `LT-WARP-App-Installer-mac.pkg` (se instala en Aplicaciones). Por ahora necesita
 ffmpeg instalado en el Mac: en Terminal, `brew install ffmpeg`.

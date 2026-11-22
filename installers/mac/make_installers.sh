@@ -18,7 +18,7 @@ mkdir -p "$DIST" "$ROOT/pkg/VST3" "$ROOT/pkg/Components"
 echo "==> 1/4 Compilando (la primera vez tarda bastante)"
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 cmake --build build --config Release -j 4 \
-  --target LTCosmos_VST3 LTCosmos_AU LTCosmos_Standalone LTLyra_VST3 LTLyra_AU LTLyra_Standalone LTLyraMidi_AU LTWarp LTLicenseStudio
+  --target LTCosmos_VST3 LTCosmos_AU LTCosmos_Standalone LTLyra_VST3 LTLyra_AU LTLyra_Standalone LTLyraMidi_AU LTLyraFx_VST3 LTLyraFx_AU LTWarp LTLicenseStudio
 
 echo "==> 2/4 Reuniendo y firmando (firma local, sin certificado de Apple)"
 for d in build/plugins/cosmos/*_artefacts/Release build/plugins/lyra/*_artefacts/Release build/plugins/lyra/*/*_artefacts/Release; do

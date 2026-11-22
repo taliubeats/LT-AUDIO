@@ -29,6 +29,19 @@ public:
     int width = 0, height = 0;         // editor size (0 = default)
     bool pinned = false;
     bool wantSystemAudio = true;       // app: listen to the whole Mac by default
+    juce::String presetName;           // the preset the current look came from ("" = none)
+
+    // ------------------------------------------------------------------ presets
+    // A preset = panels + their sizes, skin, LUFS target and window size, saved as a small file in
+    // ~/Library/Application Support/LT Audio/COSMOS/Presets. The "startup" preset is what every new
+    // COSMOS (plugin or app) opens with; saving a preset makes it the startup one.
+    static juce::File presetFolder();
+    juce::StringArray listPresets() const;
+    bool savePreset (const juce::String& name, bool makeStartup);
+    bool loadPreset (const juce::String& name);
+    bool deletePreset (const juce::String& name);
+    static juce::String getStartupPreset();
+    static void setStartupPreset (const juce::String& name);
 
     // ------------------------------------------------------------------ audio -> editor
     /** Reads up to maxSamples into l / r. Returns the number read. */

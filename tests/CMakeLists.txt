@@ -54,7 +54,7 @@ target_link_libraries(tune_test PRIVATE juce::juce_audio_basics juce::juce_audio
 lt_configure_target(tune_test)
 
 # Host-like stress tests (one per plugin). Build with -DLT_SANITIZE=ON to catch memory errors.
-foreach(plug IN ITEMS LTLyra LTCosmos LTQuasar LTVocalSuite LTNova LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
+foreach(plug IN ITEMS LTLyra LTLyraFx LTCosmos LTQuasar LTVocalSuite LTNova LTTune LTNebula LTKnock LTOrbit LTVoid LTPulsar)
     if(TARGET ${plug})
         juce_add_console_app(${plug}_stress PRODUCT_NAME "${plug} Stress")
         target_sources(${plug}_stress PRIVATE stress/PluginStress.cpp)
@@ -171,3 +171,17 @@ target_sources(warp_test PRIVATE WarpTest.cpp ${CMAKE_SOURCE_DIR}/apps/warp/Sour
 target_include_directories(warp_test PRIVATE ${CMAKE_SOURCE_DIR}/apps/warp/Source)
 target_link_libraries(warp_test PRIVATE juce::juce_events)
 lt_configure_target(warp_test)
+
+juce_add_console_app(lyra_piano_test PRODUCT_NAME "Lyra Piano Test")
+target_sources(lyra_piano_test PRIVATE LyraPianoTest.cpp ${CMAKE_SOURCE_DIR}/plugins/lyra/Source/Piano.cpp)
+target_include_directories(lyra_piano_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/lyra/Source)
+target_link_libraries(lyra_piano_test PRIVATE juce::juce_audio_basics juce::juce_audio_formats)
+lt_configure_target(lyra_piano_test)
+
+if(TARGET LTCosmos)
+    juce_add_console_app(cosmos_preset_test PRODUCT_NAME "Cosmos Preset Test")
+    target_sources(cosmos_preset_test PRIVATE CosmosPresetTest.cpp)
+    target_include_directories(cosmos_preset_test PRIVATE ${CMAKE_SOURCE_DIR}/plugins/cosmos/Source)
+    target_link_libraries(cosmos_preset_test PRIVATE LTCosmos lt_shared juce::juce_audio_processors juce::juce_gui_basics)
+    target_compile_definitions(cosmos_preset_test PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+endif()

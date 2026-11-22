@@ -7,10 +7,20 @@ Formats: VST3, AU and a standalone app. LYRA loads as an instrument, so put it o
 - Plugin code: `Ltly`
 - License product id: `LYRA`
 
+## Three ways to load it
+| Plugin | Shows up as | Sound |
+|---|---|---|
+| **LT LYRA** | instrument | its own **piano** (PIANO: -18 to -3 dB, or OFF). Plays on its own, on one track. |
+| **LT LYRA FX** | **audio effect** | lets the sound before it through (Serum, any synth); piano OFF by default |
+| **LT LYRA MIDI** | MIDI FX (Logic) | none, the instrument after it plays |
+
 ## Where to put it
 - **Logic**: insert **LT LYRA MIDI** in the **MIDI FX** slot, before the instrument. Notes pass through to the synth.
 - **Reaper, Bitwig, FL Studio (Patcher), Cubase**: LT LYRA passes its MIDI straight through, so a synth after it still plays.
-- **Ableton**: Live does not load third-party MIDI effects. Make an **Instrument Rack** with two chains, one with your synth and one with LT LYRA. Both get the same notes and you hear the synth. Alternatively, put LT LYRA on its own MIDI track with *MIDI From* set to the track you play.
+- **Ableton, simplest**: load **LT LYRA** on a MIDI track and play: you see the chords and hear its piano.
+- **Ableton with Serum**: Live only sends notes to instruments, never to effects on the same track. Two options:
+  - Instrument Rack (one track): two chains, Serum in one and LT LYRA (PIANO OFF) in the other. Both get the notes.
+  - LT LYRA FX after Serum: put it in Serum's track, then make a second MIDI track with your keyboard and set its *MIDI To* to the Serum track, *LT LYRA FX*. Or simply set the Serum track's notes to come from that MIDI track.
 - **App** (`LT LYRA.app`): the **MIDI** button picks your keyboard, so it works outside any DAW.
 
 ## What it shows

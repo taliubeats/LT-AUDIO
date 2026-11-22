@@ -9,6 +9,84 @@ Processor::Processor()
                                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
 {
     meter.prepare (48000.0, 2);
+    // a new COSMOS opens with your startup preset; a saved project then restores its own look on top
+    auto startup = getStartupPreset();
+    if (startup.isNotEmpty()) loadPreset (startup);
+}
+
+juce::File Processor::presetFolder()
+{
+    return juce::File::getSpecialLocation (juce::File::userApplicationDataDirectory)
+        .getChildFile ("LT Audio").getChildFile ("COSMOS").getChildFile ("Presets");
+}
+
+static juce::String cleanName (juce::String n)
+{
+    n = n.trim().removeCharacters ("/\\:*?\"<>|");
+    return n.substring (0, 60);
+}
+
+juce::StringArray Processor::listPresets() const
+{
+    juce::StringArray names;
+    for (auto& f : presetFolder().findChildFiles (juce::File::findFiles, false, "*.ltcosmos"))
+        names.add (f.getFileNameWithoutExtension());
+    names.sortNatural();
+    return names;
+}
+
+bool Processor::savePreset (const juce::String& rawName, bool makeStartup)
+{
+    auto name = cleanName (rawName);
+    if (name.isEmpty()) return false;
+    juce::ValueTree t ("COSMOSPRESET");
+    t.setProperty ("layout", layout, nullptr);
+    t.setProperty ("skin", skin, nullptr);
+    t.setProperty ("target", target, nullptr);
+    t.setProperty ("width", width, nullptr);
+    t.setProperty ("height", height, nullptr);
+    presetFolder().createDirectory();
+    auto xml = t.createXml();
+    if (xml == nullptr || ! xml->writeTo (presetFolder().getChildFile (name + ".ltcosmos"))) return false;
+    presetName = name;
+    if (makeStartup) setStartupPreset (name);
+    return true;
+}
+
+bool Processor::loadPreset (const juce::String& name)
+{
+    auto xml = juce::XmlDocument::parse (presetFolder().getChildFile (cleanName (name) + ".ltcosmos"));
+    if (xml == nullptr || ! xml->hasTagName ("COSMOSPRESET")) return false;
+    auto t = juce::ValueTree::fromXml (*xml);
+    layout = t.getProperty ("layout", layout).toString();
+    skin = t.getProperty ("skin", skin);
+    target = t.getProperty ("target", target);
+    width = t.getProperty ("width", width);
+    height = t.getProperty ("height", height);
+    presetName = cleanName (name);
+    return true;
+}
+
+bool Processor::deletePreset (const juce::String& name)
+{
+    auto ok = presetFolder().getChildFile (cleanName (name) + ".ltcosmos").deleteFile();
+    if (getStartupPreset() == cleanName (name)) setStartupPreset ({});
+    if (presetName == cleanName (name)) presetName = {};
+    return ok;
+}
+
+juce::String Processor::getStartupPreset()
+{
+    auto f = presetFolder().getParentDirectory().getChildFile ("startup.txt");
+    auto name = f.loadFileAsString().trim();
+    return presetFolder().getChildFile (name + ".ltcosmos").existsAsFile() ? name : juce::String();
+}
+
+void Processor::setStartupPreset (const juce::String& name)
+{
+    auto f = presetFolder().getParentDirectory().getChildFile ("startup.txt");
+    f.getParentDirectory().createDirectory();
+    if (name.isEmpty()) f.deleteFile(); else f.replaceWithText (name);
 }
 
 void Processor::prepareToPlay (double sr, int)
@@ -137,6 +215,7 @@ void Processor::getStateInformation (juce::MemoryBlock& dest)
     tree.setProperty ("height", height, nullptr);
     tree.setProperty ("pinned", pinned, nullptr);
     tree.setProperty ("system", wantSystemAudio, nullptr);
+    tree.setProperty ("preset", presetName, nullptr);
     if (auto xml = tree.createXml())
         copyXmlToBinary (*xml, dest);
 }
@@ -153,6 +232,7 @@ void Processor::setStateInformation (const void* data, int size)
     height = tree.getProperty ("height", 0);
     pinned = tree.getProperty ("pinned", false);
     wantSystemAudio = tree.getProperty ("system", true);
+    presetName = tree.getProperty ("preset", {}).toString();
     if (onStateRestored) onStateRestored();
 }
 

@@ -58,6 +58,13 @@ MIDNIGHT, PAPER, NEBULA, PHOSPHOR, BLUEPRINT, NEON, ROSE, GLACIER. A skin change
   - **INPUT** opens the audio device dialog.
 - Layout, skin, target, size and pin are saved in the DAW project.
 
+## Presets
+- **PRESET** in the bar:
+  - **SAVE AS NEW...** stores the panels, their sizes, the skin, the LUFS target and the window size under a name.
+  - That preset then **opens every time** you open COSMOS, in the app or as a new plugin. A saved project still opens the way you left it.
+- From the same menu: load any preset, save over the current one, choose which one opens at start (or the default look), delete, or open the presets folder.
+- Files live in `~/Library/Application Support/LT Audio/COSMOS/Presets/*.ltcosmos`. Tested in `tests/CosmosPresetTest.cpp`.
+
 ## System audio (app)
 - The app listens to everything the Mac plays by default: **SOURCE: SYSTEM**. It uses a Core Audio process tap on the whole system mix (macOS 14.2 or later) and needs no BlackHole.
 - The first time, macOS asks for **System Audio Recording**; allow it. Nothing is recorded or sent anywhere.

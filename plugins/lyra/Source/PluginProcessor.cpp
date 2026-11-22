@@ -7,6 +7,11 @@ namespace lyra
 #if LYRA_MIDI_FX
 // MIDI FX build (Logic's MIDI FX slot): no audio at all
 Processor::Processor() : AudioProcessor (BusesProperties())
+#elif LYRA_AUDIO_FX
+// audio-effect build: sits after a synth, lets its sound through untouched
+Processor::Processor()
+    : AudioProcessor (BusesProperties().withInput ("Input", juce::AudioChannelSet::stereo(), true)
+                                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
 #else
 Processor::Processor()
     : AudioProcessor (BusesProperties().withOutput ("Output", juce::AudioChannelSet::stereo(), true))
@@ -18,6 +23,9 @@ bool Processor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
    #if LYRA_MIDI_FX
     return layouts.getMainOutputChannelSet().isDisabled();
+   #elif LYRA_AUDIO_FX
+    auto out = layouts.getMainOutputChannelSet();
+    return (out == juce::AudioChannelSet::stereo() || out == juce::AudioChannelSet::mono()) && layouts.getMainInputChannelSet() == out;
    #else
     auto out = layouts.getMainOutputChannelSet();
     return out == juce::AudioChannelSet::stereo() || out == juce::AudioChannelSet::mono();
@@ -61,11 +69,40 @@ void Processor::handle (const juce::MidiMessage& m)
     }
 }
 
+void Processor::prepareToPlay (double sr, int block)
+{
+    piano.prepare (sr, block);
+}
+
 void Processor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
+    juce::ScopedNoDenormals noDenormals;
+   #if LYRA_AUDIO_FX
+    // the synth before LYRA keeps sounding: its audio passes straight through
+    for (int c = getTotalNumInputChannels(); c < buffer.getNumChannels(); ++c) buffer.clear (c, 0, buffer.getNumSamples());
+   #else
+    buffer.clear();
+   #endif
+    const bool playPiano = hasAudio() && pianoDb != 0 && buffer.getNumChannels() > 0;
+    piano.setGain (juce::Decibels::decibelsToGain ((float) pianoDb) * 0.5f);
+
+    // notes drive the display and, when on, the built-in piano (sample accurate); the MIDI stays in the
+    // buffer, so anything after LYRA still receives it
+    int pos = 0;
+    const int n = buffer.getNumSamples();
     for (const auto meta : midi)
-        handle (meta.getMessage());
-    buffer.clear();   // never makes sound; the MIDI stays in the buffer, so a synth after LYRA still plays
+    {
+        const auto& m = meta.getMessage();
+        auto at = juce::jlimit (0, n, meta.samplePosition);
+        if (playPiano && at > pos) { piano.render (buffer, pos, at - pos); pos = at; }
+        handle (m);
+        if (m.isNoteOn()) { if (playPiano) piano.noteOn (m.getNoteNumber(), m.getFloatVelocity()); }
+        else if (m.isNoteOff()) piano.noteOff (m.getNoteNumber());
+        else if (m.isSustainPedalOn()) piano.setPedal (usePedal);
+        else if (m.isSustainPedalOff()) piano.setPedal (false);
+        else if (m.isAllNotesOff() || m.isAllSoundOff()) piano.allOff();
+    }
+    if (playPiano && n > pos) piano.render (buffer, pos, n - pos);
 }
 
 std::array<bool, 128> Processor::getSounding() const
@@ -89,6 +126,7 @@ void Processor::getStateInformation (juce::MemoryBlock& dest)
     t.setProperty ("language", language, nullptr);
     t.setProperty ("pedal", usePedal, nullptr);
     t.setProperty ("width", width, nullptr);
+    t.setProperty ("piano", pianoDb, nullptr);
     if (auto xml = t.createXml()) copyXmlToBinary (*xml, dest);
 }
 
@@ -104,6 +142,7 @@ void Processor::setStateInformation (const void* data, int size)
     language = juce::jlimit (0, 3, (int) t.getProperty ("language", 0));
     usePedal = t.getProperty ("pedal", true);
     width = t.getProperty ("width", 0);
+    pianoDb = juce::jlimit (-18, 0, (int) t.getProperty ("piano", defaultPianoDb()));
     if (onStateRestored) onStateRestored();
 }
 

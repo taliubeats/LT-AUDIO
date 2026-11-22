@@ -22,7 +22,8 @@ make_component () {   # <plugin name> -> component pkg path
   /usr/libexec/PlistBuddy -c "Print" "$WORK/$SLUG.plist" >/dev/null
   i=0
   while /usr/libexec/PlistBuddy -c "Print :$i" "$WORK/$SLUG.plist" >/dev/null 2>&1; do
-    /usr/libexec/PlistBuddy -c "Set :$i:BundleIsRelocatable false" "$WORK/$SLUG.plist"
+    /usr/libexec/PlistBuddy -c "Set :$i:BundleIsRelocatable false" "$WORK/$SLUG.plist" 2>/dev/null \
+      || /usr/libexec/PlistBuddy -c "Add :$i:BundleIsRelocatable bool false" "$WORK/$SLUG.plist"
     i=$((i+1))
   done
 
@@ -66,12 +67,25 @@ pkgbuild --component "$APP" --install-location /Applications \
          --identifier com.ltaudio.licensestudio --version "$VERSION" "$WORK/components/LT-License-Studio.pkg" >/dev/null
 finish "LT License Studio" "$OUT/LT-License-Studio-Installer-mac.pkg" "$WORK/components/LT-License-Studio.pkg"
 
-# Apps (LT WARP, LT COSMOS, LT LYRA...) -> /Applications, one installer each
+# Apps (LT WARP, LT COSMOS, LT LYRA...) -> /Applications, one installer each.
+# The app is staged in its own root and marked NOT relocatable: otherwise Installer "updates" any other
+# copy with the same bundle id it finds on disk (a build folder, a download) instead of /Applications.
 for A in "${EXTRA_APPS[@]+"${EXTRA_APPS[@]}"}"; do
   [ -d "$A" ] || continue
   NAME="$(basename "$A" .app)"
   SLUG="$(echo "$NAME" | tr ' ' '-')"
   ID="com.ltaudio.app.$(echo "$NAME" | tr -d ' ' | tr '[:upper:]' '[:lower:]')"
-  pkgbuild --component "$A" --install-location /Applications --identifier "$ID" --version "$VERSION" "$WORK/components/$SLUG-App.pkg" >/dev/null
+  ROOT="$WORK/approot-$SLUG"
+  mkdir -p "$ROOT"
+  ditto "$A" "$ROOT/$NAME.app"
+  pkgbuild --analyze --root "$ROOT" "$WORK/$SLUG-app.plist" >/dev/null
+  i=0
+  while /usr/libexec/PlistBuddy -c "Print :$i" "$WORK/$SLUG-app.plist" >/dev/null 2>&1; do
+    /usr/libexec/PlistBuddy -c "Set :$i:BundleIsRelocatable false" "$WORK/$SLUG-app.plist" 2>/dev/null \
+      || /usr/libexec/PlistBuddy -c "Add :$i:BundleIsRelocatable bool false" "$WORK/$SLUG-app.plist"
+    i=$((i+1))
+  done
+  pkgbuild --root "$ROOT" --component-plist "$WORK/$SLUG-app.plist" --install-location /Applications \
+           --identifier "$ID" --version "$VERSION" "$WORK/components/$SLUG-App.pkg" >/dev/null
   finish "$NAME" "$OUT/$SLUG-App-Installer-mac.pkg" "$WORK/components/$SLUG-App.pkg"
 done

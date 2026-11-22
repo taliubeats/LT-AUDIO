@@ -218,6 +218,18 @@ void Editor::buildPills()
         { tr ("colour", L), juce::String (juce::CharPointer_UTF8 ("\xe2\x97\x8f")), [this] { showColourMenu(); }, false },
         { tr ("language", L), langs[proc.language], [this] { showLanguageMenu(); }, false },
     };
+    if (Processor::hasAudio())
+        list.insert (list.begin(), { tr ("piano", L), proc.pianoDb == 0 ? juce::String ("OFF") : juce::String (proc.pianoDb) + " dB", [this]
+        {
+            juce::PopupMenu m;
+            const int levels[] = { 0, -18, -12, -6, -3 };
+            for (int i = 0; i < 5; ++i)
+                m.addItem (i + 1, levels[i] == 0 ? juce::String ("OFF") : juce::String (levels[i]) + " dB", true, proc.pianoDb == levels[i]);
+            m.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (this).withMousePosition(), [this, levels] (int r)
+            {
+                if (r > 0) proc.pianoDb = levels[r - 1];
+            });
+        }, false });
     if (proc.wrapperType == juce::AudioProcessor::wrapperType_Standalone)
         list.insert (list.begin(), { "MIDI", tr ("input", L), [] {
            #if JucePlugin_Build_Standalone

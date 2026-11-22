@@ -42,6 +42,8 @@ private:
     void setFullscreen (bool);
     void showAudioSettings();
     void setSystemAudio (bool);
+    void showPresetMenu();
+    void applyLoadedPreset();
     void showActivation (bool);
     juce::DocumentWindow* window() const;
     void runSnapshot (const juce::String& file);

@@ -143,6 +143,7 @@ void Editor::buildBar()
     add ("SIZE", [this] { showSizeMenu(); });
     add (proc.target == 0 ? juce::String ("TARGET OFF") : "TARGET " + juce::String (proc.target), [this] { showTargetMenu(); });
     add ("RESET", [this] { proc.meter.requestReset(); });
+    add ("PRESET: " + (proc.presetName.isEmpty() ? juce::String ("-") : proc.presetName.toUpperCase()), [this] { showPresetMenu(); });
     if (proc.isStandalone())
     {
         add ("PIN", [this] { setPinned (! proc.pinned); }, proc.pinned);
@@ -285,6 +286,72 @@ void Editor::showTargetMenu()
     {
         if (safe == nullptr || r == 0) return;
         safe->proc.target = targets[r - 1];
+        safe->buildBar();
+        safe->repaint();
+    });
+}
+
+void Editor::applyLoadedPreset()
+{
+    if (proc.layout.isNotEmpty()) strip.setLayout (proc.layout);
+    if (proc.width > 0 && proc.height > 0) applySize (proc.width, proc.height);
+    buildBar();
+    repaint();
+}
+
+void Editor::showPresetMenu()
+{
+    proc.layout = strip.getLayout();
+    auto names = proc.listPresets();
+    auto startup = Processor::getStartupPreset();
+    juce::PopupMenu menu;
+    menu.addSectionHeader ("LOAD");
+    for (int i = 0; i < names.size(); ++i)
+        menu.addItem (100 + i, names[i] + (names[i] == startup ? "   (opens at start)" : ""), true, names[i] == proc.presetName);
+    if (names.isEmpty()) menu.addItem (1, "no presets yet", false, false);
+    menu.addSeparator();
+    menu.addItem (2, "SAVE AS NEW...");
+    if (proc.presetName.isNotEmpty())
+    {
+        menu.addItem (3, "SAVE \"" + proc.presetName + "\"");
+        menu.addItem (4, "OPEN \"" + proc.presetName + "\" AT START", true, startup == proc.presetName);
+        menu.addItem (5, "DELETE \"" + proc.presetName + "\"");
+    }
+    menu.addItem (6, "START WITH THE DEFAULT LOOK", true, startup.isEmpty());
+    menu.addItem (7, "SHOW PRESETS FOLDER");
+    juce::Component::SafePointer<Editor> safe (this);
+    menu.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (this).withMousePosition(), [safe, names] (int r)
+    {
+        if (safe == nullptr || r == 0) return;
+        auto& p = safe->proc;
+        if (r >= 100) { if (p.loadPreset (names[r - 100])) safe->applyLoadedPreset(); return; }
+        switch (r)
+        {
+            case 2:
+            {
+                auto* w = new juce::AlertWindow ("Save preset", "Name for this look (it will open like this every time):", juce::MessageBoxIconType::NoIcon);
+                w->addTextEditor ("name", p.presetName.isEmpty() ? juce::String ("My layout") : p.presetName);
+                w->addButton ("SAVE", 1, juce::KeyPress (juce::KeyPress::returnKey));
+                w->addButton ("CANCEL", 0, juce::KeyPress (juce::KeyPress::escapeKey));
+                w->enterModalState (true, juce::ModalCallbackFunction::create ([safe, w] (int result)
+                {
+                    if (safe != nullptr && result == 1)
+                    {
+                        safe->proc.layout = safe->strip.getLayout();
+                        safe->proc.savePreset (w->getTextEditorContents ("name"), true);
+                        safe->buildBar();
+                        safe->repaint();
+                    }
+                }), true);
+                break;
+            }
+            case 3: p.layout = safe->strip.getLayout(); p.savePreset (p.presetName, Processor::getStartupPreset() == p.presetName); break;
+            case 4: Processor::setStartupPreset (Processor::getStartupPreset() == p.presetName ? juce::String() : p.presetName); break;
+            case 5: p.deletePreset (p.presetName); break;
+            case 6: Processor::setStartupPreset ({}); break;
+            case 7: Processor::presetFolder().createDirectory(); Processor::presetFolder().startAsProcess(); break;
+            default: break;
+        }
         safe->buildBar();
         safe->repaint();
     });

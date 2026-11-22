@@ -2,6 +2,7 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <lt_shared/lt_shared.h>
+#include "Piano.h"
 
 namespace lyra
 {
@@ -25,6 +26,25 @@ public:
     int language = 0;        // 0 EN, 1 ES, 2 JA, 3 DE
     bool usePedal = true;
     int width = 0;
+    /** Built-in piano: 0 = off, else the level in dB (-18, -12, -6, 0). The instrument plays it by
+        default so LYRA can be used on its own; the audio-effect version starts with it off. */
+    int pianoDb = defaultPianoDb();
+    static int defaultPianoDb()
+    {
+       #if LYRA_AUDIO_FX || LYRA_MIDI_FX
+        return 0;
+       #else
+        return -6;
+       #endif
+    }
+    static bool hasAudio()
+    {
+       #if LYRA_MIDI_FX
+        return false;
+       #else
+        return true;
+       #endif
+    }
 
     // ------------------------------------------------------------------ live notes
     /** Notes sounding now (held keys, plus pedal-sustained ones when usePedal). */
@@ -33,7 +53,7 @@ public:
     int getVelocity (int note) const noexcept { return velocity[(size_t) (note & 127)].load(); }
     void refreshLicense() { license.refresh(); }
 
-    void prepareToPlay (double, int) override {}
+    void prepareToPlay (double, int) override;
     void releaseResources() override {}
     bool isBusesLayoutSupported (const BusesLayout&) const override;
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
@@ -41,7 +61,16 @@ public:
 
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override                      { return true; }
-    const juce::String getName() const override          { return "LT LYRA"; }
+    const juce::String getName() const override
+    {
+       #if LYRA_AUDIO_FX
+        return "LT LYRA FX";
+       #elif LYRA_MIDI_FX
+        return "LT LYRA MIDI";
+       #else
+        return "LT LYRA";
+       #endif
+    }
     bool acceptsMidi() const override                    { return true; }
     bool producesMidi() const override                   { return true; }    // notes pass straight through
 #if LYRA_MIDI_FX
@@ -63,6 +92,7 @@ public:
 
 private:
     void handle (const juce::MidiMessage&);
+    Piano piano;
 
     std::array<std::atomic<juce::uint64>, 2> held {}, sustained {};
     std::array<std::atomic<int>, 128> velocity {};
