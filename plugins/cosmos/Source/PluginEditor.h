@@ -17,6 +17,7 @@ public:
     void resized() override;
     void mouseDown (const juce::MouseEvent&) override;
     void mouseMove (const juce::MouseEvent&) override;
+    void mouseDrag (const juce::MouseEvent&) override;
 
     static constexpr int defaultWidth = 1180, defaultHeight = 176, barHeight = 26;
 
@@ -42,6 +43,8 @@ private:
     void setFullscreen (bool);
     void showAudioSettings();
     void setSystemAudio (bool);
+    void setInputOpen (bool);
+    juce::Rectangle<float> windowButton (int which) const;
     void showPresetMenu();
     void applyLoadedPreset();
     void showActivation (bool);
@@ -58,7 +61,11 @@ private:
     juce::int64 analyzerBase = 0;      // processor samples read before this editor started
     int frame = 0;
     double startTime = juce::Time::getMillisecondCounterHiRes();
-    bool docked = false, fullscreen = false;
+    bool docked = false, fullscreen = false, draggingWindow = false;
+    juce::ComponentDragger dragger;
+    juce::Point<float> lastMouse;
+    int silentFrames = 0;
+    juce::String savedInputDevice;
     juce::Rectangle<int> undockedBounds;
 
     lt::ui::Palette ltPalette = lt::ui::Palette::dark();

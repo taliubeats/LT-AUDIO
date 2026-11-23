@@ -15,6 +15,7 @@ juce_add_plugin(LTCosmos
     MICROPHONE_PERMISSION_ENABLED TRUE
     MICROPHONE_PERMISSION_TEXT "LT COSMOS listens to an audio input to meter and visualise it."
     PLIST_TO_MERGE "<plist><dict><key>NSAudioCaptureUsageDescription</key><string>LT COSMOS listens to what your Mac plays to meter and visualise it. Nothing is recorded or sent anywhere.</string></dict></plist>"
+    ICON_BIG ${CMAKE_SOURCE_DIR}/shared/brand/icon-cosmos.png
     COPY_PLUGIN_AFTER_BUILD FALSE)
 
 target_sources(LTCosmos PRIVATE

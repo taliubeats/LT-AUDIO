@@ -12,6 +12,7 @@ juce_add_plugin(LTLyra
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
     VST3_CATEGORIES Instrument Tools
     AU_MAIN_TYPE kAudioUnitType_MusicDevice
+    ICON_BIG ${CMAKE_SOURCE_DIR}/shared/brand/icon-lyra.png
     COPY_PLUGIN_AFTER_BUILD FALSE)
 
 target_sources(LTLyra PRIVATE
@@ -40,6 +41,7 @@ if(APPLE)
         IS_MIDI_EFFECT TRUE
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE
         AU_MAIN_TYPE kAudioUnitType_MIDIProcessor
+        ICON_BIG ${CMAKE_SOURCE_DIR}/shared/brand/icon-lyra.png
         COPY_PLUGIN_AFTER_BUILD FALSE)
     target_sources(LTLyraMidi PRIVATE Source/Piano.cpp Source/ChordEngine.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
     target_include_directories(LTLyraMidi PRIVATE Source)
@@ -64,6 +66,7 @@ juce_add_plugin(LTLyraFx
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
     VST3_CATEGORIES Fx Analyzer
     AU_MAIN_TYPE kAudioUnitType_MusicEffect
+    ICON_BIG ${CMAKE_SOURCE_DIR}/shared/brand/icon-lyra.png
     COPY_PLUGIN_AFTER_BUILD FALSE)
 target_sources(LTLyraFx PRIVATE Source/Piano.cpp Source/ChordEngine.cpp Source/PluginProcessor.cpp Source/PluginEditor.cpp)
 target_include_directories(LTLyraFx PRIVATE Source)

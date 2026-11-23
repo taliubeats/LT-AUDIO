@@ -3,6 +3,7 @@ juce_add_gui_app(LTWarp
     COMPANY_NAME "LT Audio"
     BUNDLE_ID com.ltaudio.warp
     VERSION ${PROJECT_VERSION}
+    ICON_BIG ${CMAKE_SOURCE_DIR}/shared/brand/icon-warp.png
     DOCUMENT_EXTENSIONS mp3 wav flac aif aiff m4a opus ogg mp4 mov mkv webm jpg jpeg png webp tif tiff heic)
 
 target_sources(LTWarp PRIVATE

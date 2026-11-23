@@ -60,6 +60,18 @@ Editor::Editor (Processor& p)
         && juce::SystemStats::getEnvironmentVariable ("LT_EDITOR_SNAPSHOT", {}).isEmpty())
         juce::MessageManager::callAsync ([safe = juce::Component::SafePointer<Editor> (this)] { if (safe != nullptr) safe->setSystemAudio (true); });
 
+    // the app has no title bar: the LT bar moves the window and carries minimise / close
+    if (proc.isStandalone())
+        juce::MessageManager::callAsync ([safe = juce::Component::SafePointer<Editor> (this)]
+        {
+            if (safe == nullptr) return;
+            if (auto* w = safe->window())
+            {
+                w->setUsingNativeTitleBar (false);
+                w->setTitleBarHeight (0);
+            }
+        });
+
     if (proc.isStandalone() && proc.pinned)
         juce::MessageManager::callAsync ([safe = juce::Component::SafePointer<Editor> (this)] { if (safe != nullptr) safe->setPinned (true); });
 
@@ -95,6 +107,18 @@ void Editor::pullAudio()
 
 void Editor::timerCallback()
 {
+    if (proc.isSystemAudio())
+    {
+        auto wasHinting = silentFrames > 240;
+        silentFrames = juce::jmax (analyzer.peak[0], analyzer.peak[1]) > 0.0f ? 0 : silentFrames + 1;
+        if (wasHinting != (silentFrames > 240)) { buildBar(); repaint (0, 0, getWidth(), barHeight); }
+    }
+    // developer diagnosis: LT_COSMOS_DIAG=/path/log.txt writes the source and level once a second
+    static const auto diagPath = juce::SystemStats::getEnvironmentVariable ("LT_COSMOS_DIAG", {});
+    if (diagPath.isNotEmpty() && frame % 60 == 0)
+        juce::File (diagPath).appendText ("t=" + juce::String (frame / 60) + " system=" + juce::String ((int) proc.isSystemAudio())
+                                          + " rate=" + juce::String (proc.getCurrentSampleRate(), 0)
+                                          + " peakL=" + juce::String (analyzer.peak[0], 5) + " M=" + juce::String (readings.momentary, 1) + "\n");
     if (std::abs (analyzer.getSampleRate() - proc.getCurrentSampleRate()) > 1.0)
     {
         analyzer.prepare (proc.getCurrentSampleRate());
@@ -150,6 +174,12 @@ void Editor::buildBar()
         add ("DOCK", [this] { setDocked (! docked); }, docked);
         add ("FULL", [this] { setFullscreen (! fullscreen); }, fullscreen);
         add (proc.isSystemAudio() ? "SOURCE: SYSTEM" : "SOURCE: INPUT", [this] { setSystemAudio (! proc.isSystemAudio()); }, proc.isSystemAudio());
+        if (proc.isSystemAudio() && silentFrames > 240)
+            add ("SILENT? ALLOW SYSTEM AUDIO", []
+            {
+                // macOS sends silence until LT COSMOS is allowed under "Screen & System Audio Recording"
+                juce::URL ("x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_ScreenCapture").launchInDefaultBrowser();
+            }, false, true);
         add ("INPUT", [this] { setSystemAudio (false); showAudioSettings(); });
     }
     if (! proc.license.isLicensed())
@@ -190,8 +220,20 @@ void Editor::paint (juce::Graphics& g)
     auto info = (a.bpm > 0 ? juce::String (a.bpm, 1) + (a.hostTiming ? " BPM" : " BPM~") : juce::String ("--- BPM")) + dot + bb + dot
                 + music::keyName (a.key) + dot + a.chordText + dot + "I " + draw::lufsText (readings.integrated);
     auto infoX = items.empty() ? 400.0f : items.back().bounds.getRight() + 12;
+    auto infoRight = proc.isStandalone() ? (float) getWidth() - 66.0f : (float) getWidth() - 10.0f;
     g.setColour (s.dim);
-    g.drawText (info, Rect (infoX, 0, (float) getWidth() - infoX - 10, bar.getHeight()), juce::Justification::centredRight, true);
+    g.drawText (info, Rect (infoX, 0, infoRight - infoX, bar.getHeight()), juce::Justification::centredRight, true);
+    if (proc.isStandalone())
+    {
+        g.setFont (monoFont (13.0f));
+        for (int b = 0; b < 2; ++b)
+        {
+            auto r = windowButton (b);
+            auto hot = r.contains (lastMouse);
+            g.setColour (hot ? (b == 1 ? s.warn : s.text) : s.dim);
+            g.drawText (b == 0 ? juce::String (juce::CharPointer_UTF8 ("\xe2\x80\x93")) : juce::String (juce::CharPointer_UTF8 ("\xc3\x97")), r, juce::Justification::centred);
+        }
+    }
 }
 
 void Editor::resized()
@@ -205,16 +247,39 @@ void Editor::resized()
 
 void Editor::mouseMove (const juce::MouseEvent& e)
 {
+    lastMouse = e.position;
     int h = -1;
     for (size_t i = 0; i < items.size(); ++i)
         if (items[i].bounds.contains (e.position)) h = (int) i;
     if (h != hoverItem) { hoverItem = h; repaint (0, 0, getWidth(), barHeight); }
 }
 
+juce::Rectangle<float> Editor::windowButton (int which) const
+{
+    // 0 = minimise, 1 = close, at the right end of the bar (app only)
+    return { (float) getWidth() - (which == 1 ? 30.0f : 58.0f), 3.0f, 24.0f, (float) barHeight - 6.0f };
+}
+
 void Editor::mouseDown (const juce::MouseEvent& e)
 {
+    draggingWindow = false;
     for (auto& it : items)
         if (it.bounds.contains (e.position) && it.click) { auto fn = it.click; fn(); buildBar(); repaint(); return; }
+    if (! proc.isStandalone() || e.position.y > barHeight) return;
+    if (auto* w = window())
+    {
+        if (windowButton (0).contains (e.position)) { w->setMinimised (true); return; }
+        if (windowButton (1).contains (e.position)) { if (auto* app = juce::JUCEApplicationBase::getInstance()) app->systemRequestedQuit(); return; }
+        if (docked || fullscreen) return;
+        draggingWindow = true;
+        dragger.startDraggingComponent (w, e.getEventRelativeTo (w));
+    }
+}
+
+void Editor::mouseDrag (const juce::MouseEvent& e)
+{
+    if (! draggingWindow) return;
+    if (auto* w = window()) dragger.dragComponent (w, e.getEventRelativeTo (w), nullptr);
 }
 
 //============================================================================== menus
@@ -391,7 +456,7 @@ void Editor::setDocked (bool on)
     }
     else
     {
-        w->setTitleBarHeight (26);
+        w->setTitleBarHeight (0);
         w->setBounds (undockedBounds);
         w->setAlwaysOnTop (proc.pinned);
     }
@@ -410,9 +475,33 @@ void Editor::setFullscreen (bool on)
     fullscreen = on;
 }
 
+void Editor::setInputOpen (bool open)
+{
+#if JucePlugin_Build_Standalone
+    if (auto* holder = juce::StandalonePluginHolder::getInstance())
+    {
+        auto& dm = holder->deviceManager;
+        auto setup = dm.getAudioDeviceSetup();
+        if (open) { setup.useDefaultInputChannels = true; if (setup.inputDeviceName.isEmpty()) setup.inputDeviceName = savedInputDevice; }
+        else
+        {
+            if (setup.inputDeviceName.isNotEmpty()) savedInputDevice = setup.inputDeviceName;
+            setup.inputDeviceName = {};          // no input device at all: macOS stops showing the microphone in use
+            setup.useDefaultInputChannels = false;
+            setup.inputChannels.clear();
+        }
+        dm.setAudioDeviceSetup (setup, true);
+    }
+#else
+    juce::ignoreUnused (open);
+#endif
+}
+
 void Editor::setSystemAudio (bool on)
 {
     proc.wantSystemAudio = on;
+    silentFrames = 0;
+    if (proc.isStandalone()) setInputOpen (! on);
     if (! on) { if (proc.isSystemAudio()) proc.stopSystemAudio(); }
     else if (! proc.isSystemAudio())
     {
