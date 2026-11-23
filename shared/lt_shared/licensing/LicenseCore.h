@@ -19,6 +19,13 @@ namespace Products
     inline constexpr const char* cosmos    = "COSMOS";
     inline constexpr const char* lyra      = "LYRA";
     inline constexpr const char* warp      = "WARP";
+    inline constexpr const char* air       = "AIR";
+    inline constexpr const char* halo      = "HALO";
+    inline constexpr const char* meteor    = "METEOR";
+    inline constexpr const char* saturn    = "SATURN";
+    inline constexpr const char* corona    = "CORONA";
+    inline constexpr const char* eclipse   = "ECLIPSE";
+    inline constexpr const char* horizon   = "HORIZON";
     inline constexpr const char* all       = "ALL";
 }
 

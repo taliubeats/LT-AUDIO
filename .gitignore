@@ -5,3 +5,5 @@ cmake-build*/
 dist/
 pkg/
 m4l-pkg/
+installers/windows/suite_components.iss
+third_party/models/

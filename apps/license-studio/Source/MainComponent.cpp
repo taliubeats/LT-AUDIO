@@ -12,7 +12,9 @@ namespace
 {
     const char* productOrder[] = { Products::typeBeats, Products::pulsar, Products::knock,
                                    Products::nebula, Products::orbit, Products::voidVerb, Products::tune, Products::nova,
-                                   Products::vocalSuite, Products::quasar, Products::cosmos, Products::lyra, Products::warp, Products::all };
+                                   Products::vocalSuite, Products::quasar, Products::cosmos, Products::lyra, Products::warp,
+                                   Products::air, Products::halo, Products::meteor, Products::saturn, Products::corona,
+                                   Products::eclipse, Products::horizon, Products::all };
 
     juce::Font mono (float h)
     {

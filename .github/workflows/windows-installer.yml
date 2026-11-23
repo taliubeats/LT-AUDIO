@@ -1,0 +1,56 @@
+name: Windows installer (all plugins)
+
+on:
+  push:
+    branches: [feature/windows-all-plugins]
+  workflow_dispatch:
+
+concurrency:
+  group: windows-installer-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DLT_BUILD_TESTS=OFF -DLT_BUILD_STUDIO=OFF -DLT_BUILD_WARP=OFF
+
+      - name: Build every VST3 (keeps going past errors so one run shows them all)
+        id: build
+        shell: pwsh
+        run: |
+          $targets = ninja -C build -t targets all | ForEach-Object { if ($_ -match '^(LT\w+_VST3):') { $Matches[1] } }
+          Write-Host "Targets: $($targets -join ', ')"
+          ninja -C build -k 0 -j 4 @targets
+          "ok=$($LASTEXITCODE -eq 0)" >> $env:GITHUB_OUTPUT
+          exit 0
+
+      - name: Collect the plugins
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path pkg/VST3, dist | Out-Null
+          Get-ChildItem -Path build/plugins -Recurse -Directory -Filter *.vst3 |
+            Where-Object { $_.FullName -match 'Release\\VST3\\[^\\]+\.vst3$' } |
+            ForEach-Object { Copy-Item $_.FullName -Destination pkg/VST3 -Recurse -Force }
+          Get-ChildItem pkg/VST3 | ForEach-Object { Write-Host $_.Name }
+
+      - name: Installer with a checkbox per plugin
+        shell: pwsh
+        run: ./installers/windows/build_suite_installer.ps1 -Version "0.1.${{ github.run_number }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LT-AUDIO-Plugins-Setup-windows
+          path: dist/*.exe
+
+      - name: Fail if a plugin did not build
+        if: steps.build.outputs.ok != 'True'
+        run: exit 1
