@@ -707,7 +707,7 @@ void Editor::showActivation (bool show)
     {
         proc.license.refresh();
         activation = std::make_unique<lt::ui::ActivationComponent> (proc.license, palette);
-        activation->onDismiss = [this] { juce::MessageManager::callAsync ([safe = juce::Component::SafePointer<Editor> (this)]
+        activation->onDismiss = [safe = juce::Component::SafePointer<Editor> (this)] { juce::MessageManager::callAsync ([safe]
                                          { if (safe != nullptr) safe->showActivation (false); }); };
         content.addAndMakeVisible (*activation);
         activation->setBounds (0, 0, baseWidth, baseHeight);

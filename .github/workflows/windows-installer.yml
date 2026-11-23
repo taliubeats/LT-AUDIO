@@ -39,6 +39,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path pkg/VST3, dist | Out-Null
           Get-ChildItem -Path build/plugins -Recurse -Directory -Filter *.vst3 |
             Where-Object { $_.FullName -match 'Release\\VST3\\[^\\]+\.vst3$' } |
+            Where-Object { Test-Path (Join-Path $_.FullName "Contents\x86_64-win\$($_.Name)") } |
             ForEach-Object { Copy-Item $_.FullName -Destination pkg/VST3 -Recurse -Force }
           Get-ChildItem pkg/VST3 | ForEach-Object { Write-Host $_.Name }
 

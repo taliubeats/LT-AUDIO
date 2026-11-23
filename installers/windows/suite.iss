@@ -32,7 +32,6 @@ OutputBaseFilename=LT-AUDIO-Plugins-Setup-windows
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
-ComponentsListTVStyle=yes
 CloseApplications=yes
 
 [Languages]

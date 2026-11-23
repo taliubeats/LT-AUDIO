@@ -55,8 +55,12 @@ if(LT_HALO_WHISPER)
     if(APPLE)
         set(GGML_METAL_EMBED_LIBRARY ON CACHE BOOL "" FORCE)
     endif()
+    # whisper/ggml must be static: a plugin can't find DLLs next to the host (Windows) or the bundle
+    set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
     set(LT_SAVED_SHARED ${BUILD_SHARED_LIBS})
     set(BUILD_SHARED_LIBS OFF)
+    set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+    set(GGML_BACKEND_DL OFF CACHE BOOL "" FORCE)
     FetchContent_Declare(whisper
         GIT_REPOSITORY https://github.com/ggml-org/whisper.cpp.git
         GIT_TAG v1.9.5
